@@ -8,7 +8,7 @@ const postsDirectory = path.join(process.cwd(), 'posts');
 
 export interface PostData {
   slug: string;
-  title: string;
+  title?: string;
   date: string;
   content: string;
   tags?: string[];
@@ -36,7 +36,7 @@ export async function getAllPosts(): Promise<PostData[]> {
 
         return {
           slug,
-          title: data.title || slug,
+          title: data.title,
           date: data.date || new Date().toISOString(),
           content: contentHtml,
           tags: data.tags || [],
