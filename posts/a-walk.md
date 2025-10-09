@@ -1,6 +1,6 @@
 ---
-title: "A walk"
-date: "2025-10-09"
+title: ""
+date: "2025-10-08"
 ---
 
 Yesterday while I was at work two of my intern friends (Elsie and Celeste) were feeling stressed so we all collectively decided to go for a walk. While on our walk, we talked about all sorts of things. Elsie told me that their boss called them 小天才 and 大天才 respectively (Elsie is older). She said the reason for this had started from her boss calling Celeste 小天才, but worried Elsie would feel left out because she didn't have a nickname, so decided Elsie would become the 大 variant. Elsie then said she didn't need all of that and that she was confident in herself and her abilities, acknowledging she was not a 天才 but that that was okay.
