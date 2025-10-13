@@ -9,7 +9,7 @@ export default async function Home() {
       {/* Cover Image */}
       <div className="w-full h-[280px] relative bg-gradient-to-br from-blue-200 via-blue-100 to-orange-100">
         <Image
-          src="/cover.png"
+          src="/cover.webp"
           alt="Cover"
           fill
           className="object-cover"
@@ -23,7 +23,7 @@ export default async function Home() {
           {/* Profile Picture */}
           <div className="w-32 h-32 rounded-full bg-gray-300 border-4 border-white mb-4 mx-auto relative overflow-hidden">
             <Image
-              src="/profile.png"
+              src="/profile.webp"
               alt="Profile"
               fill
               className="object-cover"
@@ -47,7 +47,7 @@ export default async function Home() {
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0 relative overflow-hidden">
                     <Image
-                      src="/profile.png"
+                      src="/profile.webp"
                       alt="Profile"
                       fill
                       className="object-cover"
