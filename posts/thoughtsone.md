@@ -1,0 +1,9 @@
+---
+date: 2025-10-26
+---
+
+I've been enjoying my work a lot lately. There's something so enticing about just being given such an open problem and then figuring out the best way to go about solving it. I think there's a saying that goes if you love the work you do you'll never work a day in your life. Now usually I'm quite a hater of such cliche sayings like that but I have to admit I think there might be some sense to this saying here. I really do enjoy what I do and I don't really feel like I'm working most of the time. Although maybe it's because I'm just an intern and what I do is meant to be fun and light-hearted.
+
+I've been thinking a lot about what I should do in the future. I don't just mean in a career regard, but really quite generally what should I aim to do. I met a couple of people at my volunteer orientation, amongst which there were two who were parents. One of them mentioned how becoming a parent had absolutely changed her. Her priorities shifted and her general approach towards life changed a lot too. I used to not really care to have or not have kids but these people are making them sound like such amazing things.
+
+For the most part I've been focused more or less on just trying to work hard and focus on my work and school. I don't really have too many other things to do anyway so it's fine. There's something almost romantic about the notion of just endlessly pouring hours into your craft. Almost painfully and relentlessly working at something. I'm not sure what it is but I believe there is a lot of beauty in that.
