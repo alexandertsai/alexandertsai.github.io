@@ -10,6 +10,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "My Blog",
   description: "A personal blog",
+  icons: {
+    icon: "/tik-tok.svg",
+  },
 };
 
 export default function RootLayout({

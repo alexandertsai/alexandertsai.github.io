@@ -37,7 +37,7 @@ export async function getAllPosts(): Promise<PostData[]> {
         return {
           slug,
           title: data.title,
-          date: data.date || new Date().toISOString(),
+          date: data.date instanceof Date ? data.date.toISOString().split('T')[0] : (data.date || new Date().toISOString().split('T')[0]),
           content: contentHtml,
           tags: data.tags || [],
         };
