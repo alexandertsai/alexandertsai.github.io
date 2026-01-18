@@ -37,7 +37,7 @@ export async function getAllPosts(): Promise<PostData[]> {
         return {
           slug,
           title: data.title,
-          date: data.date instanceof Date ? data.date.toISOString().split('T')[0] : (data.date || new Date().toISOString().split('T')[0]),
+          date: slug, // Date is inferred from filename (YYYY-MM-DD.md)
           content: contentHtml,
           tags: data.tags || [],
         };
