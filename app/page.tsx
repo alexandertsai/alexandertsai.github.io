@@ -7,7 +7,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Cover Image */}
-      <div className="w-full h-[280px] relative bg-gradient-to-br from-blue-200 via-blue-100 to-orange-100">
+      <div className="w-full h-[308px] relative bg-gradient-to-br from-blue-200 via-blue-100 to-orange-100">
         <Image
           src="/cover.webp"
           alt="Cover"
@@ -31,7 +31,7 @@ export default async function Home() {
           </div>
 
           {/* Name */}
-          <h1 className="text-2xl font-bold text-black mb-1">蔡毅睿</h1>
+          <h1 className="text-[26px] font-bold text-black mb-1">蔡毅睿</h1>
           <p className="text-sm text-gray-600">@yihrae</p>
         </div>
 
@@ -42,20 +42,12 @@ export default async function Home() {
               <p className="text-gray-500">No posts yet. Add markdown files to the posts/ directory.</p>
             </div>
           ) : (
-            posts.map((post) => (
-              <article key={post.slug} className="mb-6 pb-6 border-b border-gray-200 last:border-b-0">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-gray-300 flex-shrink-0 relative overflow-hidden">
-                    <Image
-                      src="/profile.webp"
-                      alt="Profile"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <span className="text-black font-semibold text-sm">yihrae</span>
-                </div>
-
+            posts.map((post, index) => (
+              <article
+                key={post.slug}
+                className="mb-6 p-5 border border-gray-200 rounded-lg animate-pop-in"
+                style={{ animationDelay: `${index * 0.05}s` }}
+              >
                 {post.title && (
                   <h2 className="text-[28px] font-bold mb-3 text-black leading-tight">{post.title}</h2>
                 )}
