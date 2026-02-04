@@ -22,3 +22,13 @@ body {
   animation: pop-in 0.3s ease-out forwards;
   opacity: 0;
 }
+
+/* Image captions: italic text after an image */
+p:has(> img) + p > em:only-child {
+  display: block;
+  text-align: center;
+  font-size: 0.813rem;
+  color: #9ca3af;
+  font-style: normal;
+  margin-top: -0.75rem;
+}
