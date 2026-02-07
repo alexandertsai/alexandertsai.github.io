@@ -22,3 +22,22 @@ body {
   animation: pop-in 0.3s ease-out forwards;
   opacity: 0;
 }
+
+/* Image with captions using figure/figcaption */
+figure {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+figure img {
+  border-radius: 0.5rem;
+  max-width: 100%;
+  height: auto;
+}
+
+figcaption {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}

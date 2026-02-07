@@ -53,7 +53,7 @@ export default async function Home() {
                 )}
 
                 <div
-                  className="text-black text-[15px] leading-relaxed [&_p]:mb-4 [&_p:last-child]:mb-0 [&_h3]:text-black [&_h3]:font-bold [&_h3]:text-base [&_h3]:mb-2 [&_h3]:mt-4 [&_strong]:font-bold [&_em]:italic [&_a]:text-[#00539f] [&_a]:underline [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:mb-4 [&_li]:mb-1 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-700 [&_blockquote]:my-4 [&_code]:bg-gray-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_pre]:bg-gray-50 [&_pre]:p-4 [&_pre]:rounded [&_pre]:overflow-x-auto [&_pre]:my-4 [&_pre]:border [&_pre]:border-gray-200 [&_pre_code]:bg-transparent [&_pre_code]:p-0"
+                  className="text-black text-[15px] leading-relaxed [&_p]:mb-4 [&_p:last-child]:mb-0 [&_h3]:text-black [&_h3]:font-bold [&_h3]:text-base [&_h3]:mb-2 [&_h3]:mt-4 [&_strong]:font-bold [&_em]:italic [&_a]:text-[#00539f] [&_a]:underline [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:ml-5 [&_ol]:mb-4 [&_li]:mb-1 [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-700 [&_blockquote]:my-4 [&_code]:bg-gray-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_pre]:bg-gray-50 [&_pre]:p-4 [&_pre]:rounded [&_pre]:overflow-x-auto [&_pre]:my-4 [&_pre]:border [&_pre]:border-gray-200 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_img]:rounded-lg [&_img]:my-4 [&_img]:mx-auto [&_img]:block [&_img]:max-w-full"
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
 
