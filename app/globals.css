@@ -36,8 +36,18 @@ figure img {
 }
 
 figcaption {
-  color: #6b7280;
-  font-size: 0.875rem;
+  color: #9ca3af;
+  font-size: 0.813rem;
   margin-top: 0.5rem;
   font-style: italic;
+}
+
+/* Image captions: italic text after an image (markdown syntax) */
+p:has(> img) + p > em:only-child {
+  display: block;
+  text-align: center;
+  font-size: 0.813rem;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: -0.75rem;
 }
