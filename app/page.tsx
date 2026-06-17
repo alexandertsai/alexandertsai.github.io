@@ -1,11 +1,13 @@
 import { getAllPosts } from '@/lib/posts';
 import Image from 'next/image';
+import AudioScroller from './AudioScroller';
 
 export default async function Home() {
   const posts = await getAllPosts();
 
   return (
     <div className="min-h-screen bg-white">
+      <AudioScroller />
       {/* Cover Image */}
       <div className="w-full h-[308px] relative bg-gradient-to-br from-blue-200 via-blue-100 to-orange-100">
         <Image
