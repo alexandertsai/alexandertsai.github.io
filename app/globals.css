@@ -23,6 +23,14 @@ body {
   opacity: 0;
 }
 
+/* Invisible scroll anchors for the audio-on-scroll feature */
+.audio-marker {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 /* Image with captions using figure/figcaption */
 figure {
   margin: 1rem 0;
