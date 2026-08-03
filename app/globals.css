@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* The site's display font. This rule is deliberately unlayered so it wins over
+   Tailwind's layered font utilities — don't add a font-* class to <body>
+   expecting it to take effect here. */
 body {
   margin: 0;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
