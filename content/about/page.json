@@ -1,0 +1,64 @@
+{
+  "name": "Alexander Tsai",
+  "location": "Berkeley",
+  "photo": "/_content/about/profile.webp",
+  "aboutHeading": "About",
+  "about": "I'm currently an exchange student at UC Berkeley and a machine learning engineer interested in applied research. My work involves building models in the frequency domain to identify images that have been edited by AI. I have also recently taken a great interest in mechanistic interpretability.",
+  "timelineHeading": "Recently",
+  "links": [
+    {
+      "label": "Email",
+      "href": "mailto:alexyrtsai@gmail.com"
+    },
+    {
+      "label": "GitHub",
+      "href": "https://github.com/alexandertsai"
+    },
+    {
+      "label": "Résumé",
+      "href": "/_content/about/resume.pdf"
+    },
+    {
+      "label": "Blog",
+      "href": "/blog/"
+    }
+  ],
+  "timeline": [
+    {
+      "place": "UC Berkeley",
+      "summary": "Joined as a global access student under the Data Science program.",
+      "details": "I've mainly been taking lots of fascinating classes and meeting so many new people!",
+      "startDate": "2026-08"
+    },
+    {
+      "place": "ExodusPoint",
+      "summary": "Joined as a Quantitative Research intern, focusing on credit.",
+      "details": "I focused on CDX (an index of credit default swaps), focusing heavily on how we can represent credit markets in a transformer architecture.",
+      "startDate": "2026-05"
+    },
+    {
+      "place": "TikTok",
+      "summary": "Researched how to detect AI-edited images.",
+      "details": "My work was centred around analysing images in the frequency domain to detect artefacts left behind by AI image models. Later work also involved creating large datasets for fine-tuning. Ensuring data quality in gigantic datasets is surprisingly an incredibly difficult task. Maybe more so than making the model itself.",
+      "startDate": "2026-01"
+    },
+    {
+      "place": "TikTok",
+      "summary": "Built multimodal systems for content moderation.",
+      "details": "This was my first real experience with running open source LLMs! I worked on improving Qwen's performance through SFT and RL and also increasing overall throughput. I spent a good amount of time figuring out how to squeeze out performance through vLLM and flash attention. This sadly involved reading documentation... I also ran several SFT/RL experiments to improve the general ability of the model to detect desired features within videos.",
+      "startDate": "2025-07"
+    },
+    {
+      "place": "Tradeweb",
+      "summary": "Modeled transaction costs across historical trading data.",
+      "details": "I would say this is what really sparked my interest in data science. I worked mainly with Mortgage-Backed Securities, aiming to model the transaction cost of a trade given the volume, coupon, time, and other factors. There is something incredibly satisfying about the intersection between having the data science skills to build the model but needing the financial knowledge to validate it.",
+      "startDate": "2025-05"
+    },
+    {
+      "place": "Reach Alliance",
+      "summary": "Developed chatbots to help migrant workers.",
+      "details": "I worked with migrant workers in Singapore to develop a multilingual RAG chatbot. This was an extremely rich learning experience for me, both culturally and also in a technical sense. We Published the findings and presented the research at a University of Toronto conference. I even got to give a [TEDx talk](https://www.youtube.com/watch?v=3C1R1JlOQEk)!",
+      "startDate": "2024-05"
+    }
+  ]
+}
