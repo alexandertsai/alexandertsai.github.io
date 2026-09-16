@@ -8,8 +8,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "My Blog",
-  description: "A personal blog",
+  title: "Alexander Tsai",
+  description:
+    "Alexander Tsai is a machine learning researcher and student based in Berkeley, California.",
   icons: {
     icon: "/tik-tok.svg",
   },
