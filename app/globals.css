@@ -7,6 +7,84 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.section-label {
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.profile-link {
+  color: #111827;
+  text-decoration-color: #d1d5db;
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+
+.profile-link:hover {
+  color: #00539f;
+  text-decoration-color: #00539f;
+}
+
+.experience-details {
+  margin-top: 0.25rem;
+}
+
+.experience-details summary {
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  column-gap: 8px;
+  list-style: none;
+}
+
+.experience-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.experience-details summary::before {
+  align-self: start;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid #9ca3af;
+  border-top: 5px solid transparent;
+  content: "";
+  height: 0;
+  margin-top: calc((1.5rem - 10px) / 2);
+  transform-origin: 3px 5px;
+  transition: border-color 150ms ease, transform 150ms ease;
+  width: 0;
+}
+
+.experience-details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.experience-heading {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.experience-summary,
+.experience-body {
+  color: #4b5563;
+  font-size: 15px;
+  line-height: 1.5rem;
+}
+
+.experience-summary {
+  grid-column: 2;
+}
+
+.experience-details summary:hover::before {
+  border-left-color: #111827;
+}
+
+.experience-details summary:hover .experience-summary {
+  color: #111827;
+}
+
 @keyframes pop-in {
   0% {
     opacity: 0;
@@ -58,4 +136,108 @@ p:has(> img) + p > em:only-child {
   color: #9ca3af;
   font-style: italic;
   margin-top: -0.75rem;
+}
+
+.home-page {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #faf9f6;
+  color: #242b29;
+}
+
+.home-page h1 {
+  line-height: 1.2;
+}
+
+.home-page .section-label {
+  color: #147d88;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.home-page .profile-link {
+  color: #365d4d;
+  text-decoration-color: #bccbc2;
+}
+
+.home-page .profile-link:hover {
+  color: #203d30;
+  text-decoration-color: currentColor;
+}
+
+.experience-list {
+  padding-left: 8px;
+}
+
+.experience-item {
+  position: relative;
+  padding: 0 0 2.5rem 2rem;
+}
+
+.experience-item::before {
+  position: absolute;
+  content: "";
+  top: 10px;
+  bottom: -10px;
+  left: 0;
+  width: 1px;
+  background: #bccbc2;
+}
+
+.experience-item::after {
+  position: absolute;
+  content: "";
+  top: 5px;
+  left: -5px;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid #567368;
+  border-radius: 50%;
+  background: #faf9f6;
+}
+
+.experience-item:first-child::after {
+  border-color: #365d4d;
+  background: #365d4d;
+  box-shadow: 0 0 0 5px #365d4d14;
+}
+
+.experience-item:last-child {
+  padding-bottom: 0;
+}
+
+.experience-item:last-child::before {
+  display: none;
+}
+
+.experience-date {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: #567368;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.home-page .experience-heading {
+  font-size: 1rem;
+}
+
+.home-page .experience-details[open] {
+  padding-bottom: 0.25rem;
+}
+
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #567368;
+  outline-offset: 5px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop-in {
+    animation: none;
+    opacity: 1;
+  }
 }
