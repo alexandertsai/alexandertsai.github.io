@@ -1,114 +1,129 @@
 # Personal website
 
-Alexander Tsai’s personal website, built with Next.js App Router, React, TypeScript, and Tailwind CSS. It exports static files for GitHub Pages; there is no database, CMS, or runtime backend.
-
-## Intent and pages
-
-- `/` is the main profile: a short introduction, contact links, résumé, and recent experience. Keep it simple and readable. Experience summaries expand in place to reveal details.
-- `/blog/` is the personal journal: full posts in reverse chronological order, with optional images and sound. It links back to the profile; the profile links to the blog.
-
-These are two routes in one site. Blog posts currently appear in a single feed, not on individual post pages. Content is kept separate from page components so routine writing does not require editing layout code.
-
-## Repository structure
+Edit writing and images in `content/`. Page code lives in `app/`. The existing URLs and designs are unchanged.
 
 ```text
-app/
-  layout.tsx           Shared HTML shell, font setup, and default metadata
-  globals.css          Shared styles and homepage styles
-  page.tsx             / — profile and experience layout
-  blog/
-    layout.tsx         Blog-specific metadata
-    page.tsx           /blog/ — journal feed
-  AudioScroller.tsx    Client component for opt-in, scroll-triggered blog audio
 content/
-  home.json            Homepage text, links, photo path, and experience
-posts/
-  YYYY-MM-DD.md        Blog posts; filenames determine dates and ordering
-lib/
-  posts.ts             Reads posts, renders Markdown, expands image/audio markers
-public/
-  profile.webp         Profile photo
-  cover.webp           Blog cover
-  images/              Images used in posts
-  audio/               MP3 files used by audio markers
-  alexander-tsai-resume.pdf
-.github/workflows/
-  deploy.yml           Builds and publishes GitHub Pages on pushes to main
-next.config.ts         Static export, trailing slashes, and image settings
+  about/
+    page.json                 About text, links, and experience
+    profile.webp              About photo
+    resume.pdf                Résumé
+  blog/
+    assets/                   Painting banner and profile photo
+    posts/
+      tradeweb/
+        index.md              Post text and metadata
+        image1.webp           Images for this post, right beside the text
+        ...
+      ai-for-youth/
+      solving-letterboxed/
+  personal/
+    assets/                   Journal cover and profile
+    posts/
+      2026-03-14/
+        index.md
+        picnic.webp
+        ...
+      2026-06-16/
+        index.md
+        tanemi.mp3            Audio stays with its post too
+
+app/
+  (about)/                    About page and its styles; URL remains /
+  blog/                       Professional blog layout and reader; /blog/
+  personal/                   Personal journal, styles, and audio; /personal/
+  layout.tsx                  Shared HTML shell and metadata
+  globals.css                 Shared styles only
+scripts/                      Post creation, media preparation, and preview watcher
+lib/                          Small content readers for the pages
+.vscode/                      Writing settings and tasks
 ```
 
-The homepage imports `content/home.json` directly. The blog calls `getAllPosts()` in `lib/posts.ts` at build time. That function renders the Markdown to HTML and sorts posts newest first. `AudioScroller` handles playback in the browser after the reader selects “play sound.”
+## Write a new post in VS Code
 
-Keep page-specific layout in its route component, content in JSON or Markdown, and post-processing in `lib/posts.ts`. Extract shared components when both pages need them; the current two routes do not need a separate routing or content framework.
+1. Open the Command Palette (`Cmd+Shift+P` on Mac).
+2. Select **Tasks: Run Task**, then **New post**.
+3. Choose `blog` or `personal`, then enter a title.
+4. Open the generated `index.md` (the task opens it automatically if the `code` command is installed).
+5. Write, add images beside the file, and save.
 
-`node_modules/`, `.next/`, and `out/` are generated and ignored by Git. Do not edit them. `tmp/` holds local design experiments such as `style-preview.html`; those files are not part of the Next.js site or its export.
-
-## Preview locally
+The terminal equivalent is:
 
 ```sh
-npm ci
-npm run dev -- --hostname 127.0.0.1
+npm run new:post -- blog "My internship reflections"
+npm run new:post -- personal "A weekend away"
 ```
 
-Open http://127.0.0.1:3000 for the profile or http://127.0.0.1:3000/blog/ for the journal. Keep the terminal running; saved edits appear automatically. Stop with Ctrl+C. The deployment workflow uses Node.js 20.
+Each command creates one folder with an `index.md`. It never overwrites an existing post. Professional folder names become URLs, so keep them stable after publishing. Personal posts are grouped by date and title and appear in the journal feed.
 
-## Edit homepage text
-
-Open `content/home.json`. All homepage copy is in this file:
-
-- `name` and `location`: profile information.
-- `about`: the introduction paragraph.
-- `links`: navigation labels and destinations.
-- `timeline`: experience entries in display order, newest first. Each has a `startDate`, `place`, `summary`, and `details`. The summary is clickable; details expand underneath. Use `\n\n` in details to separate paragraphs.
-- `aboutHeading` and `timelineHeading`: section labels.
-- `photo`: public URL for an image, such as `/profile.webp` for `public/profile.webp`.
-
-Set `startDate` to a month in `YYYY-MM` format, such as `2026-05`. The homepage shows the full month and year above each role on a vertical timeline. Only start dates are displayed; entries remain in the order you write them, newest first.
-
-Edit text inside double quotes and keep the commas and brackets intact. To include a double quote in text, write `\"`. The repository’s VS Code settings wrap JSON visually; there is no need to insert line breaks into long strings.
-
-## Edit blog posts
-
-Create or edit a file in `posts/` named `YYYY-MM-DD.md`. The filename supplies the displayed date and sort order. A new post appears on `/blog/` after rebuilding; no route or index file needs updating.
-
-Write ordinary Markdown. YAML front matter is optional; use it if you want a post title:
+A new file starts with:
 
 ```md
 ---
-title: "Post title"
+title: "My internship reflections"
+date: "2026-09-16"
+draft: true
 ---
 
-Your opening paragraph.
+Write here.
 ```
 
-Posts without a title begin directly with their content. The parser also reads optional `tags`, but the site does not currently display them. Raw HTML is supported for repository-authored posts.
+Dates determine ordering, newest first. Personal post titles can be empty. An optional `preview` field is supported for professional post metadata. Existing personal posts can still infer their date from the folder name.
 
-Put images in `public/images/` and use Markdown such as `![Description](/images/picnic.webp)`. The custom form `[!picnic | A caption]` renders `public/images/picnic.webp` with a caption; `[!picnic]` omits the caption. Include the extension for images other than WebP.
+## Add images without leaving the post folder
 
-For optional sound, add an MP3 to `public/audio/` and place its basename in brackets in the post: `[tanemi]` refers to `public/audio/tanemi.mp3`. Recognized markers become scroll cues. A play/stop control is inserted after the first paragraph, and playback starts only after the reader enables it.
+Drop your photo beside `index.md`, then reference just its filename:
 
-## Adjust appearance
+```md
+![Lunch with the team](./lunch.webp)
+*Lunch on our last day.*
+```
 
-- `app/page.tsx`: homepage structure and timeline date display.
-- `app/globals.css`: colors, typography, and expandable experience styling. Homepage rules use `.home-page` and `.experience-*` selectors.
-- `app/blog/page.tsx`: blog layout and its Tailwind classes.
-- `app/layout.tsx`: site-wide metadata and font setup; `app/blog/layout.tsx` overrides the blog title and description.
+JPG, PNG, WebP, GIF, SVG, and AVIF are supported. File names with spaces work using angle brackets: `![Lunch](<./team lunch.jpg>)`. A subfolder such as `images/` inside the post also works. Keep each post self-contained; do not use paths into another post's folder.
 
-The homepage uses Arial, including the larger turquoise section labels. The timeline uses muted green colors that match the profile links. Its layout and styling can change independently of the journal. Check both routes when modifying shared CSS or the root layout.
+VS Code's built-in Markdown image paste/drop feature is configured to copy images beside the current post. You can also drag a file into the Explorer folder and type the relative link yourself. Open **Markdown: Open Preview to the Side** to see the text and local images together. See [VS Code's Markdown guide](https://code.visualstudio.com/docs/languages/markdown) for editor shortcuts.
 
-## Check and publish
+You do not need to touch `public/`, copy an image twice, or type a website-wide image URL. The site prepares those URLs automatically. PDFs, video, and audio files can also be kept in the same post folder. Use ordinary Markdown links for downloads. Repository-authored HTML remains supported in personal posts.
+
+For the personal journal's existing scroll audio, put `track-name.mp3` beside `index.md` and insert `[track-name]` in the text. A play/stop control appears after the first paragraph. Audio is opt-in.
+
+## Preview and publish
+
+Run **Tasks: Run Task → Preview website**, or:
 
 ```sh
+npm ci                     # First setup only
+npm run dev -- --hostname 127.0.0.1
+```
+
+Open:
+
+- http://localhost:3000/ — About
+- http://localhost:3000/blog/ — professional blog
+- http://localhost:3000/personal/ — personal journal, not linked from the homepage
+
+Saving Markdown, adding a post folder, or adding an image refreshes the running preview. If an image path is wrong, the terminal identifies the file and missing image; fix it and save again. The preview keeps the last valid content while an edit has an error.
+
+`draft: true` posts are visible locally but excluded from the production build, including their media. Set `draft: false` (or remove the field) when ready. Saving is not publishing.
+
+Stop the preview with `Ctrl+C` before running **Check website** or these commands:
+
+```sh
+npm run test:content
 npm run lint
 npm run build
 ```
 
-The build includes TypeScript checks and exports the complete site to `out/`. To inspect that export locally:
+The build creates the static site in `out/`. Pushing to `main` publishes it through GitHub Pages. After checking, restart the preview with `npm run dev`.
 
-```sh
-python3 -m http.server 8080 --bind 127.0.0.1 --directory out
-```
+## Edit the About page and section images
 
-Open http://127.0.0.1:8080. Use this static server to preview production output; `npm run start` is not the serving workflow for this static-export configuration.
+Edit `content/about/page.json` for the About paragraph, navigation, and experience timeline. Each timeline entry has `startDate` (`YYYY-MM`), `place`, `summary`, and `details`. Separate paragraphs in `details` with `\n\n`. Inline links use `[TEDx talk](https://example.com)` and open in a new tab.
 
-Local edits and builds do not publish anything. Pushing to `main` triggers `.github/workflows/deploy.yml`, which installs dependencies, builds the site, and deploys `out/` to GitHub Pages. The workflow runs the build but does not separately run `npm run lint`, so run both checks before pushing.
+Replace `content/about/profile.webp` or `resume.pdf` to update those files. Professional blog artwork is in `content/blog/assets/`; journal cover and profile art are in `content/personal/assets/`.
+
+## How the files become a site
+
+`npm run dev` watches `content/`. `npm run build` prepares it once. Both render Markdown, validate dates and local image paths, and copy media into generated output. Next.js reads the prepared posts and exports the same routes as before. There is no CMS, database, or runtime dependency on the old website repo.
+
+`.generated/`, `public/_content/`, `.next/`, and `out/` are generated, ignored by Git, and hidden in VS Code. Do not edit them. New posts and their images should be committed together under `content/`.

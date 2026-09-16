@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "New post",
+      "type": "process",
+      "command": "node",
+      "args": ["scripts/new-post.mjs", "${input:postSection}", "${input:postTitle}", "--open"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Preview website",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "dev", "--", "--hostname", "127.0.0.1"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Check website",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "build"],
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    { "id": "postSection", "type": "pickString", "description": "Where does this post belong?", "options": ["blog", "personal"], "default": "blog" },
+    { "id": "postTitle", "type": "promptString", "description": "Post title" }
+  ]
+}

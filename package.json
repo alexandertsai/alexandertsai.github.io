@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/content.mjs && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "new:post": "node scripts/new-post.mjs",
+    "test:content": "node --test scripts/content.test.mjs"
   },
   "dependencies": {
-    "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "next": "^15.5.9",
     "react": "19.1.0",

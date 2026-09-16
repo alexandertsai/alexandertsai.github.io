@@ -1,0 +1,28 @@
+{
+  "[json]": {
+    "editor.wordWrap": "on",
+    "editor.wrappingIndent": "indent"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  "markdown.copyFiles.destination": {
+    "**/content/**/index.md": "${documentDirName}/${fileName}"
+  },
+  "files.exclude": {
+    ".next": true,
+    ".generated": true,
+    "out": true,
+    "public/_content": true
+  },
+  "search.exclude": {
+    "**/.generated/**": true,
+    "**/out/**": true,
+    "**/public/_content/**": true
+  }
+}
