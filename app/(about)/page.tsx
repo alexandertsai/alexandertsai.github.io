@@ -1,25 +1,17 @@
 import "./about.css";
-import Image from "next/image";
 import Link from "next/link";
 import content from "@/content/about/page.json";
+import ProfilePicture from "./ProfilePicture";
 
 export default function Home() {
   return (
     <main className="home-page min-h-screen px-6 py-14 sm:py-24">
       <div className="mx-auto max-w-[680px]">
-        <header className="flex flex-col gap-6 border-b border-stone-200 pb-10 sm:flex-row sm:items-center">
-          <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-full bg-gray-100">
-            <Image
-              src={content.photo}
-              alt={content.name}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+        <header data-ponyo-perch="divider" className="flex flex-col gap-6 border-b border-stone-200 pb-10 sm:flex-row sm:items-center">
+          <ProfilePicture src={content.photo} name={content.name} />
 
           <div>
-            <h1 className="text-[32px] font-semibold tracking-[-0.03em]">
+            <h1 data-ponyo-perch="text" className="text-[32px] font-semibold tracking-[-0.03em]">
               {content.name}
             </h1>
             <nav className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
@@ -32,8 +24,8 @@ export default function Home() {
           </div>
         </header>
 
-        <section className="border-b border-stone-200 py-10" aria-labelledby="about-heading">
-          <h2 id="about-heading" className="section-label">
+        <section data-ponyo-perch="divider" className="border-b border-stone-200 py-10" aria-labelledby="about-heading">
+          <h2 id="about-heading" className="section-label" data-ponyo-perch="text">
             {content.aboutHeading}
           </h2>
           <p className="mt-4 max-w-[570px] text-[16px] leading-7 text-gray-800">
@@ -42,13 +34,13 @@ export default function Home() {
         </section>
 
         <section className="py-10" aria-labelledby="timeline-heading">
-          <h2 id="timeline-heading" className="section-label">
+          <h2 id="timeline-heading" className="section-label" data-ponyo-perch="text">
             {content.timelineHeading}
           </h2>
           <ol className="experience-list mt-8">
             {content.timeline.map((item) => (
               <li key={`${item.startDate}-${item.place}`} className="experience-item">
-                <time className="experience-date" dateTime={item.startDate}>
+                <time className="experience-date" dateTime={item.startDate} data-ponyo-perch="text">
                   {new Intl.DateTimeFormat("en-US", {
                     month: "long",
                     year: "numeric",
