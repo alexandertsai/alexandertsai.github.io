@@ -1,0 +1,9 @@
+# Ponyo website sprites
+
+The standing, walking, waving, jumping, and directional frames use the original `public/pets/ponyo/spritesheet.webp` (8 columns, 11 rows, 192 × 208 pixels per frame).
+
+`public/pets/ponyo/sitting.png` was generated with the built-in image generation tool using the original atlas as a visual reference. It has four 543 × 724 pixel cells. The client compensates for each frame's transparent padding to align the seated pose with the landing surface. The original atlas is unchanged.
+
+Generation prompt:
+
+> Use case: identity-preserve. Create a website sprite asset using the attached Ponyo sprite atlas ONLY as character and pixel-art style reference. Output a transparent PNG with a single horizontal row of FOUR equally spaced animation frames in identical square cells. Each frame is the SAME small chunky pixel Ponyo seated comfortably with knees bent and small cream feet together at ground level, red tunic, coral red blocky bobbed hair, peach square face, tiny charcoal rectangular eyes and rosy cheeks. Frame 1 settling into sitting, frame 2 resting seated eyes open, frame 3 resting seated blinking, frame 4 seated eyes open slight head tilt. Preserve the exact reference's low-resolution geometric pixel blocks and palette, no outlines added, no gradients, no antialiasing, no scene or props. Same character scale and same ground baseline at 90% cell height across all four frames. Seated character height approximately 65% of cell; head same size across frames. Real transparent background, not a checkerboard. No text, labels, watermarks, borders, or grid lines. Output wide 4:1 strip if possible; four complete separated equal square cells, one pose centered in each. The character must visibly be SITTING, with bottom and feet on the baseline, not standing or crouching.

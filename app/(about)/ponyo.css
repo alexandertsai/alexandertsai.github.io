@@ -1,0 +1,112 @@
+.home-page {
+  padding-bottom: 144px;
+}
+
+.ponyo-companion {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.ponyo-pet {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 42px;
+  height: 45.5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  visibility: hidden;
+}
+
+.ponyo-greeting {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(232px, calc(100vw - 24px));
+  padding: 8px 10px;
+  color: #503d35;
+  background: #fff9e8;
+  box-shadow: -2px 0 #80614e, 2px 0 #80614e, 0 -2px #80614e, 0 2px #80614e, 4px 4px #80614e30;
+  font: 11px/1.5 var(--font-jetbrains-mono), monospace;
+}
+
+.ponyo-greeting::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: var(--tail-left, 50%);
+  width: 6px;
+  height: 6px;
+  background: #fff9e8;
+  box-shadow: -2px 0 #80614e, 2px 0 #80614e, 0 2px #80614e;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 639px) {
+  .home-page header {
+    padding-bottom: 128px;
+  }
+}
+
+.ponyo-pet:disabled {
+  pointer-events: none;
+}
+
+.ponyo-sprite {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: url("/pets/ponyo/spritesheet.webp");
+  background-size: 800% 1100%;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+
+.ponyo-sprite[data-pose="sit"] {
+  left: -7.5%;
+  width: 115%;
+  height: auto;
+  aspect-ratio: 543 / 724;
+  background-image: url("/pets/ponyo/sitting.png");
+  background-size: 400% 100%;
+}
+
+.ponyo-toggle {
+  position: absolute;
+  right: 16px;
+  bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  border: 1px solid #bccbc2;
+  border-radius: 4px;
+  padding: 3px 7px;
+  color: #365d4d;
+  background: #faf9f6;
+  font: 11px/1.4 Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.ponyo-toggle:hover {
+  background: #edf0e9;
+}
+
+.ponyo-companion button:focus-visible {
+  outline: 2px solid #567368;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (max-width: 480px) {
+  .ponyo-pet {
+    width: 36px;
+    height: 39px;
+  }
+}
