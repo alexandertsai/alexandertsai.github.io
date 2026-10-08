@@ -6,6 +6,9 @@ import ProfilePicture from "./ProfilePicture";
 export default function Home() {
   return (
     <main className="home-page min-h-screen px-6 py-14 sm:py-24">
+      {process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL && (
+        <link rel="stylesheet" href={process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL} />
+      )}
       <div className="mx-auto max-w-[680px]">
         <header data-ponyo-perch="divider" className="flex flex-col gap-6 border-b border-stone-200 pb-10 sm:flex-row sm:items-center">
           <ProfilePicture src={content.photo} name={content.name} />
@@ -28,7 +31,7 @@ export default function Home() {
           <h2 id="about-heading" className="section-label" data-ponyo-perch="text">
             {content.aboutHeading}
           </h2>
-          <p className="mt-4 max-w-[570px] text-[16px] leading-7 text-gray-800">
+          <p className="intro-copy mt-4 max-w-[570px]">
             {content.about}
           </p>
         </section>
@@ -37,7 +40,7 @@ export default function Home() {
           <h2 id="timeline-heading" className="section-label" data-ponyo-perch="text">
             {content.timelineHeading}
           </h2>
-          <ol className="experience-list mt-8">
+          <ol className="experience-list mt-4">
             {content.timeline.map((item) => (
               <li key={`${item.startDate}-${item.place}`} className="experience-item">
                 <time className="experience-date" dateTime={item.startDate} data-ponyo-perch="text">
@@ -46,13 +49,13 @@ export default function Home() {
                     year: "numeric",
                     timeZone: "UTC",
                   }).format(new Date(`${item.startDate}-01T00:00:00Z`))}
+                  :
                 </time>
-                <h3 className="experience-heading">{item.place}</h3>
                 <details className="experience-details">
                   <summary>
-                    <span className="experience-summary">{item.summary}</span>
+                    <span className="experience-summary"><span className="experience-heading">{item.place}</span> — {item.summary}</span>
                   </summary>
-                  <div className="experience-body mt-3 space-y-3 pl-5">
+                  <div className="experience-body mt-2 space-y-3">
                     {item.details.split(/\n\s*\n/).map((paragraph, index) => (
                       <p key={index}>
                         {paragraph.split(/(\[[^\]]+\]\(https?:\/\/[^\s)]+\))/g).map((part, partIndex) => {

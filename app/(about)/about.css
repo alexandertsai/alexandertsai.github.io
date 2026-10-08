@@ -1,69 +1,5 @@
-.section-label {
-  color: #6b7280;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.experience-details {
-  margin-top: 0.25rem;
-}
-
-.experience-details summary {
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: 12px minmax(0, 1fr);
-  column-gap: 8px;
-  list-style: none;
-}
-
-.experience-details summary::-webkit-details-marker {
-  display: none;
-}
-
-.experience-details summary::before {
-  align-self: start;
-  border-bottom: 5px solid transparent;
-  border-left: 7px solid #9ca3af;
-  border-top: 5px solid transparent;
-  content: "";
-  height: 0;
-  margin-top: calc((1.5rem - 10px) / 2);
-  transform-origin: 3px 5px;
-  transition: border-color 150ms ease, transform 150ms ease;
-  width: 0;
-}
-
-.experience-details[open] summary::before {
-  transform: rotate(90deg);
-}
-
-.experience-heading {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.experience-summary,
-.experience-body {
-  color: #4b5563;
-  font-size: 15px;
-  line-height: 1.5rem;
-}
-
-.experience-summary {
-  grid-column: 2;
-}
-
-.experience-details summary:hover::before {
-  border-left-color: #111827;
-}
-
-.experience-details summary:hover .experience-summary {
-  color: #111827;
-}
-
 .home-page {
+  --font-home-copy: "warnock-pro", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
   font-family: Arial, Helvetica, sans-serif;
   background: #faf9f6;
   color: #242b29;
@@ -75,11 +11,10 @@
 
 .home-page .section-label {
   color: #147d88;
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: 0.04em;
+  font-family: var(--font-home-copy);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
 }
 
 .home-page .profile-link {
@@ -92,63 +27,67 @@
   text-decoration-color: currentColor;
 }
 
+.intro-copy,
 .experience-list {
-  padding-left: 8px;
+  font-family: var(--font-home-copy);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.intro-copy {
+  color: #242b29;
+}
+
+.experience-list {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 8px;
+  padding: 0;
+  list-style: none;
 }
 
 .experience-item {
-  position: relative;
-  padding: 0 0 2.5rem 2rem;
-}
-
-.experience-item::before {
-  position: absolute;
-  content: "";
-  top: 10px;
-  bottom: -10px;
-  left: 0;
-  width: 1px;
-  background: #bccbc2;
-}
-
-.experience-item::after {
-  position: absolute;
-  content: "";
-  top: 5px;
-  left: -5px;
-  width: 11px;
-  height: 11px;
-  border: 1.5px solid #567368;
-  border-radius: 50%;
-  background: #faf9f6;
-}
-
-.experience-item:first-child::after {
-  border-color: #365d4d;
-  background: #365d4d;
-  box-shadow: 0 0 0 5px #365d4d14;
-}
-
-.experience-item:last-child {
-  padding-bottom: 0;
-}
-
-.experience-item:last-child::before {
-  display: none;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: baseline;
 }
 
 .experience-date {
-  display: block;
-  margin-bottom: 0.65rem;
-  color: #567368;
-  font-size: 14px;
-  line-height: 21px;
+  color: #242b29;
+  font: inherit;
+  white-space: nowrap;
 }
 
-.home-page .experience-heading {
-  font-size: 1rem;
+.experience-details {
+  min-width: 0;
 }
 
-.home-page .experience-details[open] {
-  padding-bottom: 0.25rem;
+.experience-details summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.experience-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.experience-heading {
+  font-weight: 600;
+}
+
+.experience-details summary:hover,
+.experience-details[open] .experience-heading {
+  color: #365d4d;
+}
+
+.experience-body {
+  color: #4b5563;
+  padding-bottom: 12px;
+}
+
+@media (max-width: 480px) {
+  .experience-list {
+    column-gap: 6px;
+  }
 }

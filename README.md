@@ -118,6 +118,8 @@ The build creates the static site in `out/`. Pushing to `main` publishes it thro
 
 ## Edit the About page and section images
 
+The About paragraph and timeline use Warnock Pro when an Adobe Fonts kit is configured. Set `NEXT_PUBLIC_ADOBE_FONTS_KIT_URL` to your own kit stylesheet URL in `.env.local` for local previews and in the build environment for publishing. Without a kit, the page falls back to Palatino or Georgia. Font loading is scoped to the homepage.
+
 Edit `content/about/page.json` for the About paragraph, navigation, and experience timeline. Each timeline entry has `startDate` (`YYYY-MM`), `place`, `summary`, and `details`. Separate paragraphs in `details` with `\n\n`. Inline links use `[TEDx talk](https://example.com)` and open in a new tab.
 
 Replace `content/about/profile.webp` or `resume.pdf` to update those files. Professional blog artwork is in `content/blog/assets/`; journal cover and profile art are in `content/personal/assets/`.

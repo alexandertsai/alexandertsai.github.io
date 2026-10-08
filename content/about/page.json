@@ -17,10 +17,6 @@
     {
       "label": "Résumé",
       "href": "/_content/about/resume.pdf"
-    },
-    {
-      "label": "Blog",
-      "href": "/blog/"
     }
   ],
   "timeline": [
@@ -50,7 +46,7 @@
     },
     {
       "place": "Tradeweb",
-      "summary": "Modeled transaction costs across historical trading data.",
+      "summary": "Modeled transactions for mortgage-backed securities.",
       "details": "I would say this is what really sparked my interest in data science. I worked mainly with Mortgage-Backed Securities, aiming to model the transaction cost of a trade given the volume, coupon, time, and other factors. There is something incredibly satisfying about the intersection between having the data science skills to build the model but needing the financial knowledge to validate it.",
       "startDate": "2025-05"
     },
