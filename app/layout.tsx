@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "./components/site.css";
+import "../public/typography.css";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -8,12 +10,18 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://alexandertsai.github.io"),
   title: "Alexander Tsai",
   description:
-    "Alexander Tsai is a machine learning researcher and student based in Berkeley, California.",
-  icons: {
-    icon: "/tik-tok.svg",
+    "Machine learning engineer and aspiring AI researcher working on image forensics, multimodal models and interpretability.",
+  openGraph: {
+    title: "Alexander Tsai",
+    description: "Machine learning engineer and aspiring AI researcher.",
+    url: "/",
+    siteName: "Alexander Tsai",
+    type: "website",
   },
+  twitter: { card: "summary_large_image", title: "Alexander Tsai" },
 };
 
 export default function RootLayout({

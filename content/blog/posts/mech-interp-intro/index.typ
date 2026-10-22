@@ -1,0 +1,2 @@
+Neural networks are often thought of black boxes that perform tasks that we cannot write programs to do. For example, it is almost impossible to manually code a function to differentiate between a picture of a cat and a dog. You can however, train a neural network to do this task (very well)! At the heart of this network is a bunch of weights (numbers) that are performing a multitude of simple mathematical operations with our input image. How exactly these weights work together to produce an output can be thought of as mechanistic interpretability.
+

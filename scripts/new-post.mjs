@@ -23,9 +23,15 @@ const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')
 const directory = path.resolve('content', section, 'posts', section === 'personal' ? `${date}-${slug}` : slug);
 if (fs.existsSync(directory)) throw new Error(`Post already exists: ${directory}`);
 fs.mkdirSync(directory, { recursive: true });
-const file = path.join(directory, 'index.md');
-fs.writeFileSync(file, `---\ntitle: ${JSON.stringify(title)}\ndate: "${date}"\ndraft: true\n---\n\n`);
-console.log(`Created ${file}\n\nWrite in index.md. Drop images beside it and use ![Description](./photo.jpg).\nPreview with npm run dev. Set draft: false when ready to publish.`);
+const file = path.join(directory, section === 'blog' ? 'index.typ' : 'index.md');
+if (section === 'blog') {
+  fs.writeFileSync(file, '');
+  fs.writeFileSync(path.join(directory, 'post.json'), JSON.stringify({ title, date, preview: '', draft: true }, null, 2) + '\n');
+  console.log(`Created ${file}\n\nWrite native Typst in index.typ, or open the browser editor with npm run write. Set draft to false in post.json when ready.`);
+} else {
+  fs.writeFileSync(file, `---\ntitle: ${JSON.stringify(title)}\ndate: "${date}"\ndraft: true\n---\n\n`);
+  console.log(`Created ${file}\n\nWrite Markdown in index.md. Keep images beside the post. Preview with npm run dev.`);
+}
 if (process.argv.includes('--open')) {
   const editor = spawn('code', ['--reuse-window', file], { stdio: 'ignore' });
   editor.on('error', () => console.log('Open the file above in VS Code. To enable automatic opening, install the code command from the VS Code Command Palette.'));

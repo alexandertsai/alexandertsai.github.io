@@ -1,0 +1,14 @@
+Generated with the built-in GPT image generation tool, using ocean.webp as the style reference.
+
+ocean-still
+
+Use case: precise-object-edit. Edit this ocean footer illustration. Remove ONLY the tiny red toy boat and its smoke in the left third; fill the area naturally with the same sea and white sky. Preserve the watercolor fish-shaped waves, composition, colors, texture, white sky, bottom deep teal, and wide 3:1 aspect ratio exactly. No other changes. This will be a stationary background behind separately animated foreground waves and a boat.
+
+boat
+
+Use case: illustration-story. Generate a separate website animation asset using the attached ocean image as a STYLE REFERENCE ONLY. A single little toy steam boat, full side view with bow pointing right: red painted hull, ivory cabin, three round teal portholes, golden yellow trim, one short black smokestack with a warm red band. Hand-painted watercolor and delicate pencil outlines precisely matching the boat in the reference image, nostalgic Ponyo seaside aesthetic. Charming and simple, no people, no smoke, no waves, no water, no shadows outside object, no background, no text. Entire boat visible, centered, tight generous cutout margin around its silhouette, genuine alpha transparency. Wide landscape 3:2 composition. This cutout will bob independently on the water.
+
+wave-layer
+
+Use case: illustration-story. Generate a website animation layer using the attached ocean scene as a STYLE REFERENCE ONLY. A wide 3:1 horizontally seamless repeating strip of hand-painted turquoise ocean swells. Transparent sky above a low irregular softly rounded wave crest with little ivory foam highlights. Upper 20% entirely transparent; wave crests around 25%-45% height, lower area filled with deep teal blue-green water that gently becomes flat #17606a at the very bottom. Watercolor wash and restrained gouache texture, delicate hand-painted animation aesthetic like the reference. Calm rolling swells, no huge storm, no fish eyes, no boat, no people, no horizon, no text. Production animation background layer. Left and right edges must join seamlessly at the same crest height, foam arrangement, and water color. Crests flow through both side boundaries naturally, no vignette and no faded edges. Genuine transparency outside water silhouette.
+

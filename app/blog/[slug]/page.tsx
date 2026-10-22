@@ -8,7 +8,9 @@ type Props = { params: Promise<{ slug: string }> };
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getBlogPosts().map(({ slug }) => ({ slug }));
+  const posts = getBlogPosts().map(({ slug }) => ({ slug }));
+  // Static export requires a parameter even when every post is archived.
+  return posts.length ? posts : [{ slug: "__empty__" }];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

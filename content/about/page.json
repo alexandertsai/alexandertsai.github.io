@@ -1,60 +1,161 @@
 {
   "name": "Alexander Tsai",
-  "location": "Berkeley",
-  "photo": "/_content/about/profile.webp",
-  "aboutHeading": "About",
-  "about": "I'm currently an exchange student at UC Berkeley and a machine learning engineer interested in applied research. My work involves building models in the frequency domain to identify images that have been edited by AI. I have also recently taken a great interest in mechanistic interpretability.",
-  "timelineHeading": "Recently",
+  "about": "I'm a machine learning engineer working on **AI image detection**, interpretability, and content moderation at TikTok. I'm also currently a visiting student at UC Berkeley!",
+  "personal": "Outside of work, I play the drums and generally just love meeting people!",
+  "facts": [
+    {
+      "label": "Based in",
+      "value": "Berkeley, CA"
+    },
+    {
+      "label": "Work auth",
+      "value": "US citizen"
+    }
+  ],
+  "resume": "/_content/about/resume.pdf",
   "links": [
     {
       "label": "Email",
-      "href": "mailto:alexyrtsai@gmail.com"
+      "href": "mailto:alexyrtsai@gmail.com",
+      "icon": "mail"
+    },
+    {
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/alexandertsaiyihrae",
+      "icon": "linkedin"
     },
     {
       "label": "GitHub",
-      "href": "https://github.com/alexandertsai"
-    },
-    {
-      "label": "Résumé",
-      "href": "/_content/about/resume.pdf"
+      "href": "https://github.com/alexandertsai",
+      "icon": "github"
     }
   ],
-  "timeline": [
+  "experience": [
     {
-      "place": "UC Berkeley",
-      "summary": "Joined as a global access student under the Data Science program.",
-      "details": "I've mainly been taking lots of fascinating classes and meeting so many new people!",
-      "startDate": "2026-08"
+      "org": "TikTok",
+      "title": "Research Scientist Intern",
+      "location": "San Jose, CA",
+      "dates": "Sep 2026 – Present",
+      "summary": "Developed an **AI-generated image classifier** with **99.85% precision and 76% recall** on production data, and 66% recall on unseen generators. Curated 1.6M AI-edited images; global deployment is projected to reduce refund abuse losses by $4M annually."
     },
     {
-      "place": "ExodusPoint",
-      "summary": "Joined as a Quantitative Research intern, focusing on credit.",
-      "details": "I focused on CDX (an index of credit default swaps), working largely on how we can represent credit markets in a transformer architecture.",
-      "startDate": "2026-05"
+      "org": "ExodusPoint Capital Management",
+      "title": "Quantitative Research Intern",
+      "location": "New York, NY",
+      "dates": "May – Aug 2026",
+      "summary": "Developed a **credit-market trading signal** from six years of intraday data. Evaluated an external dataset, saving $75k annually, and modeled trade direction and volume using Weibull curves and decision trees."
     },
     {
-      "place": "TikTok",
-      "summary": "Research on how to detect AI-edited images.",
-      "details": "My work was centred around preventing refund fraud. I analysed images in the frequency domain to detect artefacts left behind by AI image models. Later work also involved creating large datasets for fine-tuning. Ensuring data quality in gigantic datasets is surprisingly an incredibly difficult task.",
-      "startDate": "2026-01"
+      "org": "TikTok",
+      "title": "Machine Learning Engineer Intern",
+      "location": "San Jose, CA · Singapore",
+      "dates": "Jul 2025 – May 2026",
+      "summary": "Built and deployed a **Qwen3-VL, vLLM, and XGBoost** content moderation pipeline enforcing 4,000+ accounts daily. **GRPO** fine-tuning improved video feature extraction accuracy by 12%; inference optimizations increased throughput **5.35×**."
     },
     {
-      "place": "TikTok",
-      "summary": "Utilising VLMs for content moderation.",
-      "details": "This was my first experience with open source LLMs! I worked on improving Qwen's performance through SFT and RL while also focusing on high throughput. I spent a lot of time maximising performance using vLLM and flash attention. This involved reading documentation (gulp)... I also ran several SFT/RL experiments to improve the general ability of the model to detect desired features within videos.",
-      "startDate": "2025-07"
+      "org": "Tradeweb",
+      "title": "Data Science Intern",
+      "location": "New York, NY",
+      "dates": "May – Jul 2025",
+      "summary": "Built an **XGBoost** transaction-cost model using five years of trades totaling $4.7T in notional volume. Hyperparameter optimization and SHAP-guided feature engineering reduced **RMSE by 21%** over baseline."
+    }
+  ],
+  "research": [
+    {
+      "org": "Reach Alliance",
+      "title": "Research Fellow",
+      "location": "Singapore",
+      "dates": "May 2024 – May 2025",
+      "summary": "Developed a **multilingual RAG chatbot** with LangChain and Firestore to support migrant workers’ financial literacy. Findings were published and presented at a University of Toronto conference and in a TEDx talk."
     },
     {
-      "place": "Tradeweb",
-      "summary": "Modeled transactions for mortgage-backed securities.",
-      "details": "I would say this is what really sparked my interest in data science. I worked mainly with Mortgage-Backed Securities, aiming to model the transaction cost of a trade given the volume, coupon, time, and other factors. There is something incredibly satisfying about the intersection between having the data science skills to build the model but needing the financial knowledge to validate it.",
-      "startDate": "2025-05"
+      "org": "Sustainable Learning Lab 2",
+      "title": "AI for Youth Instructor",
+      "location": "Singapore",
+      "dates": "Aug – Dec 2024",
+      "summary": "Taught **Python, statistics, and neural networks** to 30 students in Intel’s AI for Youth program. Guided six teams on capstone projects, including computer vision attendance systems and emotional-support chatbots."
+    }
+  ],
+  "education": [
+    {
+      "school": "University of California, Berkeley",
+      "detail": "Visiting student, Global Computing and Data Science Program",
+      "dates": "Aug – Dec 2026",
+      "note": ""
     },
     {
-      "place": "Reach Alliance",
-      "summary": "Developed chatbots to help migrant workers.",
-      "details": "I worked with migrant workers in Singapore to develop a multilingual RAG chatbot. This was an extremely rich learning experience for me, both culturally and in a technical sense. We published the findings and presented the research at a University of Toronto conference. I even got to give a [TEDx talk](https://www.youtube.com/watch?v=3C1R1JlOQEk)!",
-      "startDate": "2024-05"
+      "school": "Singapore Management University",
+      "detail": "B.S. in Human-Computer Interactions",
+      "dates": "Aug 2023 – May 2027 (expected)",
+      "note": "Dean’s List AY2024–2026"
+    }
+  ],
+  "talks": [
+    {
+      "title": "Financial Literacy for Migrant Workers Through Conversational AI",
+      "venue": "Reach Alliance report · University of Toronto conference",
+      "href": "https://reachalliance.org/wp-content/uploads/2024/05/FINAL_Financial-Literacy-Ai.pdf"
+    },
+    {
+      "title": "Behavioural Sciences and Conversational AI",
+      "venue": "TEDx talk",
+      "href": "https://www.youtube.com/watch?v=3C1R1JlOQEk"
+    }
+  ],
+  "projects": [
+    {
+      "title": "CS180: computer vision",
+      "note": "Computer vision experiments with filters, frequencies and image alignment.",
+      "href": "https://alexandertsai.github.io/cs180/"
+    },
+    {
+      "title": "Mechanistic interpretability notebooks",
+      "note": "Notebooks rebuilding transformer models from scratch.",
+      "href": "https://github.com/alexandertsai/foundational-mechanistic-interpretability"
+    },
+    {
+      "title": "Telegram MCP server",
+      "note": "An MCP server connecting Claude and Telegram.",
+      "href": "https://github.com/alexandertsai/mcp-telegram"
+    },
+    {
+      "title": "Footfall analysis",
+      "note": "Visitor counting using YOLOv8 object detection.",
+      "href": "https://github.com/alexandertsai/footfall-analysis"
+    }
+  ],
+  "skills": [
+    {
+      "group": "Programming",
+      "items": [
+        "Python",
+        "Bash",
+        "R",
+        "SQL"
+      ]
+    },
+    {
+      "group": "ML libraries",
+      "items": [
+        "PyTorch",
+        "vLLM",
+        "Transformers",
+        "scikit-learn",
+        "OpenCV",
+        "LangChain"
+      ]
+    },
+    {
+      "group": "Infrastructure & data",
+      "items": [
+        "Docker",
+        "Kubernetes",
+        "Spark",
+        "Polars",
+        "Pandas",
+        "NumPy",
+        "Git"
+      ]
     }
   ]
 }

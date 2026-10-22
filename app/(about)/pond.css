@@ -1,0 +1,19 @@
+.pond { position: fixed; inset: 0; z-index: -1; pointer-events: none; background-image: linear-gradient(#b7c6a803 1px, transparent 1px), linear-gradient(90deg, #b7c6a803 1px, transparent 1px); background-size: 7px 10px; }
+.pond canvas { width: 100%; height: 100%; display: block; }
+.pond-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 45% 43%, transparent 38%, #080a0940 100%); }
+.pond-controls { position: fixed; bottom: 20px; left: 30px; right: 30px; display: flex; justify-content: space-between; z-index: 5; pointer-events: none; }
+.pond-controls button { pointer-events: auto; cursor: pointer; padding: 8px 11px; border: 1px solid #ffffff0c; background: #080a09d9; border-radius: 4px; font-family: var(--font-jetbrains-mono), Menlo, Consolas, monospace; font-size: 10px; color: #9da392; transition: color 180ms, border-color 180ms; }
+.pond-controls button:hover { color: #dedfd4; border-color: #ffffff30; }
+.pond-controls .pond-secret { letter-spacing: 2px; }
+.ascii-ponyo { position: fixed; bottom: 65px; left: 20px; z-index: 4; pointer-events: none; animation: ponyo-cross 18s linear infinite; }
+.ascii-ponyo pre { font: 10px/10px Menlo, Consolas, monospace; color: #d46b50; animation: ponyo-step .24s ease-in-out infinite alternate; text-shadow: 0 2px 12px #080a09; }
+.ascii-ponyo pre span { color: #e5bd96; }
+@keyframes ponyo-cross { to { transform: translateX(100vw); } }
+@keyframes ponyo-step { to { transform: translateY(-8px) rotate(4deg); } }
+@media (prefers-reduced-motion: reduce) { .ascii-ponyo { left: auto; right: 18%; animation: none; } .ascii-ponyo pre { animation: none; } }
+.pond-small canvas { opacity: .62; }
+@media (max-width: 760px) {
+  .pond-controls { left: 16px; right: 16px; bottom: 12px; }
+  .pond canvas { opacity: .7; }
+  .pond-vignette { background: linear-gradient(90deg, #080a0940 30%, transparent); }
+}

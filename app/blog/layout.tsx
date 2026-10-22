@@ -1,22 +1,27 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import SiteHeader from "../components/SiteHeader";
+import KoiPond from "../(about)/KoiPond";
 import "./blog.css";
 
 export const metadata: Metadata = {
   title: "Blog | Alexander Tsai",
-  description: "Writing on internships, teaching, and technical projects by Alexander Tsai.",
+  description: "Writing by Alexander Tsai.",
 };
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="professional-blog">
-      <div className="blog-banner" />
-      <header className="blog-header">
-        <Image src="/_content/blog/assets/profile.jpg" alt="Alexander Tsai" className="blog-profile" width={120} height={120} priority />
-        <h1>Alexander Tsai</h1>
-        <p>My website where I post writings and other projects!</p>
+      <KoiPond small />
+      {process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL && (
+        <link rel="stylesheet" href={process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL} />
+      )}
+      <SiteHeader />
+      <header className="blog-header site-width" data-pond-text>
+        <p className="blog-eyebrow">Alexander Tsai / Writing</p>
+        <h1>Writing<span>.</span></h1>
       </header>
       {children}
+      <footer className="site-footer site-width" data-pond-text><span>Alexander Tsai</span><a href="mailto:alexyrtsai@gmail.com">Get in touch ↗</a></footer>
     </div>
   );
 }

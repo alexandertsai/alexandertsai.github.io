@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import "./ponyo.css";
-import { chooseGreetingPerch, isSurfaceVisible, measureSurfaces, resolvePerch, type Perch, type Point, type Surface } from "./ponyo-surfaces";
+import { chooseGreetingPerch, isSurfaceVisible, measureSurfaces, nearbyPerches, resolvePerch, MAX_JUMP_DISTANCE, MAX_JUMP_HEIGHT, type Perch, type Point, type Surface } from "./ponyo-surfaces";
 
 const animations = {
   idle: { row: 0, frames: 6 },
@@ -14,7 +14,15 @@ const animations = {
 
 type Animation = keyof typeof animations;
 
-export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivElement | null> }) {
+export default function Ponyo({
+  originRef,
+  leapFromOrigin = false,
+  greeting = "thank you for reading! feel free to send an email and say hi.",
+}: {
+  originRef: RefObject<HTMLDivElement | null>;
+  leapFromOrigin?: boolean;
+  greeting?: ReactNode;
+}) {
   const petRef = useRef<HTMLButtonElement>(null);
   const greetingRef = useRef<HTMLDivElement>(null);
   const greetingUntil = useRef<number | null>(null);
@@ -83,13 +91,11 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
       }
     };
     const choosePerch = (): Perch | null => {
-      const candidates = surfaces.filter(visible);
-      const alternatives = candidates.filter((surface) => surface.id !== perch?.id);
-      const nearest = (alternatives.length ? alternatives : candidates)
-        .sort((a, b) => Math.hypot((a.left + a.right) / 2 - point.x, a.y - point.y) - Math.hypot((b.left + b.right) / 2 - point.x, b.y - point.y))
-        .slice(0, 5);
+      const candidates = nearbyPerches(surfaces.filter(visible), point, (Math.random() - 0.5) * 64);
+      const alternatives = candidates.filter((spot) => spot.id !== perch?.id);
+      const nearest = (alternatives.length ? alternatives : candidates).slice(0, 3);
       const chosen = nearest[Math.floor(Math.random() * nearest.length)];
-      return chosen ? { id: chosen.id, fraction: 0.2 + Math.random() * 0.6 } : null;
+      return chosen ?? null;
     };
     const draw = () => {
       sprite.dataset.pose = state === "sit" ? "sit" : "stand";
@@ -144,7 +150,9 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
           }, Math.max(0, greetingUntil.current! - performance.now()));
         }
         const left = clamp(point.x - greeting.offsetWidth / 2, 12, window.innerWidth - greeting.offsetWidth - 12);
-        const top = point.y - window.scrollY - height - greeting.offsetHeight - 3;
+        const above = point.y - window.scrollY - height - greeting.offsetHeight - 8;
+        const top = above < 12 ? point.y - window.scrollY + 10 : above;
+        greeting.dataset.placement = above < 12 ? "below" : "above";
         greeting.style.transform = `translate3d(${left}px, ${Math.max(12, top)}px, 0)`;
         greeting.style.setProperty("--tail-left", `${clamp(point.x - left, 16, greeting.offsetWidth - 16)}px`);
       }
@@ -153,7 +161,7 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
     const rest = () => {
       walkTarget = null;
       change("sit");
-      nextAction = elapsed + 2600 + Math.random() * 2000;
+      nextAction = elapsed + 5000 + Math.random() * 4000;
     };
     const pace = () => {
       const surface = surfaceFor(perch);
@@ -176,14 +184,15 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
     const jumpTo = (to: Perch) => {
       const target = resolve(to);
       const distance = Math.hypot(target.x - point.x, target.y - point.y);
-      flight = { from: { ...point }, to, start: elapsed, duration: clamp(distance * 1.8, 600, 1300), arc: clamp(distance * 0.2, 28, 90) };
+      if (distance > MAX_JUMP_DISTANCE || Math.abs(target.y - point.y) > MAX_JUMP_HEIGHT) return;
+      flight = { from: { ...point }, to, start: elapsed, duration: clamp(distance * 3, 500, 800), arc: clamp(distance * 0.16, 14, 30) };
       restingRef.current = to;
       walkTarget = null;
       change("jump");
       started = elapsed;
     };
     const settle = () => {
-      if (!surfaceFor(perch)) perch = choosePerch();
+      if (!surfaceFor(perch)) perch = choosePerch() ?? greetingPerch();
       if (perch) {
         point = resolve(perch);
         restingRef.current = perch;
@@ -209,8 +218,7 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
       const engaged = interaction.current.hovered || interaction.current.focused;
       const destination = surfaceFor(flight ? flight.to : perch);
       if (!destination || !visible(destination)) {
-        const greetingActive = flight?.entrance || (greetingUntil.current !== null && performance.now() < greetingUntil.current);
-        const next = greetingActive ? greetingPerch() ?? choosePerch() : choosePerch();
+        const next = choosePerch();
         if (next) {
           if (perch || flight) {
             const entrance = flight?.entrance;
@@ -221,7 +229,9 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
         } else {
           flight = null;
           walkTarget = null;
-          perch = null;
+          perch = greetingPerch();
+          settle();
+          rest();
         }
       }
       if (interaction.current.jump && !(greetingUntil.current && performance.now() < greetingUntil.current)) {
@@ -270,6 +280,7 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
         } else if (elapsed >= nextAction) {
           const next = choosePerch();
           if (next) jumpTo(next);
+          else rest();
         }
         point = resolve(perch);
         restingRef.current = perch;
@@ -289,11 +300,13 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
     measure();
     const origin = originRef.current?.getBoundingClientRect();
     if (!enteredRef.current && origin && !stopped && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const target = greetingPerch() ?? choosePerch();
+      point = { x: origin.left + origin.width / 2, y: origin.bottom + window.scrollY };
+      const target = choosePerch() ?? greetingPerch();
       if (target) {
         const destination = resolve(target);
-        point = { x: destination.x, y: destination.y + height * 0.5 };
-        flight = { from: { ...point }, to: target, start: elapsed, duration: 650, arc: 55, entrance: true };
+        const nearby = Math.hypot(destination.x - point.x, destination.y - point.y) <= MAX_JUMP_DISTANCE && Math.abs(destination.y - point.y) <= MAX_JUMP_HEIGHT;
+        if (!leapFromOrigin || !nearby) point = { x: destination.x, y: destination.y + height * 0.25 };
+        flight = { from: { ...point }, to: target, start: elapsed, duration: 650, arc: 26, entrance: true };
         restingRef.current = target;
         change("jump");
       } else settle();
@@ -333,12 +346,12 @@ export default function Ponyo({ originRef }: { originRef: RefObject<HTMLDivEleme
       document.removeEventListener("pointerleave", leave);
       document.removeEventListener("visibilitychange", visibility);
     };
-  }, [stopped, originRef]);
+  }, [stopped, originRef, leapFromOrigin]);
 
   return (
     <aside className="ponyo-companion" aria-label="Ponyo companion">
       <div ref={greetingRef} className="ponyo-greeting" role="status" hidden>
-        thank you for reading! feel free to send an email and say hi.
+        {greeting}
       </div>
       <button
         ref={petRef}

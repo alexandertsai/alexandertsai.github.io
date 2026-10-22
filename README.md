@@ -1,131 +1,145 @@
 # Personal website
 
-Edit writing and images in `content/`. Page code lives in `app/`. The existing URLs and designs are unchanged.
+Next.js exports this site to GitHub Pages. The homepage is at `/`, the blog at `/blog/`, and the personal journal at `/personal/`.
+
+## Write blog posts with Typst
+
+```sh
+npm ci
+npm run write
+```
+
+Open http://127.0.0.1:4310. This editor runs locally and saves into this repository. GitHub Pages hosts the published articles, not the editor. Change the editor port with `EDITOR_PORT=4311 npm run write`.
+
+1. Click **New post** and enter a title, URL, and date.
+2. Write native Typst in the source pane. The persistent compiler renders the entire document as SVG, including text, math, images, tables, and diagrams. Compile time is shown above the preview.
+3. Paste or drop images into the source pane, or click **Add image**. Images save beside the document and the editor inserts `#image(...)`. Add useful alternative text. New posts save as drafts before the first image upload.
+4. Click **Save post** or press Cmd/Ctrl+S. Source saves to `index.typ` and metadata to `post.json`. Unsaved source is also backed up in browser storage where available. Conflicting disk edits are rejected.
+5. Choose **Ready to publish**, save, commit the post folder, and push to `main`.
+
+Saving does not push to GitHub. Drafts are excluded from production along with their media; they appear in the local site preview. Invalid Typst can be saved as a draft but cannot be marked ready. Preview errors keep the last valid document visible.
+
+Preview updates after a 50 ms typing pause. The same compiler stays alive between edits so Typst can reuse previous work. The frame updates in place, preserving scroll position. Resizing the pane recompiles at the new width. Production builds generate narrow, medium, and wide layouts for responsive reading, using the same compiler and default styles.
+
+The URL becomes the folder name. Edit it and save to rename the post and move its images together. Existing URLs cannot be overwritten. Changing a published URL replaces its old address. Posts appear at `/blog/<url>/`; `/blog/` shows the newest post.
+
+## Typst syntax
+
+```typst
+= Introduction
+
+This is *bold* and this is _italic_.
+
+Inline math: $x^2 + y^2 = z^2$.
+
+$ sum_(i=1)^n i = (n(n+1))/2 $
+
+- First point
+- Second point
+
+#link("https://typst.app/docs/")[Typst documentation]
+
+#table(columns: 2, [A], [B], [1], [2])
+
+#image("./photo.png", width: 100%, alt: "Photo description")
+```
+
+Write Typst directly; there is no Markdown parser in the blog. Headings start with `=`, bold uses `*text*`, italic uses `_text_`, and display math has spaces inside `$ ... $`. Use set/show rules and Typst functions as usual. Post-local images, included `.typ` files, and data files resolve inside the post folder. PNG, JPG, WebP, and GIF uploads up to 10 MB are supported; local SVG images may also be referenced directly in Typst.
+
+The compiler runtime comes from the npm dependency; a separate Typst CLI installation is not required. The preview and published output embed glyphs and images, so readers need neither fonts nor a compiler installed. The web SVG output includes a text selection layer.
+
+Native Typst uses actual font files, not browser CSS. It defaults to embedded Libertinus Serif for reproducible preview and deployment. To use Warnock Pro, place licensed desktop font files in `content/blog/fonts/`; see that folder's README. The homepage uses Helvetica Neue/Helvetica/Arial for body text and system monospace fonts for labels and metadata. Blog interface fonts are defined in `public/typography.css`.
+
+## Content layout
 
 ```text
 content/
   about/
-    page.json                 About text, links, and experience
-    profile.webp              About photo
-    resume.pdf                Résumé
+    page.json                 Homepage text, links, and experience
+    resume.pdf
   blog/
-    assets/                   Painting banner and profile photo
+    assets/impression-sunrise.jpeg
+    fonts/                    Optional licensed Typst fonts
     posts/
-      tradeweb/
-        index.md              Post text and metadata
-        image1.webp           Images for this post, right beside the text
-        ...
-      ai-for-youth/
-      solving-letterboxed/
+      post-title/
+        index.typ             Native Typst source
+        post.json             Title, date, description, draft status
+        image-*.png           Pasted images
   personal/
     assets/                   Journal cover and profile
     posts/
-      2026-03-14/
-        index.md
-        picnic.webp
-        ...
-      2026-06-16/
-        index.md
-        tanemi.mp3            Audio stays with its post too
-
-app/
-  (about)/                    About page and its styles; URL remains /
-  blog/                       Professional blog layout and reader; /blog/
-  personal/                   Personal journal, styles, and audio; /personal/
-  layout.tsx                  Shared HTML shell and metadata
-  globals.css                 Shared styles only
-scripts/                      Post creation, media preparation, and preview watcher
-lib/                          Small content readers for the pages
-.vscode/                      Writing settings and tasks
+      YYYY-MM-DD/
+        index.md              Journal Markdown, unchanged
+        photo.webp
+        track.mp3
+archive/blog/                 Former blog posts and original media
+app/                          Site components and styles
+scripts/editor/               Browser editor and preview interface
+scripts/editor.mjs            Local editor server
+scripts/typst.mjs             Persistent Typst compiler and publication layouts
+scripts/content.mjs           Content preparation
 ```
 
-## Write a new post in VS Code
+The former blog posts remain archived and are excluded from builds and the editor. They retain their original Markdown source. Restoring one requires converting its source to Typst and adding `post.json`; the original folder name can be reused to restore its old URL.
 
-1. Open the Command Palette (`Cmd+Shift+P` on Mac).
-2. Select **Tasks: Run Task**, then **New post**.
-3. Choose `blog` or `personal`, then enter a title.
-4. Open the generated `index.md` (the task opens it automatically if the `code` command is installed).
-5. Write, add images beside the file, and save.
+Previous Markdown browser backups are left intact. The new editor recovers an unsaved old draft as text and asks you to check its Typst syntax. New backups use a separate storage key.
 
-The terminal equivalent is:
+## Edit files directly
+
+Browser editing is optional:
 
 ```sh
-npm run new:post -- blog "My internship reflections"
+npm run new:post -- blog "Post title"
 npm run new:post -- personal "A weekend away"
 ```
 
-Each command creates one folder with an `index.md`. It never overwrites an existing post. Professional folder names become URLs, so keep them stable after publishing. Personal posts are grouped by date and title and appear in the journal feed.
+The blog command creates `index.typ` and `post.json`:
 
-A new file starts with:
-
-```md
----
-title: "My internship reflections"
-date: "2026-09-16"
-draft: true
----
-
-Write here.
+```json
+{
+  "title": "Post title",
+  "date": "2026-10-11",
+  "preview": "Optional search description",
+  "draft": true
+}
 ```
 
-Dates determine ordering, newest first. Personal post titles can be empty. An optional `preview` field is supported for professional post metadata. Existing personal posts can still infer their date from the folder name.
+Set `draft` to `false` when ready. Dates determine ordering, newest first. Keep the document and all its files together in its post folder.
 
-## Add images without leaving the post folder
+The personal journal continues to use Markdown with YAML front matter in `index.md`. Personal titles can be empty; existing posts can infer the date from the folder name. Use `![Description](./photo.webp)` for images. Repository-authored HTML remains supported. For scroll audio, put `track-name.mp3` beside the file and insert `[track-name]` in the text. Audio is opt-in.
 
-Drop your photo beside `index.md`, then reference just its filename:
-
-```md
-![Lunch with the team](./lunch.webp)
-*Lunch on our last day.*
-```
-
-JPG, PNG, WebP, GIF, SVG, and AVIF are supported. File names with spaces work using angle brackets: `![Lunch](<./team lunch.jpg>)`. A subfolder such as `images/` inside the post also works. Keep each post self-contained; do not use paths into another post's folder.
-
-VS Code's built-in Markdown image paste/drop feature is configured to copy images beside the current post. You can also drag a file into the Explorer folder and type the relative link yourself. Open **Markdown: Open Preview to the Side** to see the text and local images together. See [VS Code's Markdown guide](https://code.visualstudio.com/docs/languages/markdown) for editor shortcuts.
-
-You do not need to touch `public/`, copy an image twice, or type a website-wide image URL. The site prepares those URLs automatically. PDFs, video, and audio files can also be kept in the same post folder. Use ordinary Markdown links for downloads. Repository-authored HTML remains supported in personal posts.
-
-For the personal journal's existing scroll audio, put `track-name.mp3` beside `index.md` and insert `[track-name]` in the text. A play/stop control appears after the first paragraph. Audio is opt-in.
-
-## Preview and publish
-
-Run **Tasks: Run Task → Preview website**, or:
+## Preview, check, and publish
 
 ```sh
-npm ci                     # First setup only
 npm run dev -- --hostname 127.0.0.1
 ```
 
-Open:
+Open http://localhost:3000 for the homepage, `/blog/` for the blog, or `/personal/` for the journal. Run the editor in another terminal. Saving content refreshes the site preview; adding a post restarts the preview server. Content errors keep the last valid prepared content.
 
-- http://localhost:3000/ — About
-- http://localhost:3000/blog/ — professional blog
-- http://localhost:3000/personal/ — personal journal, not linked from the homepage
-
-Saving Markdown, adding a post folder, or adding an image refreshes the running preview. If an image path is wrong, the terminal identifies the file and missing image; fix it and save again. The preview keeps the last valid content while an edit has an error.
-
-`draft: true` posts are visible locally but excluded from the production build, including their media. Set `draft: false` (or remove the field) when ready. Saving is not publishing.
-
-Stop the preview with `Ctrl+C` before running **Check website** or these commands:
+Stop the site preview before building:
 
 ```sh
 npm run test:content
+npm run test:editor
+npm run test:ponyo
 npm run lint
 npm run build
 ```
 
-The build creates the static site in `out/`. Pushing to `main` publishes it through GitHub Pages. After checking, restart the preview with `npm run dev`.
+The build generates `out/`. Pushing to `main` deploys through GitHub Pages. The site has no database or production server.
 
-## Edit the About page and section images
+`.generated/`, `public/_content/`, `.next/`, and `out/` are generated and ignored. Do not edit them. Commit posts and their images together under `content/`.
 
-The About paragraph and timeline use Warnock Pro when an Adobe Fonts kit is configured. Set `NEXT_PUBLIC_ADOBE_FONTS_KIT_URL` to your own kit stylesheet URL in `.env.local` for local previews and in the build environment for publishing. Without a kit, the page falls back to Palatino or Georgia. Font loading is scoped to the homepage.
+## Homepage
 
-Edit `content/about/page.json` for the About paragraph, navigation, and experience timeline. Each timeline entry has `startDate` (`YYYY-MM`), `place`, `summary`, and `details`. Separate paragraphs in `details` with `\n\n`. Inline links use `[TEDx talk](https://example.com)` and open in a new tab.
+Edit `content/about/page.json` for the introduction, contact links, experience, research, education, talks, projects, and skills. Experience and research entries use `org`, `title`, `location`, `dates`, and `summary`. Use `**text**` in the introduction and summaries for bold emphasis. Replace `content/about/resume.pdf` to update the résumé. Homepage styles are in `app/(about)/home.css`.
 
-Replace `content/about/profile.webp` or `resume.pdf` to update those files. Professional blog artwork is in `content/blog/assets/`; journal cover and profile art are in `content/personal/assets/`.
+The blog uses `NEXT_PUBLIC_ADOBE_FONTS_KIT_URL` for its Adobe Fonts stylesheet. Set it in `.env.local` and the build environment. Blog browser font stacks are shared in `public/typography.css`. Native Typst font configuration is described above.
 
-## How the files become a site
+## ASCII koi homepage
 
-`npm run dev` watches `content/`. `npm run build` prepares it once. Both render Markdown, validate dates and local image paths, and copy media into generated output. Next.js reads the prepared posts and exports the same routes as before. There is no CMS, database, or runtime dependency on the old website repo.
+The dark homepage uses `app/(about)/KoiPond.tsx`, an original canvas renderer inspired by [ascii-sharks](https://github.com/stackedlol/ascii-sharks). Rounded koi bodies, barbels, patterned scales, and flowing fins are sampled into a grid of colored ASCII characters. Each fish steers toward changing destinations across the viewport, gives nearby koi room and makes occasional trips beyond the viewport before swimming back, and bends its body through turns. Run `npm run test:koi` to check roaming and containment at desktop and mobile sizes. Click open water for ripples. The scene respects reduced-motion preferences and pauses while the tab is hidden. At most four fish of varied sizes swim on each page; the writing pages use smaller fish. Each fish accelerates and slows independently, with smaller fish moving faster and gaining speed on downward passes. Ivory/vermilion, gold, blue-silver, and cream/charcoal palettes distinguish the four koi. Bodies follow the route their heads traveled, creating curved turns.
 
-`.generated/`, `public/_content/`, `.next/`, and `out/` are generated, ignored by Git, and hidden in VS Code. Do not edit them. New posts and their images should be committed together under `content/`.
+Type `ponyo` outside a text field, or use the small fish control at the bottom left, to toggle the hidden ASCII Ponyo visitor. Escape dismisses her. The former Ponyo design, components, and art are preserved in `archive/ponyo-design/`.
+
+The water simulation in `app/(about)/pond-water.ts` adds schooling minnows, circulating currents, click and cursor avoidance, turn glints, and a diffusing wake field. Tails disturb the water, leaving small teal lights that spread and fade. The implementation follows the behavior of the reference repository’s [world](https://github.com/stackedlol/ascii-sharks/blob/main/src/world.ts) and [renderer](https://github.com/stackedlol/ascii-sharks/blob/main/src/renderer.ts), adapted to koi and the page’s text masks. Tiny schooling dashes are separate from the four large koi. `npm run test:koi` covers both simulations and wake decay.

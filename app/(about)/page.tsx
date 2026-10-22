@@ -1,80 +1,142 @@
-import "./about.css";
-import Link from "next/link";
+import SiteHeader from "../components/SiteHeader";
 import content from "@/content/about/page.json";
-import ProfilePicture from "./ProfilePicture";
+import KoiPond from "./KoiPond";
+import ContactIcon from "./ContactIcon";
+import "./home.css";
+
+type Entry = (typeof content.experience)[number] | (typeof content.research)[number];
+
+function emphasize(text: string, focused = false) {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  const highlight = parts.findIndex((part, index) => index % 2 && /\d[\d.,]*\s*(?:%|×)/.test(part));
+  return parts.map((part, index) => index % 2 && (!focused || index === (highlight < 0 ? 1 : highlight)) ? <strong key={index}>{part}</strong> : part);
+}
+
+function Heading({ id, children, className = "" }: { id: string; children: React.ReactNode; className?: string }) {
+  return (
+    <h2 id={id} data-pond-text className={`home-heading ${className}`}>
+      {children}
+    </h2>
+  );
+}
+
+function TimelineEntry({ entry }: { entry: Entry }) {
+  return (
+    <li className="home-job">
+      <div className="home-job-identity" data-pond-text>
+        <h3 className="home-org">{entry.org}</h3>
+        <p className="home-title">{entry.title}</p>
+        <p className="home-meta home-dates">{entry.dates}</p>
+        {entry.location && <p className="home-location">{entry.location}</p>}
+      </div>
+      <p className="home-summary" data-pond-text>{emphasize(entry.summary, true)}</p>
+    </li>
+  );
+}
 
 export default function Home() {
+  const contacts = [
+    ...content.links.filter((link) => link.icon === "linkedin"),
+    { label: "Résumé", href: content.resume, icon: "resume" },
+    ...content.links.filter((link) => link.icon !== "linkedin"),
+  ];
   return (
-    <main className="home-page min-h-screen px-6 py-14 sm:py-24">
-      {process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL && (
-        <link rel="stylesheet" href={process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL} />
-      )}
-      <div className="mx-auto max-w-[680px]">
-        <header data-ponyo-perch="divider" className="flex flex-col gap-6 border-b border-stone-200 pb-10 sm:flex-row sm:items-center">
-          <ProfilePicture src={content.photo} name={content.name} />
-
-          <div>
-            <h1 data-ponyo-perch="text" className="text-[32px] font-semibold tracking-[-0.03em]">
-              {content.name}
-            </h1>
-            <nav className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              {content.links.map((link) => (
-                <Link className="profile-link" key={link.label} href={link.href}>
-                  {link.label}
-                </Link>
+    <main className="home">
+      <KoiPond />
+      <a className="skip-link" href="#experience-heading">Skip to experience</a>
+      <SiteHeader />
+      <div className="home-shell">
+        <section className="home-hero" aria-label="About">
+          <p className="home-eyebrow"><span />{content.facts[0].value}</p>
+          <h1 className="home-name" data-pond-text>Alexander<br />Tsai<span>.</span></h1>
+          <p className="home-intro" data-pond-text>{emphasize(content.about)}</p>
+          <nav aria-label="Contact and links">
+            <ul className="home-links" data-pond-text>
+              {contacts.map((link) => (
+                <li key={link.label}>
+                  <a href={link.href} title={link.label} {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                    <ContactIcon name={link.icon === "doc" ? "blog" : link.icon} />
+                    <span>{link.label}</span>
+                  </a>
+                </li>
               ))}
-            </nav>
-          </div>
-        </header>
-
-        <section data-ponyo-perch="divider" className="border-b border-stone-200 py-10" aria-labelledby="about-heading">
-          <h2 id="about-heading" className="section-label" data-ponyo-perch="text">
-            {content.aboutHeading}
-          </h2>
-          <p className="intro-copy mt-4 max-w-[570px]">
-            {content.about}
-          </p>
+            </ul>
+          </nav>
+          <a className="home-scroll" href="#experience-heading">Selected experience <span aria-hidden="true">↓</span></a>
         </section>
+        <div className="home-content">
+          <section className="home-section" aria-labelledby="experience-heading">
+            <Heading id="experience-heading">Industry experience</Heading>
+            <ol className="mt-5 grid gap-7">
+              {content.experience.map((job) => <TimelineEntry key={`${job.org}-${job.dates}`} entry={job} />)}
+            </ol>
+          </section>
 
-        <section className="py-10" aria-labelledby="timeline-heading">
-          <h2 id="timeline-heading" className="section-label" data-ponyo-perch="text">
-            {content.timelineHeading}
-          </h2>
-          <ol className="experience-list mt-4">
-            {content.timeline.map((item) => (
-              <li key={`${item.startDate}-${item.place}`} className="experience-item">
-                <time className="experience-date" dateTime={item.startDate} data-ponyo-perch="text">
-                  {new Intl.DateTimeFormat("en-US", {
-                    month: "long",
-                    year: "numeric",
-                    timeZone: "UTC",
-                  }).format(new Date(`${item.startDate}-01T00:00:00Z`))}
-                  :
-                </time>
-                <details className="experience-details">
-                  <summary>
-                    <span className="experience-summary"><span className="experience-heading">{item.place}</span> — {item.summary}</span>
-                  </summary>
-                  <div className="experience-body mt-2 space-y-3">
-                    {item.details.split(/\n\s*\n/).map((paragraph, index) => (
-                      <p key={index}>
-                        {paragraph.split(/(\[[^\]]+\]\(https?:\/\/[^\s)]+\))/g).map((part, partIndex) => {
-                          const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
-                          return link ? (
-                            <a className="profile-link" key={partIndex} href={link[2]} target="_blank" rel="noopener noreferrer">
-                              {link[1]}
-                            </a>
-                          ) : part;
-                        })}
-                      </p>
-                    ))}
+          <section className="home-section" aria-labelledby="research-heading">
+            <Heading id="research-heading">Research &amp; mentorship</Heading>
+            <ol className="mt-5 grid gap-7">
+              {content.research.map((item) => <TimelineEntry key={item.org} entry={item} />)}
+            </ol>
+          </section>
+
+          <section className="home-section home-projects" aria-labelledby="projects-heading">
+            <Heading id="projects-heading">Selected projects</Heading>
+            <ol className="home-project-list">
+              {content.projects.map((item, index) => (
+                <li key={item.href}>
+                  <a className="home-project" href={item.href} target="_blank" rel="noopener noreferrer">
+                    <span className="home-project-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                    <div data-pond-text><h3>{item.title}</h3><p>{item.note}</p></div>
+                    <span className="home-project-arrow" aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="home-section home-details grid gap-12 md:grid-cols-2" aria-label="Education, talks and toolkit">
+            <div data-pond-text>
+              <Heading id="education-heading">Education</Heading>
+              <ul className="mt-5 grid gap-5">
+                {content.education.map((item) => (
+                  <li key={item.school}>
+                    <p className="font-semibold leading-snug">{item.school}</p>
+                    <p className="text-[15px]">{item.detail}</p>
+                    <p className="home-meta">{item.note ? `${item.dates} · ${item.note}` : item.dates}</p>
+                  </li>
+                ))}
+              </ul>
+              <Heading id="talks-heading" className="mt-10">Publications &amp; talks</Heading>
+              <ul className="mt-5 grid gap-4">
+                {content.talks.map((item) => (
+                  <li key={item.href}>
+                    <a className="home-link text-[15px] font-medium" href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
+                    <p className="home-meta">{item.venue}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div data-pond-text>
+              <Heading id="toolkit-heading">Toolkit</Heading>
+              <dl className="mt-5 grid gap-4">
+                {content.skills.map((group) => (
+                  <div key={group.group}>
+                    <dt className="home-label">{group.group}</dt>
+                    <dd className="mt-1.5">
+                      <ul className="flex flex-wrap gap-1.5">
+                        {group.items.map((item) => <li key={item} className="home-chip">{item}</li>)}
+                      </ul>
+                    </dd>
                   </div>
-                </details>
-              </li>
-            ))}
-          </ol>
-        </section>
+                ))}
+              </dl>
+              <p className="home-personal mt-8">{content.personal}</p>
+            </div>
+          </section>
+        </div>
       </div>
+
+      <footer className="site-footer site-width" data-pond-text><span>{content.name}</span><a href="mailto:alexyrtsai@gmail.com">Get in touch ↗</a></footer>
     </main>
   );
 }

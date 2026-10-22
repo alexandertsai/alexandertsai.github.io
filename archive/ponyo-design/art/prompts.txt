@@ -1,0 +1,14 @@
+Generated with the built-in GPT image generation tool.
+
+bucket
+
+Use case: illustration-story. Asset type: transparent website illustration, square canvas. Create a single small green seaside toy bucket inspired by Sosuke's bucket in Ponyo. Front view with a slight view down into the oval opening, upright arched thin handle, pale jade green body, soft mint-blue water visible in the opening. Empty bucket, no fish and no people. Beautiful hand-painted Japanese animation background aesthetic, delicate dark green pencil contours, restrained gouache shading, subtle paper texture inside the object, warm afternoon light. Clear simple silhouette readable when displayed at 64 pixels. The bucket including handle fills 90% of the square canvas, centered, base at 94% height, water surface around 48% height. Genuine transparent background outside the bucket, including inside the handle. No ground, no scenery, no text, no logo, no decorative sparkles, no pixels, no 3D.
+
+goldfish
+
+Use case: illustration-story. Asset type: transparent website character cutout, square canvas. Ponyo in her recognizable tiny goldfish form: round cheerful peach human face, tousled coral red hair, bright red soft rounded fish body, little translucent red tail fins, small round black eyes, rosy cheeks. Front three-quarter view, happily peeking upward, compact chubby silhouette. Hand-painted Japanese 2D cel animation and watercolor illustration, gentle pencil outlines and restrained gouache shading, warm coral and peach palette, readable at 32 pixels. Exactly one complete character centered filling 85% of square canvas. Genuine transparent background. No bucket, water, bubbles, legs, scenery, text, logo, harsh pixel grid, 3D, gradients outside the character.
+
+ocean
+
+Use case: illustration-story. Asset type: website footer landscape, wide 3:1 horizontal composition. A quiet sea inspired by Ponyo, hand-painted Japanese animation watercolor background with soft gouache textures and delicate pencil contours. Off-white to pure white empty sky occupies upper 45% and fades completely to pure white at the top edge so it blends into a white webpage. Across the lower half, overlapping gentle turquoise and deep teal ocean swells, organic rounded shapes, a few charming large fish-shaped waves with subtle eyes, delicate ivory foam. One tiny red-hulled toy steam boat with cream cabin and golden trim sits on the waves at the left third; a soft little curl of steam. Restrained, lyrical, calm scene, not a storm. Bottom 12% becomes uniform deep teal #17606a with no foam or texture at the very bottom edge to meet a solid color footer. Wide panorama, keep boat and waves in bottom 55%, no coastline, no people, no buildings, no lettering, no logo, no frame, no pixel art, no photorealism, no 3D. Production quality detailed illustration.
+

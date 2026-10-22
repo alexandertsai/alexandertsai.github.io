@@ -12,6 +12,21 @@ export type Surface = {
 export type Perch = { id: string; fraction: number };
 export type Point = { x: number; y: number };
 
+export const MAX_JUMP_DISTANCE = 160;
+export const MAX_JUMP_HEIGHT = 96;
+
+export function nearbyPerches(surfaces: Surface[], point: Point, offset = 0): Perch[] {
+  return surfaces.map((surface) => {
+    const span = surface.right - surface.left;
+    const x = Math.max(surface.left, Math.min(surface.right, point.x + offset));
+    const perch = { id: surface.id, fraction: span > 0 ? (x - surface.left) / span : 0.5 };
+    const target = resolvePerch(surface, perch);
+    return { perch, distance: Math.hypot(target.x - point.x, target.y - point.y), rise: Math.abs(target.y - point.y) };
+  }).filter(({ distance, rise }) => distance <= MAX_JUMP_DISTANCE && rise <= MAX_JUMP_HEIGHT)
+    .sort((a, b) => a.distance - b.distance)
+    .map(({ perch }) => perch);
+}
+
 export function measureSurfaces(elements: HTMLElement[], width: number): Surface[] {
   const context = document.createElement("canvas").getContext("2d");
   const surfaces: Surface[] = [];

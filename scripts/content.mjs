@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
+import { renderTypstPost } from './typst.mjs';
 
 const mediaExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif', '.mp3', '.wav', '.ogg', '.m4a', '.mp4', '.webm', '.pdf']);
 const escapeHtml = (value) => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
@@ -56,9 +57,11 @@ export async function prepareContent(root = process.cwd(), { includeDrafts = fal
       const slug = entry.name;
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error(`Use lowercase letters, numbers, and hyphens for the post folder: ${slug}`);
       const directory = path.join(postsRoot, slug);
-      const file = path.join(directory, 'index.md');
+      const file = path.join(directory, section === 'blog' ? 'index.typ' : 'index.md');
       if (!fs.existsSync(file)) continue;
-      const { data, content } = matter(fs.readFileSync(file, 'utf8'));
+      const { data, content } = section === 'blog'
+        ? { data: JSON.parse(fs.readFileSync(path.join(directory, 'post.json'), 'utf8')), content: fs.readFileSync(file, 'utf8') }
+        : matter(fs.readFileSync(file, 'utf8'));
       if (data.draft !== undefined && typeof data.draft !== 'boolean') throw new Error(`${file}: draft must be true or false`);
       if (data.draft && !includeDrafts) continue;
       const date = data.date instanceof Date ? data.date.toISOString().slice(0, 10) : data.date ?? slug.slice(0, 10);
@@ -92,7 +95,9 @@ export async function prepareContent(root = process.cwd(), { includeDrafts = fal
         };
       }
 
-      let rendered = String(await remark().use(localMedia).use(html, { sanitize: section !== 'personal' }).process(content));
+      let rendered = section === 'blog'
+        ? renderTypstPost(content, directory, { fontDirectory: path.join(contentRoot, 'blog/fonts') })
+        : String(await remark().use(localMedia).use(html, { sanitize: false }).process(content));
       if (section === 'personal') {
         const audio = new Map(filesIn(directory).filter((file) => path.extname(file) === '.mp3').map((file) => [path.basename(file, '.mp3'), addAsset(file)]));
         let hasAudio = false;

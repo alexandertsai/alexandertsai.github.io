@@ -3,9 +3,9 @@ import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
 
-const source = await readFile(new URL('../app/(about)/ponyo-surfaces.ts', import.meta.url), 'utf8');
+const source = await readFile(new URL('../archive/ponyo-design/components/ponyo-surfaces.ts', import.meta.url), 'utf8');
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext } });
-const { resolvePerch, isSurfaceVisible, chooseGreetingPerch } = await import(`data:text/javascript;base64,${Buffer.from(compiled.outputText).toString('base64')}`);
+const { resolvePerch, isSurfaceVisible, chooseGreetingPerch, nearbyPerches, MAX_JUMP_DISTANCE } = await import(`data:text/javascript;base64,${Buffer.from(compiled.outputText).toString('base64')}`);
 
 const surface = {
   id: 'word', kind: 'text', label: 'Abc', left: 10, right: 70, y: 100, footprint: 12,
@@ -59,4 +59,24 @@ test('greeting leaves room above the sprite for its bubble on mobile', () => {
   ];
   assert.equal(chooseGreetingPerch(surfaces, 500, 667, 39).id, 'safe');
   assert.equal(chooseGreetingPerch(surfaces, 900, 667, 39), null);
+});
+
+test('jumps exclude distant headings and large vertical drops', () => {
+  const surfaces = [
+    { id: 'near', kind: 'text', left: 130, right: 170, y: 160 },
+    { id: 'far', kind: 'text', left: 400, right: 450, y: 100 },
+    { id: 'drop', kind: 'text', left: 90, right: 130, y: 220 },
+  ];
+  assert.deepEqual(nearbyPerches(surfaces, { x: 100, y: 100 }).map(({ id }) => id), ['near']);
+});
+
+test('wide dividers offer a nearby landing instead of a jump to their center', () => {
+  const divider = { id: 'line', kind: 'divider', left: 20, right: 1400, y: 170 };
+  const origin = { x: 60, y: 100 };
+  for (const offset of [-32, 0, 32]) {
+    const [perch] = nearbyPerches([divider], origin, offset);
+    const landing = resolvePerch(divider, perch);
+    assert.ok(Math.hypot(landing.x - origin.x, landing.y - origin.y) <= MAX_JUMP_DISTANCE);
+    assert.equal(landing.x, origin.x + offset);
+  }
 });

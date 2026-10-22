@@ -3,6 +3,6 @@ import BlogReader from "./BlogReader";
 
 export default function Blog() {
   const posts = getBlogPosts();
-  if (posts.length === 0) return <p>No posts yet.</p>;
+  if (posts.length === 0) return <p className="blog-empty">No posts yet.</p>;
   return <BlogReader slug={posts[0].slug} />;
 }

@@ -1,0 +1,142 @@
+.fish-waves {
+  margin-top: auto;
+  padding-top: 56px;
+  overflow: hidden;
+}
+
+.fish-waves-stage {
+  position: relative;
+  height: clamp(160px, 24vw, 320px);
+  overflow: hidden;
+  background: #17606a;
+}
+
+.fish-waves-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  image-rendering: pixelated;
+}
+
+.fish-waves-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--wave-height) * -0.5);
+  height: var(--wave-height);
+  pointer-events: none;
+}
+
+.fish-waves-layer-middle {
+  --wave-height: clamp(160px, 18vw, 240px);
+  --wave-duration: 120s;
+}
+
+.fish-waves-layer-front {
+  --wave-height: clamp(180px, 20vw, 280px);
+  --wave-duration: 90s;
+  bottom: calc(var(--wave-height) * -0.4);
+}
+
+.fish-waves-track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: fish-waves-travel var(--wave-duration) linear infinite;
+  will-change: transform;
+}
+
+.fish-waves-tile {
+  flex: none;
+  width: calc(var(--wave-height) * 3);
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.fish-waves-tile:nth-child(even) {
+  transform: scaleX(-1);
+}
+
+.fish-waves-boat {
+  position: absolute;
+  left: 20%;
+  bottom: 24%;
+  width: clamp(72px, 9vw, 124px);
+  transform-origin: 50% 80%;
+  animation: fish-waves-boat 4.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.fish-waves-boat img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.fish-waves-surface {
+  position: absolute;
+  inset: auto 0 28px;
+  height: 1px;
+}
+
+@keyframes fish-waves-travel {
+  to { transform: translateX(calc(var(--wave-height) * -6)); }
+}
+
+@keyframes fish-waves-boat {
+  0%, 100% { transform: translateY(2px) rotate(-1.5deg); }
+  50% { transform: translateY(-3px) rotate(1.5deg); }
+}
+
+.growing-ponyo {
+  position: absolute;
+  transform: translate(-50%, -75%);
+  pointer-events: none;
+}
+
+.growing-ponyo-sprite {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: growing-ponyo-bob 3.5s ease-in-out infinite;
+}
+
+.growing-ponyo-sprite img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.growing-ponyo-sprite:focus-visible {
+  outline: 2px solid #567368;
+  outline-offset: 3px;
+  border-radius: 50%;
+}
+
+@keyframes growing-ponyo-bob {
+  0%, 100% { transform: translateY(1px) rotate(-3deg); }
+  50% { transform: translateY(-1px) rotate(3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fish-waves-track,
+  .fish-waves-boat,
+  .growing-ponyo-sprite { animation: none; }
+}
+
+.ponyo-greeting a {
+  color: #0b6f69;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  pointer-events: auto;
+}

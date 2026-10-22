@@ -1,7 +1,3 @@
-.home-page {
-  padding-bottom: 144px;
-}
-
 .ponyo-companion {
   position: fixed;
   inset: 0;
@@ -48,10 +44,10 @@
   transform: translateX(-50%);
 }
 
-@media (max-width: 639px) {
-  .home-page header {
-    padding-bottom: 128px;
-  }
+.ponyo-greeting[data-placement="below"]::after {
+  top: -6px;
+  bottom: auto;
+  box-shadow: -2px 0 #80614e, 2px 0 #80614e, 0 -2px #80614e;
 }
 
 .ponyo-pet:disabled {

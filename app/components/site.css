@@ -1,0 +1,30 @@
+:root {
+  --site-bg: #080a09;
+  --site-ink: #e9e7df;
+  --site-copy: #b4b8ac;
+  --site-muted: #a0a696;
+  --site-accent: #d2916e;
+  --site-line: #c7cfb51c;
+  --site-mono: Menlo, Consolas, monospace;
+}
+body { --site-mono: var(--font-jetbrains-mono), Menlo, Consolas, monospace; }
+.site-width { width: min(100% - 112px, 1080px); margin-inline: auto; }
+.site-header { position: relative; display: flex; justify-content: flex-end; align-items: center; height: 100px; border-bottom: 1px solid var(--site-line); }
+.site-header nav { display: flex; align-items: center; gap: 32px; font-family: var(--site-mono); font-size: 11px; }
+.site-header nav a { position: relative; padding: 12px 0; color: var(--site-muted); transition: color 180ms; }
+.site-header nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 5px; height: 1px; background: var(--site-accent); transform: scaleX(0); transform-origin: left; transition: transform 180ms; }
+.site-header nav a:hover, .site-header nav a[aria-current] { color: var(--site-ink); }
+.site-header nav a:hover::after, .site-header nav a[aria-current]::after { transform: scaleX(1); }
+.site-header nav span { margin-left: 4px; color: var(--site-accent); }
+.site-footer { position: relative; display: flex; justify-content: space-between; padding: 32px 0 84px; border-top: 1px solid var(--site-line); font-family: var(--site-mono); font-size: 11px; color: var(--site-muted); }
+.site-footer a { transition: color 180ms; }
+.site-footer a:hover { color: var(--site-accent); }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 5px; border-radius: 2px; }
+::selection { background: #995536; color: #fff8ec; }
+@media (max-width: 760px) {
+  .site-width { width: calc(100% - 48px); }
+  .site-header { height: 80px; }
+  .site-header nav { gap: 20px; font-size: 10px; }
+  .site-footer { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .site-header *, .site-header *::after, .site-footer * { transition: none; } }

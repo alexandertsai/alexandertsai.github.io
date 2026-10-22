@@ -10,7 +10,8 @@ export default async function BlogReader({ slug }: { slug: string }) {
   return (
     <div className="blog-reader">
       <nav className="blog-sidebar" aria-label="Posts">
-        <ul>
+        <p className="blog-sidebar-label">Articles</p>
+        <ul data-pond-text>
           {posts.map((entry) => (
             <li key={entry.slug}>
               <Link
@@ -24,7 +25,7 @@ export default async function BlogReader({ slug }: { slug: string }) {
           ))}
         </ul>
       </nav>
-      <main className="blog-article"><article>
+      <main className="blog-article" data-pond-text><article>
         <h2>{post.title}</h2>
         <div className="blog-post-meta">
           <time dateTime={post.date}>{formatBlogDate(post.date)}</time>

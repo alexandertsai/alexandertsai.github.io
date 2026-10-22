@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog editor</title>
+  <link rel="stylesheet" href="/typography.css">
+  <link rel="stylesheet" href="/editor.css">
+  <script type="module" src="/editor.js"></script>
+</head>
+<body>
+  <aside>
+    <h1>Blog editor</h1>
+    <button id="new" type="button">New post</button>
+    <nav id="posts" aria-label="Posts"></nav>
+    <p class="note">Saved to this repository.<br>Push to main to publish ready posts.</p>
+  </aside>
+  <main>
+    <header><h2 id="heading">New post</h2><div><span id="status" role="status">Not saved</span><button id="save" type="button">Save post</button></div></header>
+    <form id="metadata">
+      <label>Title<input id="title" required placeholder="Post title"></label>
+      <div class="fields">
+        <label>URL<input id="slug" required placeholder="post-title" pattern="[a-z0-9]+(-[a-z0-9]+)*"></label>
+        <label>Date<input id="date" type="date" required></label>
+        <label>Status<select id="draft"><option value="true">Draft</option><option value="false">Ready to publish</option></select></label>
+      </div>
+      <label>Description<input id="description" placeholder="Optional description for search results"></label>
+    </form>
+    <div class="toolbar" role="toolbar" aria-label="Typst formatting">
+      <button type="button" data-format="bold">Bold</button><button type="button" data-format="italic">Italic</button><button type="button" data-format="heading">Heading</button><button type="button" data-format="link">Link</button><button type="button" data-format="list">List</button><button type="button" data-format="quote">Quote</button><button type="button" data-format="code">Code</button><button type="button" data-format="math">Math</button><button type="button" data-format="display">Display math</button><button type="button" id="image">Add image</button>
+      <input id="image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden multiple>
+    </div>
+    <p id="error" role="alert" hidden></p>
+    <div class="panes">
+      <section><label for="body">Typst source</label><textarea id="body" spellcheck="true" placeholder="Write your post here. Paste images directly into the editor."></textarea></section>
+      <section><h3>Compiler preview <span id="compile-time"></span></h3><p id="preview-error" role="status" hidden></p><iframe id="preview" title="Post preview" src="/preview.html" sandbox="allow-scripts"></iframe></section>
+    </div>
+    <details class="help"><summary>Typst help</summary><p>Headings: <code>= Heading</code>. Bold: <code>*text*</code>. Italic: <code>_text_</code>. Links: <code>#link("https://example.com")[text]</code>. Lists start with <code>-</code>. Use Cmd/Ctrl+B and Cmd/Ctrl+I for formatting and Cmd/Ctrl+S to save.</p><p>Inline math: <code>$x^2$</code>. Display math includes spaces: <code>$ sum_(i=1)^n i $</code>. Write native Typst directly, including functions, tables, diagrams, and show rules. No Markdown fences are needed around Typst.</p><p>Paste or drop images into the source pane, or choose Add image. The editor inserts <code>#image("./image.png", width: 100%, alt: "Image description")</code>. Add useful alternative text. New posts are saved as drafts before the first upload.</p><p>The preview uses a persistent local Typst compiler. Errors keep the last valid preview visible. Source saves to <code>index.typ</code>; metadata saves to <code>post.json</code>. Drafts may be saved with errors. Ready to publish requires valid Typst; push to main to publish.</p><p>Edit the URL and save to rename a post. Images move with it. Changing a published URL replaces its old address.</p><p>Unsaved source is backed up in this browser. Previous Markdown backups remain untouched. <a href="https://typst.app/docs/tutorial/writing-in-typst/" target="_blank" rel="noreferrer">Typst writing guide</a></p></details>
+  </main>
+</body>
+</html>

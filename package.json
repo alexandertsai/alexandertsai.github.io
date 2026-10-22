@@ -9,9 +9,13 @@
     "lint": "eslint",
     "new:post": "node scripts/new-post.mjs",
     "test:content": "node --test scripts/content.test.mjs",
-    "test:ponyo": "node --test scripts/ponyo.test.mjs"
+    "test:koi": "node --test scripts/koi.test.mjs scripts/pond-water.test.mjs",
+    "test:ponyo": "node --test scripts/ponyo.test.mjs",
+    "write": "node scripts/editor.mjs",
+    "test:editor": "node --test scripts/editor.test.mjs"
   },
   "dependencies": {
+    "@myriaddreamin/typst-ts-node-compiler": "^0.7.0",
     "gray-matter": "^4.0.3",
     "next": "^15.5.9",
     "react": "19.1.0",
