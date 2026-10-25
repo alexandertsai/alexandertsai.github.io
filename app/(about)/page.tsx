@@ -2,6 +2,7 @@ import SiteHeader from "../components/SiteHeader";
 import content from "@/content/about/page.json";
 import KoiPond from "./KoiPond";
 import ContactIcon from "./ContactIcon";
+import ProjectFigure from "./ProjectFigure";
 import "./home.css";
 
 type Entry = (typeof content.experience)[number] | (typeof content.research)[number];
@@ -48,7 +49,7 @@ export default function Home() {
       <div className="home-shell">
         <section className="home-hero" aria-label="About">
           <p className="home-eyebrow"><span />{content.facts[0].value}</p>
-          <h1 className="home-name" data-pond-text>Alexander<br />Tsai<span>.</span></h1>
+          <h1 className="home-name">Alexander<br />Tsai<span>.</span></h1>
           <p className="home-intro" data-pond-text>{emphasize(content.about)}</p>
           <nav aria-label="Contact and links">
             <ul className="home-links" data-pond-text>
@@ -87,6 +88,7 @@ export default function Home() {
                   <a className="home-project" href={item.href} target="_blank" rel="noopener noreferrer">
                     <span className="home-project-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                     <div data-pond-text><h3>{item.title}</h3><p>{item.note}</p></div>
+                    <div className="home-project-art" data-pond-text><ProjectFigure index={index} /></div>
                     <span className="home-project-arrow" aria-hidden="true">↗</span>
                   </a>
                 </li>
@@ -118,19 +120,18 @@ export default function Home() {
             </div>
             <div data-pond-text>
               <Heading id="toolkit-heading">Toolkit</Heading>
-              <dl className="mt-5 grid gap-4">
+              <dl className="home-toolkit">
                 {content.skills.map((group) => (
-                  <div key={group.group}>
-                    <dt className="home-label">{group.group}</dt>
-                    <dd className="mt-1.5">
-                      <ul className="flex flex-wrap gap-1.5">
-                        {group.items.map((item) => <li key={item} className="home-chip">{item}</li>)}
+                  <div className="home-toolkit-group" key={group.group}>
+                    <dt>{group.group}</dt>
+                    <dd>
+                      <ul>
+                        {group.items.map((item) => <li key={item}>{item}</li>)}
                       </ul>
                     </dd>
                   </div>
                 ))}
               </dl>
-              <p className="home-personal mt-8">{content.personal}</p>
             </div>
           </section>
         </div>

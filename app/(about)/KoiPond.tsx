@@ -8,10 +8,10 @@ import "./pond.css";
 type Ripple = { x: number; y: number; born: number };
 const TAU = Math.PI * 2;
 const PALETTES = [
-  { shade: ["#b4ada0", "#f0e7cc", "#b6b29d"], patch: "#e36d42", fin: "#c5c5aa" },
-  { shade: ["#a37837", "#edca79", "#a77832"], patch: "#d4933d", fin: "#ccb779" },
-  { shade: ["#81929f", "#d8e1e2", "#7e96a2"], patch: "#c96f51", fin: "#a5bec6" },
-  { shade: ["#a8aea4", "#e8e8d7", "#96a69c"], patch: "#34423e", fin: "#bcc9b9" },
+  { shade: ["#7e979a", "#d4ded8", "#a4b8b6"], patch: "#df4423", fin: "#b6c7c6" },
+  { shade: ["#aa6c16", "#efbb48", "#ce8c21"], patch: "#f4d87a", fin: "#d49e37" },
+  { shade: ["#242e32", "#526062", "#303e43"], patch: "#e65127", fin: "#556c72" },
+  { shade: ["#95a9af", "#e7eee9", "#b7c8c9"], patch: "#252e33", fin: "#9eb8be" },
 ];
 
 function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn: number) {
@@ -32,7 +32,7 @@ function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn:
   body.closePath();
 
   ctx.save();
-  ctx.globalAlpha = .65;
+  ctx.globalAlpha = .94;
   for (const side of [-1, 1]) {
     const reach = side * (1 - side * Math.max(-.23, Math.min(.23, turn * .3)));
     const flutter = Math.sin(time * 3.5 + side) * 5;
@@ -42,12 +42,12 @@ function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn:
     ctx.bezierCurveTo(53, reach * 58, 8, reach * (77 + flutter), -16, reach * 59);
     ctx.quadraticCurveTo(-28, reach * 47, 18, reach * 26);
     ctx.fill();
-    ctx.strokeStyle = "#626d60"; ctx.lineWidth = 1.4;
+    ctx.strokeStyle = "#27465b"; ctx.lineWidth = 1.4;
     for (let i = 0; i < 6; i++) {
       ctx.beginPath(); ctx.moveTo(43 - i * 3, reach * 29);
       ctx.quadraticCurveTo(23 - i * 5, reach * 46, 12 - i * 4, reach * (63 - i)); ctx.stroke();
     }
-    ctx.fillStyle = "#929d87";
+    ctx.fillStyle = palette.fin;
     ctx.beginPath(); ctx.ellipse(-54, reach * 24 + bend(-54), 23, 10, reach * -.5, 0, TAU); ctx.fill();
   }
   const tail = bend(-106), tip = bend(-165);
@@ -57,7 +57,7 @@ function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn:
   ctx.bezierCurveTo(-193, tip - 37, -158, tip - 12, -149, tip);
   ctx.bezierCurveTo(-161, tip + 15, -190, tip + 38, -179, tip + 45);
   ctx.bezierCurveTo(-146, tip + 53, -125, tail + 7, -101, tail + 5); ctx.fill();
-  ctx.strokeStyle = "#657364"; ctx.lineWidth = 1.2;
+  ctx.strokeStyle = "#27465b"; ctx.lineWidth = 1.2;
   for (let i = -4; i <= 4; i++) {
     ctx.beginPath(); ctx.moveTo(-109, tail); ctx.quadraticCurveTo(-137, tip + i * 3, -176 + Math.abs(i) * 2, tip + i * 10); ctx.stroke();
   }
@@ -79,20 +79,21 @@ function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn:
     ctx.fill();
   }
   if (variant === 2) {
-    ctx.fillStyle = "#303e36";
+    ctx.fillStyle = "#e9ece0";
     for (const [x, y, r] of [[35, 22, 16], [-20, -18, 19], [-77, 2, 10]]) {
       ctx.beginPath(); ctx.ellipse(x, y + bend(x), r, r * .7, .5, 0, TAU); ctx.fill();
     }
   }
   if (variant === 3) {
-    ctx.fillStyle = "#ce7755"; ctx.beginPath(); ctx.ellipse(81, 0, 13, 18, 0, 0, TAU); ctx.fill();
+    ctx.fillStyle = "#e34622"; ctx.beginPath(); ctx.ellipse(81, 0, 13, 18, 0, 0, TAU); ctx.fill();
   }
   ctx.strokeStyle = "#65745c"; ctx.globalAlpha = .3; ctx.lineWidth = 1;
   for (let x = -85; x < 66; x += 10) for (let y = -38; y < 40; y += 11) {
     ctx.beginPath(); ctx.arc(x + (Math.abs(y) % 2) * 4, y + bend(x), 6, -.9, .9); ctx.stroke();
   }
   ctx.restore();
-  ctx.strokeStyle = "#969c83"; ctx.lineWidth = 1.5;
+  ctx.strokeStyle = "#5e7679"; ctx.lineWidth = 3.5; ctx.stroke(body);
+  ctx.strokeStyle = "#24475e"; ctx.lineWidth = 1.5;
   for (const side of [-1, 1]) {
     ctx.beginPath(); ctx.moveTo(63, side * 29); ctx.quadraticCurveTo(48, side * 13, 56, side * 4); ctx.stroke();
     ctx.fillStyle = "#141f18";
@@ -126,6 +127,8 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
     let sequence = "";
     const ripples: Ripple[] = [];
     const school = createSchool(small);
+    const hero = document.querySelector(".home-hero");
+    let pondOpacity = 1;
     let minnows: ReturnType<typeof createWaterSchools>;
     let wake: ReturnType<typeof createWakeField>;
     const waterPointer: WaterPointer = { x: 0, y: 0, active: false };
@@ -135,7 +138,11 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       waterPointer.active = event.pointerType !== "touch" && !(event.target as Element).closest("a, button, input, textarea");
     };
     let mask = new Float32Array(0), maskDirty = true, lastMask = 0;
-    const invalidateMask = () => { maskDirty = true; };
+    const invalidateMask = () => {
+      maskDirty = true;
+      const remaining = hero?.getBoundingClientRect().bottom ?? height;
+      pondOpacity = small ? .55 : .28 + .72 * Math.max(0, Math.min(1, remaining / (height * .65)));
+    };
     const measureText = () => {
       const cols = buffer.width, rows = buffer.height;
       mask = new Float32Array(cols * rows).fill(1);
@@ -162,10 +169,10 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       school.resetTrails(width, height);
       minnows = createWaterSchools(width, height, small);
       wake = createWakeField(buffer.width, buffer.height);
-      maskDirty = true;
+      invalidateMask();
     };
     const pointer = (event: PointerEvent) => {
-      if (motion.matches || (event.target as Element).closest("a, button")) return;
+      if (motion.matches || event.button !== 0 || (event.target as Element).closest("a, button, input, textarea")) return;
       minnows.splash(event.clientX, event.clientY);
       wake.stamp(event.clientX, event.clientY, 5, .75);
       ripples.push({ x: event.clientX, y: event.clientY, born: time });
@@ -218,8 +225,8 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
         ink.save(); ink.translate(200, 120); koi(ink, swimmer.phase / 4.5, swimmer.variant, swimmer.turn); ink.restore();
         const size = Math.max(.7, scale) * swimmer.size;
         paint.save(); paint.scale(1 / 7, 1 / 10);
-        const light = .88 + .08 * Math.sin(time * .27 + swimmer.x * 4) * Math.cos(time * .18 + swimmer.y * 5);
-        paint.filter = `brightness(${light * (.75 + swimmer.depth * .25)})`;
+        const light = 1 + .035 * Math.sin(time * .27 + swimmer.x * 4) * Math.cos(time * .18 + swimmer.y * 5);
+        paint.filter = `brightness(${light * (.94 + swimmer.depth * .06)})`;
         // Each strip follows the position the head previously swam through.
         for (let x = -190; x < 128; x += 4) {
           const pose = sampleSpine(swimmer, (108 - x) * size, width, height);
@@ -231,6 +238,7 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       });
       if (maskDirty || now - lastMask > 750) { measureText(); lastMask = now; }
       const pixels = paint.getImageData(0, 0, cols, rows).data;
+      ctx.globalAlpha = pondOpacity;
       ctx.font = "10px Menlo, Consolas, monospace"; ctx.textBaseline = "top";
       const occupied = new Uint8Array(cols * rows);
       for (let i = 0; i < wake.energy.length; i++) {
@@ -241,7 +249,7 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
         const shadowCell = Math.max(0, y - 2) * cols + Math.max(0, x - 2);
         const shadow = pixels[shadowCell * 4 + 3] > 40 ? .3 : 1;
         const alpha = Math.min(.55, Math.sqrt(energy) * .5) * caustic * mask[i] * shadow;
-        ctx.fillStyle = `rgba(111,205,204,${alpha})`;
+        ctx.fillStyle = `rgba(44,115,117,${alpha})`;
         const dot = energy > .35 ? 3 : 2;
         ctx.fillRect(x * 7 + 4, y * 10 + 6, dot, dot);
       }
@@ -251,7 +259,7 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
         occupied[i] = 1;
         const glint = Math.min(1, Math.max(Math.abs(f.turn) / 4, f.alarm));
         const alpha = (.17 + f.depth * .35 + glint * .25) * mask[i];
-        ctx.fillStyle = `rgba(190,210,218,${alpha})`; ctx.fillText("-", x * 7, y * 10);
+        ctx.fillStyle = `rgba(70,101,108,${alpha})`; ctx.fillText("-", x * 7, y * 10);
       }
       const chars = ".:;=+x%S8@";
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
@@ -261,18 +269,28 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
         const noise = ((x * 37 + y * 71) % 101) / 101;
         const coverage = pixels[offset + 3] / 255;
         const marking = r > g * 1.2;
-        const density = coverage < .8 ? .12 + noise * .3 : marking ? .7 + noise * .29 : .4 + noise * .35;
-        const alpha = (.66 + noise * .25) * coverage * mask[y * cols + x];
-        ctx.fillStyle = `rgba(${r},${g},${b},${alpha * 0.19})`; ctx.fillRect(x * 7, y * 10, 6, 9);
+        const density = coverage < .55 ? .3 + noise * .25 : marking ? .74 + noise * .25 : .57 + noise * .3;
+        const alpha = (.92 + noise * .08) * coverage * mask[y * cols + x];
+        ctx.fillStyle = `rgba(${r},${g},${b},${alpha * 0.24})`; ctx.fillRect(x * 7, y * 10, 6, 9);
         ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
         ctx.fillText(chars[Math.min(chars.length - 1, Math.floor(density * chars.length))], x * 7, y * 10);
       }
-      if (!still) for (const ripple of ripples) {
+      ctx.globalAlpha = 1;
+      for (let index = ripples.length - 1; index >= 0; index--) {
+        const ripple = ripples[index];
         const age = time - ripple.born;
-        if (age > 3) continue;
-        ctx.strokeStyle = `rgba(170,174,154,${(1 - age / 3) * 0.15})`; ctx.lineWidth = 0.7;
-        for (let i = 0; i < 2; i++) {
-          ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y, age * 25 + i * 13 + 1, age * 15 + i * 8 + 1, 0, 0, TAU); ctx.stroke();
+        if (age > 4.2) { ripples.splice(index, 1); continue; }
+        if (still) continue;
+        const reach = Math.min(640, Math.max(width, height) * .48);
+        for (let ring = 0; ring < 4; ring++) {
+          const progress = (age - ring * .16) / 3.7;
+          if (progress <= 0 || progress >= 1) continue;
+          const radius = 5 + reach * (1 - Math.pow(1 - progress, 1.7));
+          const opacity = Math.pow(1 - progress, 1.8) * (.42 - ring * .055);
+          ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y, radius, radius * .76, 0, 0, TAU); ctx.stroke();
+          ctx.strokeStyle = `rgba(255,255,250,${opacity * .85})`; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y - 2, radius + 2, radius * .76 + 2, 0, 0, TAU); ctx.stroke();
         }
       }
 

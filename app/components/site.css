@@ -1,10 +1,10 @@
 :root {
-  --site-bg: #080a09;
-  --site-ink: #e9e7df;
-  --site-copy: #b4b8ac;
-  --site-muted: #a0a696;
-  --site-accent: #d2916e;
-  --site-line: #c7cfb51c;
+  --site-bg: #faf8f2;
+  --site-ink: #242c29;
+  --site-copy: #535e58;
+  --site-muted: #69736b;
+  --site-accent: #a54f2d;
+  --site-line: #34483a24;
   --site-mono: Menlo, Consolas, monospace;
 }
 body { --site-mono: var(--font-jetbrains-mono), Menlo, Consolas, monospace; }
@@ -20,7 +20,7 @@ body { --site-mono: var(--font-jetbrains-mono), Menlo, Consolas, monospace; }
 .site-footer a { transition: color 180ms; }
 .site-footer a:hover { color: var(--site-accent); }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 5px; border-radius: 2px; }
-::selection { background: #995536; color: #fff8ec; }
+::selection { background: #eed5c1; color: #382c23; }
 @media (max-width: 760px) {
   .site-width { width: calc(100% - 48px); }
   .site-header { height: 80px; }

@@ -143,3 +143,7 @@ The dark homepage uses `app/(about)/KoiPond.tsx`, an original canvas renderer in
 Type `ponyo` outside a text field, or use the small fish control at the bottom left, to toggle the hidden ASCII Ponyo visitor. Escape dismisses her. The former Ponyo design, components, and art are preserved in `archive/ponyo-design/`.
 
 The water simulation in `app/(about)/pond-water.ts` adds schooling minnows, circulating currents, click and cursor avoidance, turn glints, and a diffusing wake field. Tails disturb the water, leaving small teal lights that spread and fade. The implementation follows the behavior of the reference repository’s [world](https://github.com/stackedlol/ascii-sharks/blob/main/src/world.ts) and [renderer](https://github.com/stackedlol/ascii-sharks/blob/main/src/renderer.ts), adapted to koi and the page’s text masks. Tiny schooling dashes are separate from the four large koi. `npm run test:koi` covers both simulations and wake decay.
+
+## Light ASCII design
+
+`design/light-ascii-koi` restores the ASCII koi site with an ivory background, charcoal text, warm accents, and darker fish and water particles. The image-based design and all four movement studies are preserved on `design/ivory-particle-koi` at `7a9c625`. Current page content is carried over.

@@ -36,28 +36,29 @@
       "title": "Research Scientist Intern",
       "location": "San Jose, CA",
       "dates": "Sep 2026 – Present",
-      "summary": "Developed an **AI-generated image classifier** with **99.85% precision and 76% recall** on production data, and 66% recall on unseen generators. Curated 1.6M AI-edited images; global deployment is projected to reduce refund abuse losses by $4M annually."
+      "summary": "Developed an **AI-generated image classifier** with **99.85% precision and 76% recall** on production data. Experiments were focused around OOD generalisation, robustness to compression, and interpretability. Global deployment is projected to reduce refund abuse losses by over $4M annually."
     },
     {
       "org": "ExodusPoint Capital Management",
       "title": "Quantitative Research Intern",
       "location": "New York, NY",
       "dates": "May – Aug 2026",
-      "summary": "Developed a **credit-market trading signal** from six years of intraday data. Evaluated an external dataset, saving $75k annually, and modeled trade direction and volume using Weibull curves and decision trees."
+      "summary": "Working primarily on Credit Default Swaps. Developed a **credit-market trading signal** from six years of intraday data. Also build a model to infer trade direction and volume from public order books."
     },
     {
       "org": "TikTok",
       "title": "Machine Learning Engineer Intern",
       "location": "San Jose, CA · Singapore",
       "dates": "Jul 2025 – May 2026",
-      "summary": "Built and deployed a **Qwen3-VL, vLLM, and XGBoost** content moderation pipeline enforcing 4,000+ accounts daily. **GRPO** fine-tuning improved video feature extraction accuracy by 12%; inference optimizations increased throughput **5.35×**."
+      "summary": "Built and deployed a content moderation pipeline with **Qwen3-VL and XGBoost**. Work revolved around improving a VLM's visual understanding through RL (GRPO) and optimizing inference (speculative decoding, batching, multithreading) for large-scale offline processing."
+
     },
     {
       "org": "Tradeweb",
       "title": "Data Science Intern",
       "location": "New York, NY",
       "dates": "May – Jul 2025",
-      "summary": "Built an **XGBoost** transaction-cost model using five years of trades totaling $4.7T in notional volume. Hyperparameter optimization and SHAP-guided feature engineering reduced **RMSE by 21%** over baseline."
+      "summary": "Built an **XGBoost** transaction-cost model using five years of trades totaling $4.7T in notional volume. Hyperparameter optimization and feature engineering with SHAP graphs reduced **RMSE by 21%** over baseline."
     }
   ],
   "research": [
@@ -66,7 +67,7 @@
       "title": "Research Fellow",
       "location": "Singapore",
       "dates": "May 2024 – May 2025",
-      "summary": "Developed a **multilingual RAG chatbot** with LangChain and Firestore to support migrant workers’ financial literacy. Findings were published and presented at a University of Toronto conference and in a TEDx talk."
+      "summary": "Developed a **multilingual RAG chatbot** with LangChain and Firestore to enhance the financial literacy of migrant workers. Findings were published and presented at a University of Toronto conference and in a TEDx talk."
     },
     {
       "org": "Sustainable Learning Lab 2",
@@ -117,11 +118,6 @@
       "title": "Telegram MCP server",
       "note": "An MCP server connecting Claude and Telegram.",
       "href": "https://github.com/alexandertsai/mcp-telegram"
-    },
-    {
-      "title": "Footfall analysis",
-      "note": "Visitor counting using YOLOv8 object detection.",
-      "href": "https://github.com/alexandertsai/footfall-analysis"
     }
   ],
   "skills": [

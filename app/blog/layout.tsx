@@ -16,10 +16,6 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
         <link rel="stylesheet" href={process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL} />
       )}
       <SiteHeader />
-      <header className="blog-header site-width" data-pond-text>
-        <p className="blog-eyebrow">Alexander Tsai / Writing</p>
-        <h1>Writing<span>.</span></h1>
-      </header>
       {children}
       <footer className="site-footer site-width" data-pond-text><span>Alexander Tsai</span><a href="mailto:alexyrtsai@gmail.com">Get in touch ↗</a></footer>
     </div>

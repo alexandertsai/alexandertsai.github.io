@@ -23,7 +23,7 @@ export function sampleSpine(fish: Swimmer, distance: number, width: number, heig
 
 export function createSchool(small = false) {
   const starts = [
-    [.85, .26, 2.1, 1.4, 30], [.13, .78, -.8, .98, 43],
+    [.84, .55, 1.8, 1.15, 34], [.13, .78, -.8, .98, 43],
     [.82, .86, -2.5, .65, 58], [.32, .12, .9, .42, 72],
   ];
   const fish: Swimmer[] = starts.map(([x, y, angle, size, speed], index) => ({

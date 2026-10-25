@@ -26,7 +26,7 @@ export default async function BlogReader({ slug }: { slug: string }) {
         </ul>
       </nav>
       <main className="blog-article" data-pond-text><article>
-        <h2>{post.title}</h2>
+        <h1>{post.title}</h1>
         <div className="blog-post-meta">
           <time dateTime={post.date}>{formatBlogDate(post.date)}</time>
         </div>
