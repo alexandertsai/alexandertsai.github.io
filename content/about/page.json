@@ -67,7 +67,7 @@
       "title": "Research Fellow",
       "location": "Singapore",
       "dates": "May 2024 – May 2025",
-      "summary": "Developed a **multilingual RAG chatbot** with LangChain and Firestore to enhance the financial literacy of migrant workers. Findings were published and presented at a University of Toronto conference and in a TEDx talk."
+      "summary": "Developed a **multilingual RAG chatbot** with LangChain and Firestore to enhance the financial literacy of migrant workers. The [published findings](https://reachalliance.org/reports/how-can-we-utilise-conversational-a-i-to-enhance-financial-literacy-for-migrant-workers-in-singapore/) were presented at a University of Toronto conference and in a [TEDx talk](https://www.youtube.com/watch?v=3C1R1JlOQEk)."
     },
     {
       "org": "Sustainable Learning Lab 2",
@@ -88,7 +88,7 @@
       "school": "Singapore Management University",
       "detail": "B.S. in Human-Computer Interactions",
       "dates": "Aug 2023 – May 2027 (expected)",
-      "note": "Dean’s List AY2024–2026"
+      "note": ""
     }
   ],
   "talks": [

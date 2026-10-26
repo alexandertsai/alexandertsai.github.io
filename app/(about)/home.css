@@ -44,7 +44,8 @@
 .home-summary { font-size: 15px; line-height: 1.9; color: var(--site-copy); }
 .home-meta { font-family: var(--mono); font-size: 11px; line-height: 1.8; color: var(--muted); }
 .home-link { color: var(--ink); text-decoration: underline; text-decoration-color: #71846b66; text-underline-offset: 4px; transition: color 180ms, text-decoration-color 180ms; }
-.home-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.home-link:hover, .home-link:focus-visible { color: var(--accent); text-decoration-color: var(--accent); }
+.home-link:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
 .home-project-list { margin-top: 22px; }
 .home-project { display: grid; grid-template-columns: 32px minmax(0, 1fr) 24px; align-items: baseline; gap: 18px; padding: 26px 0; border-bottom: 1px solid var(--line); }
 .home-project-number { font-family: var(--mono); font-size: 10px; color: var(--muted); }

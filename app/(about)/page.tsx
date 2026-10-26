@@ -7,10 +7,17 @@ import "./home.css";
 
 type Entry = (typeof content.experience)[number] | (typeof content.research)[number];
 
+function inlineLinks(text: string) {
+  return text.split(/(\[[^\]]+\]\(https?:\/\/[^\s)]+\))/g).map((part, index) => {
+    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
+    return link ? <a key={index} className="home-link" href={link[2]} target="_blank" rel="noopener noreferrer">{link[1]}</a> : part;
+  });
+}
+
 function emphasize(text: string, focused = false) {
   const parts = text.split(/\*\*(.+?)\*\*/g);
   const highlight = parts.findIndex((part, index) => index % 2 && /\d[\d.,]*\s*(?:%|×)/.test(part));
-  return parts.map((part, index) => index % 2 && (!focused || index === (highlight < 0 ? 1 : highlight)) ? <strong key={index}>{part}</strong> : part);
+  return parts.map((part, index) => index % 2 && (!focused || index === (highlight < 0 ? 1 : highlight)) ? <strong key={index}>{inlineLinks(part)}</strong> : inlineLinks(part));
 }
 
 function Heading({ id, children, className = "" }: { id: string; children: React.ReactNode; className?: string }) {
