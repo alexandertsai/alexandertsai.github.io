@@ -12,7 +12,6 @@ export default function ProjectFigure({ href }: { href: string }) {
       const ring = Math.floor(i / 16), angle = i % 16 / 16 * Math.PI * 2;
       return { x: 70 + Math.cos(angle) * (12 + ring * 11), y: 50 + Math.sin(angle) * (10 + ring * 8), r: 2.4 + Math.sin(i * 3) * .7, warm: i % 7 < 2 };
     }
-    if (index === 1) return { x: 32 + i % 8 * 10.7, y: 14 + Math.floor(i / 8) * 10.7, r: Math.abs(i % 8 - Math.floor(i / 8)) < 2 ? 3.5 : 2.1, warm: (i % 8 + Math.floor(i / 8)) % 7 === 0 };
     const node = Math.floor(i / 16), angle = i * 2.4, spread = Math.sqrt(i % 16) * 3.8;
     return { x: [30, 78, 115][node] + Math.cos(angle) * spread, y: [69, 27, 67][node] + Math.sin(angle) * spread, r: 2.7, warm: node === 1 };
   });
