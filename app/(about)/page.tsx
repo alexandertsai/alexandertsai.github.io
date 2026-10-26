@@ -95,7 +95,7 @@ export default function Home() {
                   <a className="home-project" href={item.href} target="_blank" rel="noopener noreferrer">
                     <span className="home-project-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                     <div data-pond-text><h3>{item.title}</h3><p>{item.note}</p></div>
-                    <div className="home-project-art" data-pond-text><ProjectFigure index={index} /></div>
+                    <div className="home-project-art" data-pond-text><ProjectFigure href={item.href} /></div>
                     <span className="home-project-arrow" aria-hidden="true">↗</span>
                   </a>
                 </li>
