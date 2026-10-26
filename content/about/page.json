@@ -105,14 +105,14 @@
   ],
   "projects": [
     {
-      "title": "CS180: computer vision",
-      "note": "Computer vision experiments with filters, frequencies and image alignment.",
-      "href": "https://alexandertsai.github.io/cs180/"
-    },
-    {
       "title": "Stella",
       "note": "Built with Lily and Stella at Cal Hacks 2026 to observe workflows, identify patterns, and automate work through computer use.",
       "href": "https://github.com/alexandertsai/stella"
+    },
+    {
+      "title": "CS180: computer vision",
+      "note": "Computer vision experiments with filters, frequencies and image alignment.",
+      "href": "https://alexandertsai.github.io/cs180/"
     },
     {
       "title": "Telegram MCP server",
