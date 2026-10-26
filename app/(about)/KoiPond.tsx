@@ -279,19 +279,14 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       for (let index = ripples.length - 1; index >= 0; index--) {
         const ripple = ripples[index];
         const age = time - ripple.born;
-        if (age > 4.2) { ripples.splice(index, 1); continue; }
+        if (age >= 3.7) { ripples.splice(index, 1); continue; }
         if (still) continue;
         const reach = Math.min(640, Math.max(width, height) * .48);
-        for (let ring = 0; ring < 4; ring++) {
-          const progress = (age - ring * .16) / 3.7;
-          if (progress <= 0 || progress >= 1) continue;
-          const radius = 5 + reach * (1 - Math.pow(1 - progress, 1.7));
-          const opacity = Math.pow(1 - progress, 1.8) * (.42 - ring * .055);
-          ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 1.2;
-          ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y, radius, radius * .76, 0, 0, TAU); ctx.stroke();
-          ctx.strokeStyle = `rgba(255,255,250,${opacity * .85})`; ctx.lineWidth = 1.6;
-          ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y - 2, radius + 2, radius * .76 + 2, 0, 0, TAU); ctx.stroke();
-        }
+        const progress = age / 3.7;
+        const radius = 5 + reach * (1 - Math.pow(1 - progress, 1.7));
+        const opacity = Math.pow(1 - progress, 1.8) * .42;
+        ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y, radius, radius * .76, 0, 0, TAU); ctx.stroke();
       }
 
     };

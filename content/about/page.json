@@ -110,9 +110,9 @@
       "href": "https://alexandertsai.github.io/cs180/"
     },
     {
-      "title": "Mechanistic interpretability notebooks",
-      "note": "Notebooks rebuilding transformer models from scratch.",
-      "href": "https://github.com/alexandertsai/foundational-mechanistic-interpretability"
+      "title": "Stella",
+      "note": "Built with Lily and Stella at Cal Hacks 2026 to observe workflows, identify patterns, and automate work through computer use.",
+      "href": "https://github.com/alexandertsai/stella"
     },
     {
       "title": "Telegram MCP server",
