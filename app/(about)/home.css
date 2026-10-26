@@ -47,13 +47,11 @@
 .home-link:hover, .home-link:focus-visible { color: var(--accent); text-decoration-color: var(--accent); }
 .home-link:focus-visible { outline: 1px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
 .home-project-list { margin-top: 22px; }
-.home-project { display: grid; grid-template-columns: 32px minmax(0, 1fr) 24px; align-items: baseline; gap: 18px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.home-project { display: grid; grid-template-columns: 32px minmax(0, 1fr); align-items: baseline; gap: 18px; padding: 26px 0; border-bottom: 1px solid var(--line); }
 .home-project-number { font-family: var(--mono); font-size: 10px; color: var(--muted); }
 .home-project h3 { font-size: 21px; font-weight: 400; line-height: 1.45; letter-spacing: -.025em; transition: color 180ms; }
 .home-project p { margin-top: 5px; max-width: 560px; font-size: 14px; line-height: 1.8; color: var(--site-copy); }
-.home-project-arrow { font-size: 20px; color: var(--muted); transition: transform 180ms, color 180ms; }
-.home-project:hover h3, .home-project:hover .home-project-arrow { color: var(--accent); }
-.home-project:hover .home-project-arrow { transform: translate(3px, -3px); }
+.home-project:hover h3, .home-project:focus-visible h3 { color: var(--accent); }
 .home-details { padding-top: 2px; }
 .home-details > div > ul > li > p.text-\[15px\] { color: var(--site-copy); margin-top: 5px; }
 .home-details .font-semibold { font-weight: 500; }
@@ -71,7 +69,7 @@
   .home-location { display: inline; }
   .home-links { gap: 18px; }
   .home-section { margin-top: 48px; }
-  .home-project { grid-template-columns: 22px minmax(0, 1fr) 18px; gap: 12px; padding: 24px 0; }
+  .home-project { grid-template-columns: 22px minmax(0, 1fr); gap: 12px; padding: 24px 0; }
   .home-project h3 { font-size: 19px; }
   .home-project p { font-size: 13px; }
 }
@@ -82,14 +80,13 @@
   .home-scroll { margin-top: 44px; }
 }
 
-.home-project { grid-template-columns: 32px minmax(0, 1fr) 160px 24px; align-items: center; }
+.home-project { grid-template-columns: 32px minmax(0, 1fr) 160px; align-items: center; }
 .home-project-figure { display: block; width: 160px; height: 110px; opacity: .85; transition: opacity 180ms, transform 180ms; }
 .home-project:hover .home-project-figure, .home-project:focus-visible .home-project-figure { opacity: 1; transform: translateY(-2px); }
 @media (max-width: 760px) {
-  .home-project { grid-template-columns: 22px minmax(0, 1fr) 20px; align-items: baseline; }
+  .home-project { grid-template-columns: 22px minmax(0, 1fr); align-items: baseline; }
   .home-project-art { grid-column: 2; grid-row: 2; }
   .home-project-figure { width: 130px; height: 90px; }
-  .home-project-arrow { grid-column: 3; grid-row: 1; }
 }
 @media (prefers-reduced-motion: reduce) { .home-project-figure { transition: none; transform: none !important; } }
 
