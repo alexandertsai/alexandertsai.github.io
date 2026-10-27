@@ -1,4 +1,28 @@
 export type WaterPointer = { x: number; y: number; active: boolean };
+export type Ripple = { x: number; y: number; born: number };
+export const RIPPLE_DURATION = 2.2;
+
+export function rippleRadius(progress: number, width: number, height: number) {
+  const reach = Math.min(640, Math.max(width, height) * .48);
+  return 5 + reach * (1 - Math.pow(1 - Math.max(0, Math.min(1, progress)), 1.7));
+}
+
+export function rippleCurrent(x: number, y: number, time: number, ripples: Ripple[], width: number, height: number) {
+  let pushX = 0, pushY = 0;
+  for (const ripple of ripples) {
+    const progress = (time - ripple.born) / RIPPLE_DURATION;
+    if (progress < 0 || progress >= 1) continue;
+    const dx = x - ripple.x, dy = y - ripple.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance < 1) continue;
+    const offset = (Math.hypot(dx, dy / .76) - rippleRadius(progress, width, height)) / 36;
+    const strength = Math.exp(-offset * offset * 2) * Math.pow(1 - progress, 1.8) * 18;
+    pushX += dx / distance * strength;
+    pushY += dy / distance * strength;
+  }
+  const limit = Math.max(1, Math.hypot(pushX, pushY) / 18);
+  return { x: pushX / limit, y: pushY / limit };
+}
 export type Obstacle = { x: number; y: number; radius: number; angle: number };
 export type Minnow = { x: number; y: number; vx: number; vy: number; group: number; alarm: number; turn: number; depth: number; phase: number };
 

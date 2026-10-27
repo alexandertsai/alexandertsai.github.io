@@ -2,10 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createSchool, sampleSpine } from "./koi-motion";
-import { createWakeField, createWaterSchools, waterCurrent, type WaterPointer } from "./pond-water";
+import { createWakeField, createWaterSchools, rippleCurrent, rippleRadius, RIPPLE_DURATION, waterCurrent, type Ripple, type WaterPointer } from "./pond-water";
 import "./pond.css";
 
-type Ripple = { x: number; y: number; born: number };
 const TAU = Math.PI * 2;
 const PALETTES = [
   { shade: ["#7e979a", "#d4ded8", "#a4b8b6"], patch: "#df4423", fin: "#b6c7c6" },
@@ -127,6 +126,11 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
     let sequence = "";
     const ripples: Ripple[] = [];
     const school = createSchool(small);
+    const current = (x: number, y: number, time: number) => {
+      const flow = waterCurrent(x, y, time);
+      const ripple = rippleCurrent(x, y, time, ripples, width, height);
+      return { x: flow.x + ripple.x, y: flow.y + ripple.y };
+    };
     const hero = document.querySelector(".home-hero");
     let pondOpacity = 1;
     let minnows: ReturnType<typeof createWaterSchools>;
@@ -200,7 +204,7 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
         let steps = 0;
         while (accumulator >= 1 / 60 && steps < 5) {
           const step = 1 / 60;
-          time += step; school.advance(step, time, width, height, waterCurrent);
+          time += step; school.advance(step, time, width, height, current);
           const obstacles = school.fish.flatMap(swimmer => {
             const size = Math.max(.7, scale) * swimmer.size;
             return [0, 85, 155].map(distance => ({ ...sampleSpine(swimmer, distance * size, width, height), radius: 40 + size * 65 }));
@@ -279,11 +283,10 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       for (let index = ripples.length - 1; index >= 0; index--) {
         const ripple = ripples[index];
         const age = time - ripple.born;
-        if (age >= 2.6) { ripples.splice(index, 1); continue; }
+        if (age >= RIPPLE_DURATION) { ripples.splice(index, 1); continue; }
         if (still) continue;
-        const reach = Math.min(640, Math.max(width, height) * .48);
-        const progress = age / 2.6;
-        const radius = 5 + reach * (1 - Math.pow(1 - progress, 1.7));
+        const progress = age / RIPPLE_DURATION;
+        const radius = rippleRadius(progress, width, height);
         const opacity = Math.pow(1 - progress, 1.8) * .42;
         ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y, radius, radius * .76, 0, 0, TAU); ctx.stroke();

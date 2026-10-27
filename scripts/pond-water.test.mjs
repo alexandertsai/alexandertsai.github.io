@@ -5,7 +5,25 @@ import ts from 'typescript';
 
 const source = await readFile(new URL('../app/(about)/pond-water.ts', import.meta.url), 'utf8');
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext } });
-const { createWakeField, createWaterSchools, waterCurrent } = await import(`data:text/javascript;base64,${Buffer.from(compiled.outputText).toString('base64')}`);
+const { createWakeField, createWaterSchools, rippleCurrent, rippleRadius, RIPPLE_DURATION, waterCurrent } = await import(`data:text/javascript;base64,${Buffer.from(compiled.outputText).toString('base64')}`);
+
+test('ripples gently push outward at the visible wavefront and leave distant fish alone', () => {
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    const ripple = { x: width / 2, y: height / 2, born: 0 };
+    const time = .3, radius = rippleRadius(time / RIPPLE_DURATION, width, height);
+    const right = rippleCurrent(ripple.x + radius, ripple.y, time, [ripple], width, height);
+    const above = rippleCurrent(ripple.x, ripple.y - radius * .76, time, [ripple], width, height);
+    assert.ok(right.x > 0 && right.x < 18);
+    assert.equal(right.y, 0);
+    assert.ok(above.y < 0 && above.y > -18);
+    const distant = rippleCurrent(ripple.x + radius + 150, ripple.y, time, [ripple], width, height);
+    assert.ok(Math.hypot(distant.x, distant.y) < .001);
+    assert.deepEqual(rippleCurrent(ripple.x + radius, ripple.y, RIPPLE_DURATION, [ripple], width, height), { x: 0, y: 0 });
+    const repeated = rippleCurrent(ripple.x + radius, ripple.y, time, Array(6).fill(ripple), width, height);
+    assert.ok(Math.hypot(repeated.x, repeated.y) <= 18);
+    assert.deepEqual(rippleCurrent(ripple.x, ripple.y, time, [ripple], width, height), { x: 0, y: 0 });
+  }
+});
 
 test('tail wakes spread into nearby cells and fade without gaining energy', () => {
   const wake = createWakeField(25, 25);
