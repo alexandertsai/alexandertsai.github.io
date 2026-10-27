@@ -137,9 +137,18 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
     let wake: ReturnType<typeof createWakeField>;
     const waterPointer: WaterPointer = { x: 0, y: 0, active: false };
     const leavePointer = () => { waterPointer.active = false; };
+    const hasSelection = () => {
+      const selection = window.getSelection();
+      return selection !== null && !selection.isCollapsed;
+    };
+    const selectionChanged = () => {
+      if (!hasSelection()) return;
+      ripples.length = 0;
+      leavePointer();
+    };
     const movePointer = (event: PointerEvent) => {
       waterPointer.x = event.clientX; waterPointer.y = event.clientY;
-      waterPointer.active = event.pointerType !== "touch" && !(event.target as Element).closest("a, button, input, textarea");
+      waterPointer.active = event.pointerType !== "touch" && event.buttons === 0 && !hasSelection() && !(event.target as Element).closest("a, button, input, textarea, [contenteditable], .blog-article");
     };
     let mask = new Float32Array(0), maskDirty = true, lastMask = 0;
     const invalidateMask = () => {
@@ -175,8 +184,8 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       wake = createWakeField(buffer.width, buffer.height);
       invalidateMask();
     };
-    const pointer = (event: PointerEvent) => {
-      if (motion.matches || event.button !== 0 || (event.target as Element).closest("a, button, input, textarea")) return;
+    const pointer = (event: MouseEvent) => {
+      if (motion.matches || event.button !== 0 || hasSelection() || (event.target as Element).closest("a, button, input, textarea, [contenteditable], .blog-article")) return;
       minnows.splash(event.clientX, event.clientY);
       school.disturb(event.clientX, event.clientY, width, height);
       wake.stamp(event.clientX, event.clientY, 5, .75);
@@ -299,9 +308,10 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
     window.addEventListener("pointermove", movePointer, { passive: true });
     window.addEventListener("blur", leavePointer);
     document.documentElement.addEventListener("pointerleave", leavePointer);
-    window.addEventListener("resize", resize); window.addEventListener("pointerdown", pointer); window.addEventListener("keydown", key);
+    document.addEventListener("selectionchange", selectionChanged);
+    window.addEventListener("resize", resize); window.addEventListener("click", pointer); window.addEventListener("keydown", key);
     raf = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("pointermove", movePointer); window.removeEventListener("blur", leavePointer); document.documentElement.removeEventListener("pointerleave", leavePointer); window.removeEventListener("scroll", invalidateMask); window.removeEventListener("resize", resize); window.removeEventListener("pointerdown", pointer); window.removeEventListener("keydown", key); };
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("pointermove", movePointer); window.removeEventListener("blur", leavePointer); document.removeEventListener("selectionchange", selectionChanged); document.documentElement.removeEventListener("pointerleave", leavePointer); window.removeEventListener("scroll", invalidateMask); window.removeEventListener("resize", resize); window.removeEventListener("click", pointer); window.removeEventListener("keydown", key); };
   }, [small]);
 
   return <>

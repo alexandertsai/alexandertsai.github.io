@@ -9,6 +9,7 @@
   line-height: 1.8;
 }
 .professional-blog .blog-reader { display: grid; grid-template-columns: 190px minmax(0, 680px); gap: 56px; width: min(100% - 112px, 1080px); margin: 0 auto 100px; padding-top: 56px; }
+.professional-blog .pond canvas { opacity: .3; filter: saturate(.65); }
 .professional-blog .blog-sidebar { align-self: start; position: sticky; top: 36px; }
 .blog-sidebar-label { margin-bottom: 18px; font-family: var(--site-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--site-muted); }
 .professional-blog .blog-sidebar ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
