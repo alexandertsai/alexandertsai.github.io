@@ -279,10 +279,10 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       for (let index = ripples.length - 1; index >= 0; index--) {
         const ripple = ripples[index];
         const age = time - ripple.born;
-        if (age >= 3.7) { ripples.splice(index, 1); continue; }
+        if (age >= 2.6) { ripples.splice(index, 1); continue; }
         if (still) continue;
         const reach = Math.min(640, Math.max(width, height) * .48);
-        const progress = age / 3.7;
+        const progress = age / 2.6;
         const radius = 5 + reach * (1 - Math.pow(1 - progress, 1.7));
         const opacity = Math.pow(1 - progress, 1.8) * .42;
         ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 2;
