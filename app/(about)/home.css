@@ -20,7 +20,7 @@
 .home-hero { position: relative; padding: 82px 0 58px; min-height: 680px; }
 .home-eyebrow { display: flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 11px; letter-spacing: .03em; color: var(--muted); }
 .home-eyebrow > span { width: 5px; height: 5px; border-radius: 50%; background: #71846b; box-shadow: 0 0 12px #71846b26; }
-.home-name { width: fit-content; margin-top: 26px; font-size: clamp(72px, 8vw, 104px); font-weight: 400; line-height: .98; letter-spacing: -.065em; }
+.home-name { width: fit-content; margin-top: 26px; font-size: clamp(64px, 7.2vw, 94px); font-weight: 400; line-height: .98; letter-spacing: -.065em; }
 .home-name > span { color: var(--accent); }
 .home-intro { max-width: 530px; margin-top: 32px; font-size: 17px; line-height: 1.85; color: var(--site-copy); text-wrap: pretty; }
 .home-links { display: flex; width: fit-content; flex-wrap: wrap; gap: 24px; margin-top: 26px; }
@@ -61,7 +61,7 @@
 @media (max-width: 760px) {
   .home-shell { width: calc(100% - 48px); }
   .home-hero { padding-top: 64px; min-height: 650px; }
-  .home-name { font-size: clamp(60px, 20vw, 80px); }
+  .home-name { font-size: clamp(54px, 18vw, 72px); }
   .home-intro { max-width: 440px; padding-right: 8px; font-size: 16px; }
   .home-content { margin: 0; padding: 0 0 56px; }
   .home-job { grid-template-columns: 1fr; gap: 18px; padding: 18px 0 25px; }
