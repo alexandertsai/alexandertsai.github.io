@@ -13,11 +13,11 @@ const PALETTES = [
   { shade: ["#95a9af", "#e7eee9", "#b7c8c9"], patch: "#252e33", fin: "#9eb8be" },
 ];
 
-function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn: number) {
+function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn: number, alarm: number) {
   const palette = PALETTES[variant % PALETTES.length];
   const bend = (x: number) => {
     const tail = Math.max(0, (80 - x) / 185);
-    return Math.sin(time * 4.5 - tail * 4) * 15 * tail * tail;
+    return Math.sin(time * 4.5 - tail * 4) * 15 * (1 + alarm * 1.4) * tail * tail;
   };
   const body = new Path2D();
   body.moveTo(108, bend(108));
@@ -178,6 +178,7 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
     const pointer = (event: PointerEvent) => {
       if (motion.matches || event.button !== 0 || (event.target as Element).closest("a, button, input, textarea")) return;
       minnows.splash(event.clientX, event.clientY);
+      school.disturb(event.clientX, event.clientY, width, height);
       wake.stamp(event.clientX, event.clientY, 5, .75);
       ripples.push({ x: event.clientX, y: event.clientY, born: time });
       if (ripples.length > 6) ripples.shift();
@@ -226,7 +227,7 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       }
       [...school.fish].sort((a, b) => a.depth - b.depth).forEach((swimmer) => {
         ink.clearRect(0, 0, texture.width, texture.height);
-        ink.save(); ink.translate(200, 120); koi(ink, swimmer.phase / 4.5, swimmer.variant, swimmer.turn); ink.restore();
+        ink.save(); ink.translate(200, 120); koi(ink, swimmer.phase / 4.5, swimmer.variant, swimmer.turn, swimmer.alarm); ink.restore();
         const size = Math.max(.7, scale) * swimmer.size;
         paint.save(); paint.scale(1 / 7, 1 / 10);
         const light = 1 + .035 * Math.sin(time * .27 + swimmer.x * 4) * Math.cos(time * .18 + swimmer.y * 5);

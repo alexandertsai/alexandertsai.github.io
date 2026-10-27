@@ -15,12 +15,12 @@ export function rippleCurrent(x: number, y: number, time: number, ripples: Rippl
     const dx = x - ripple.x, dy = y - ripple.y;
     const distance = Math.hypot(dx, dy);
     if (distance < 1) continue;
-    const offset = (Math.hypot(dx, dy / .76) - rippleRadius(progress, width, height)) / 36;
-    const strength = Math.exp(-offset * offset * 2) * Math.pow(1 - progress, 1.8) * 18;
+    const offset = (Math.hypot(dx, dy / .76) - rippleRadius(progress, width, height)) / 48;
+    const strength = Math.exp(-offset * offset * 2) * Math.pow(1 - progress, 1.8) * 32;
     pushX += dx / distance * strength;
     pushY += dy / distance * strength;
   }
-  const limit = Math.max(1, Math.hypot(pushX, pushY) / 18);
+  const limit = Math.max(1, Math.hypot(pushX, pushY) / 32);
   return { x: pushX / limit, y: pushY / limit };
 }
 export type Obstacle = { x: number; y: number; radius: number; angle: number };

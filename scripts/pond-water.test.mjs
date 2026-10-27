@@ -13,14 +13,14 @@ test('ripples gently push outward at the visible wavefront and leave distant fis
     const time = .3, radius = rippleRadius(time / RIPPLE_DURATION, width, height);
     const right = rippleCurrent(ripple.x + radius, ripple.y, time, [ripple], width, height);
     const above = rippleCurrent(ripple.x, ripple.y - radius * .76, time, [ripple], width, height);
-    assert.ok(right.x > 0 && right.x < 18);
+    assert.ok(right.x > 0 && right.x < 32);
     assert.equal(right.y, 0);
-    assert.ok(above.y < 0 && above.y > -18);
+    assert.ok(above.y < 0 && above.y > -32);
     const distant = rippleCurrent(ripple.x + radius + 150, ripple.y, time, [ripple], width, height);
     assert.ok(Math.hypot(distant.x, distant.y) < .001);
     assert.deepEqual(rippleCurrent(ripple.x + radius, ripple.y, RIPPLE_DURATION, [ripple], width, height), { x: 0, y: 0 });
     const repeated = rippleCurrent(ripple.x + radius, ripple.y, time, Array(6).fill(ripple), width, height);
-    assert.ok(Math.hypot(repeated.x, repeated.y) <= 18);
+    assert.ok(Math.hypot(repeated.x, repeated.y) <= 32);
     assert.deepEqual(rippleCurrent(ripple.x, ripple.y, time, [ripple], width, height), { x: 0, y: 0 });
   }
 });

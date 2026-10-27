@@ -84,3 +84,37 @@ test('a small fish gains speed when descending and accelerates smoothly', () => 
   assert.ok(down.velocity > up.velocity * 1.2);
   assert.notEqual(down.velocity, startVelocity);
 });
+
+test('clicking a fish body builds a bounded escape response that settles naturally', () => {
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    const school = createSchool();
+    const calm = createSchool();
+    const fish = school.fish[0], baseline = calm.fish[0];
+    for (const swimmer of [fish, baseline]) {
+      swimmer.x = .5; swimmer.y = .5; swimmer.angle = 0; swimmer.turn = 0;
+      swimmer.targetX = .9; swimmer.targetY = .5;
+    }
+    school.resetTrails(width, height);
+    calm.resetTrails(width, height);
+    school.disturb(-1000, -1000, width, height);
+    assert.equal(fish.alarm, 0, 'distant clicks should leave koi alone');
+    const size = Math.max(.7, Math.min(width / 1250, 1.15)) * fish.size;
+    const body = sampleSpine(fish, 100 * size, width, height);
+    school.disturb(body.x, body.y, width, height);
+    const once = fish.alarm;
+    assert.ok(once > 0, 'the body should react even when the head is far from the click');
+    for (let i = 0; i < 8; i++) school.disturb(body.x, body.y, width, height);
+    assert.ok(fish.alarm > once && fish.alarm <= 1, 'repeated clicks should build a capped response');
+    assert.equal(fish.angle, 0, 'clicks should not instantly rotate the fish');
+    assert.equal(fish.velocity, baseline.velocity, 'clicks should not instantly change speed');
+    for (let step = 1; step <= 60; step++) {
+      school.advance(1 / 60, step / 60, width, height);
+      calm.advance(1 / 60, step / 60, width, height);
+    }
+    assert.ok(fish.velocity > baseline.velocity * 1.2, 'the fish should accelerate to escape');
+    assert.ok(fish.phase > baseline.phase + 1, 'the tail beat should visibly quicken');
+    assert.ok(Math.hypot(fish.x * width - body.x, fish.y * height - body.y) > 100 * size, 'the fish should swim away from the click');
+    for (let step = 61; step <= 480; step++) school.advance(1 / 60, step / 60, width, height);
+    assert.ok(fish.alarm < .005, 'the fish should calm down after clicking stops');
+  }
+});
