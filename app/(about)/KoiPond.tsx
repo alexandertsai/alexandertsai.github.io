@@ -285,7 +285,7 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
         const progress = age / 3.7;
         const radius = 5 + reach * (1 - Math.pow(1 - progress, 1.7));
         const opacity = Math.pow(1 - progress, 1.8) * .42;
-        ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 6;
+        ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y, radius, radius * .76, 0, 0, TAU); ctx.stroke();
       }
 

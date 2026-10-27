@@ -33,7 +33,7 @@
   "experience": [
     {
       "org": "TikTok",
-      "title": "Research Scientist Intern",
+      "title": "Machine Learning Engineer Intern",
       "location": "San Jose, CA",
       "dates": "Sep 2026 – Present",
       "summary": "Developed an **AI-generated image classifier** with **99.85% precision and 76% recall** on production data. Experiments were focused around OOD generalisation, robustness to compression, and interpretability. Global deployment is projected to reduce refund abuse losses by over $4M annually."
@@ -106,12 +106,12 @@
   "projects": [
     {
       "title": "Stella",
-      "note": "Built with Lily and Stella at Cal Hacks 2026 to observe workflows, identify patterns, and automate work through computer use.",
+      "note": "Built with my friends Lily and Stella at Cal Hacks 2026! Stella is a tool to autonomously identify workflow patterns and automate tasks for users unfamiliar with AI.",
       "href": "https://github.com/alexandertsai/stella"
     },
     {
       "title": "CS180: computer vision",
-      "note": "Computer vision experiments with filters, frequencies and image alignment.",
+      "note": "Computer vision experiments with lots of fun images exploring filters, frequencies and image alignment.",
       "href": "https://alexandertsai.github.io/cs180/"
     },
     {
