@@ -3,7 +3,7 @@ import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
 
-const source = await readFile(new URL('../archive/ponyo-design/components/ponyo-surfaces.ts', import.meta.url), 'utf8');
+const source = await readFile(new URL('../app/(about)/ponyo-surfaces.ts', import.meta.url), 'utf8');
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext } });
 const { resolvePerch, isSurfaceVisible, chooseGreetingPerch, nearbyPerches, MAX_JUMP_DISTANCE } = await import(`data:text/javascript;base64,${Buffer.from(compiled.outputText).toString('base64')}`);
 

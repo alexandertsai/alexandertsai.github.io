@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="380" viewBox="0 0 640 380" role="img" aria-labelledby="title desc">
+<title id="title">Two dog-head pathways in a neural network</title><desc id="desc">A simplified neural network with three hidden layers of circular neurons and one output neuron that answers "Is this a dog?". In each hidden layer, a blue neuron detects left-facing dog heads and an ochre neuron detects right-facing dog heads. Each excites the same-orientation neuron in the next layer and, through dashed red connections ending in bars, inhibits the opposite-orientation neuron. Both pathways feed the output neuron. Faint grey neurons and connections show the rest of the network.</desc>
+<rect width="640" height="380" fill="white"/>
+<defs><marker id="blue-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10" fill="#245880"/></marker><marker id="ochre-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10" fill="#a66d30"/></marker><marker id="inhibit" viewBox="0 0 10 14" refX="5" refY="7" markerWidth="6" markerHeight="8" orient="auto"><path d="M5 1 L5 13" stroke="#ad514b" stroke-width="2"/></marker></defs>
+<path d="M70 40 L225 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 40 L225 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 40 L225 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 40 L225 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 40 L225 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 110 L225 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 110 L225 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 110 L225 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 110 L225 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 110 L225 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 180 L225 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 180 L225 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 180 L225 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 180 L225 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 180 L225 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 250 L225 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 250 L225 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 250 L225 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 250 L225 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 250 L225 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 320 L225 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 320 L225 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 320 L225 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 320 L225 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M70 320 L225 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 40 L380 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 40 L380 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 40 L380 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 40 L380 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 40 L380 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 110 L380 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 110 L380 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 110 L380 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 110 L380 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 110 L380 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 180 L380 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 180 L380 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 180 L380 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 180 L380 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 180 L380 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 250 L380 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 250 L380 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 250 L380 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 250 L380 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 250 L380 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 320 L380 40" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 320 L380 110" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 320 L380 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 320 L380 250" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M225 320 L380 320" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 40 L560 60" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 40 L560 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 40 L560 300" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 110 L560 60" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 110 L560 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 110 L560 300" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 180 L560 60" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 180 L560 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 180 L560 300" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 250 L560 60" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 250 L560 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 250 L560 300" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 320 L560 60" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 320 L560 180" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M380 320 L560 300" stroke="#e8ebed" stroke-width="1.3"/>
+<path d="M95.2 132.8 L198.3 225.9" fill="none" stroke="#ad514b" stroke-width="2.2" stroke-dasharray="6 5" marker-end="url(#inhibit)"/>
+<path d="M95.2 227.2 L198.3 134.1" fill="none" stroke="#ad514b" stroke-width="2.2" stroke-dasharray="6 5" marker-end="url(#inhibit)"/>
+<path d="M104 110 L189 110" fill="none" stroke="#245880" stroke-width="3.5" marker-end="url(#blue-arrow)"/>
+<path d="M104 250 L189 250" fill="none" stroke="#a66d30" stroke-width="3.5" marker-end="url(#ochre-arrow)"/>
+<path d="M250.2 132.8 L353.3 225.9" fill="none" stroke="#ad514b" stroke-width="2.2" stroke-dasharray="6 5" marker-end="url(#inhibit)"/>
+<path d="M250.2 227.2 L353.3 134.1" fill="none" stroke="#ad514b" stroke-width="2.2" stroke-dasharray="6 5" marker-end="url(#inhibit)"/>
+<path d="M259 110 L344 110" fill="none" stroke="#245880" stroke-width="3.5" marker-end="url(#blue-arrow)"/>
+<path d="M259 250 L344 250" fill="none" stroke="#a66d30" stroke-width="3.5" marker-end="url(#ochre-arrow)"/>
+<path d="M411.7 122.3 L520.9 164.8" fill="none" stroke="#245880" stroke-width="3.5" marker-end="url(#blue-arrow)"/>
+<path d="M411.7 237.7 L520.9 195.2" fill="none" stroke="#a66d30" stroke-width="3.5" marker-end="url(#ochre-arrow)"/>
+<circle cx="70" cy="40" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="70" cy="110" r="30" fill="white" stroke="#245880" stroke-width="2"/>
+<g transform="translate(70,112) scale(-0.72,.72)"><path d="M-16 22 L-16 4 Q-25-4-20-15 L-22-28 L-7-19 Q8-19 13-6 L27 0 L27 8 L12 13 L9 23 Z" fill="none" stroke="#245880" stroke-width="2.8" stroke-linejoin="round"/><circle cx="8" cy="-7" r="2.6" fill="#245880"/></g>
+<circle cx="70" cy="180" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="70" cy="250" r="30" fill="white" stroke="#a66d30" stroke-width="2"/>
+<g transform="translate(70,252) scale(0.72,.72)"><path d="M-16 22 L-16 4 Q-25-4-20-15 L-22-28 L-7-19 Q8-19 13-6 L27 0 L27 8 L12 13 L9 23 Z" fill="none" stroke="#a66d30" stroke-width="2.8" stroke-linejoin="round"/><circle cx="8" cy="-7" r="2.6" fill="#a66d30"/></g>
+<circle cx="70" cy="320" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="225" cy="40" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="225" cy="110" r="30" fill="white" stroke="#245880" stroke-width="2"/>
+<g transform="translate(225,112) scale(-0.72,.72)"><path d="M-16 22 L-16 4 Q-25-4-20-15 L-22-28 L-7-19 Q8-19 13-6 L27 0 L27 8 L12 13 L9 23 Z" fill="none" stroke="#245880" stroke-width="2.8" stroke-linejoin="round"/><circle cx="8" cy="-7" r="2.6" fill="#245880"/></g>
+<circle cx="225" cy="180" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="225" cy="250" r="30" fill="white" stroke="#a66d30" stroke-width="2"/>
+<g transform="translate(225,252) scale(0.72,.72)"><path d="M-16 22 L-16 4 Q-25-4-20-15 L-22-28 L-7-19 Q8-19 13-6 L27 0 L27 8 L12 13 L9 23 Z" fill="none" stroke="#a66d30" stroke-width="2.8" stroke-linejoin="round"/><circle cx="8" cy="-7" r="2.6" fill="#a66d30"/></g>
+<circle cx="225" cy="320" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="380" cy="40" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="380" cy="110" r="30" fill="white" stroke="#245880" stroke-width="2"/>
+<g transform="translate(380,112) scale(-0.72,.72)"><path d="M-16 22 L-16 4 Q-25-4-20-15 L-22-28 L-7-19 Q8-19 13-6 L27 0 L27 8 L12 13 L9 23 Z" fill="none" stroke="#245880" stroke-width="2.8" stroke-linejoin="round"/><circle cx="8" cy="-7" r="2.6" fill="#245880"/></g>
+<circle cx="380" cy="180" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="380" cy="250" r="30" fill="white" stroke="#a66d30" stroke-width="2"/>
+<g transform="translate(380,252) scale(0.72,.72)"><path d="M-16 22 L-16 4 Q-25-4-20-15 L-22-28 L-7-19 Q8-19 13-6 L27 0 L27 8 L12 13 L9 23 Z" fill="none" stroke="#a66d30" stroke-width="2.8" stroke-linejoin="round"/><circle cx="8" cy="-7" r="2.6" fill="#a66d30"/></g>
+<circle cx="380" cy="320" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="560" cy="60" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<circle cx="560" cy="180" r="36" fill="#f4f6f7" stroke="#626e76" stroke-width="2"/>
+<g transform="translate(-5,2)"><path d="M547 188 L547 172 L541 153 L554 159 Q565 154 576 159 L589 153 L583 172 L583 188 Q565 204 547 188Z" fill="none" stroke="#626e76" stroke-width="2" stroke-linejoin="round"/><circle cx="555" cy="174" r="2" fill="#626e76"/><circle cx="575" cy="174" r="2" fill="#626e76"/><path d="M561 184 L569 184 L565 188Z" fill="#626e76"/></g>
+<circle cx="560" cy="300" r="8" fill="white" stroke="#cfd5da" stroke-width="1.5"/>
+<text x="560" y="242" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="19" font-weight="600" fill="#333" stroke="white" stroke-width="6" stroke-linejoin="round" paint-order="stroke">Is this a dog?</text>
+<text x="70" y="372" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="400" fill="#777" stroke="white" stroke-width="6" stroke-linejoin="round" paint-order="stroke">Layer 1</text>
+<text x="225" y="372" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="400" fill="#777" stroke="white" stroke-width="6" stroke-linejoin="round" paint-order="stroke">Layer 2</text>
+<text x="380" y="372" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="400" fill="#777" stroke="white" stroke-width="6" stroke-linejoin="round" paint-order="stroke">Layer 3</text>
+<text x="560" y="372" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="400" fill="#777" stroke="white" stroke-width="6" stroke-linejoin="round" paint-order="stroke">Output</text>
+</svg>

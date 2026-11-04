@@ -1,0 +1,21 @@
+<style>
+.nn-quiz input { flex:1 1 auto; min-width:0; box-sizing:border-box; height:38px; margin:0; padding:0 12px; border:1px solid #ccc; border-radius:2px; background:#fff; color:#333; font:15px Inter,Arial,sans-serif; }
+.nn-quiz input:focus { outline:none; border-color:#245880; box-shadow:0 0 0 1px #245880; }
+.nn-quiz button { flex:none; height:38px; margin:0; padding:0 16px; border:1px solid #333; border-radius:2px; background:#333; color:#fff; font:600 13px Inter,Arial,sans-serif; cursor:pointer; }
+.nn-quiz button:hover { background:#444; }
+.nn-quiz button:focus-visible { outline:2px solid #245880; outline-offset:2px; }
+.nn-quiz .nn-quiz-right, .nn-quiz .nn-quiz-wrong { display:none; margin:12px 0 0; font-size:13px; line-height:1.6; }
+.nn-quiz:has(input:valid) input { border-color:#245880; }
+.nn-quiz:has(input:valid) .nn-quiz-right { display:block; }
+.nn-quiz:has(input:invalid:not(:placeholder-shown):not(:focus)) input { border-color:#ad514b; }
+.nn-quiz:has(input:invalid:not(:placeholder-shown):not(:focus)) .nn-quiz-wrong { display:block; }
+</style>
+<figure class="nn-quiz" style="margin:0;padding:20px 22px;border:1px solid #0000001a;border-radius:2px;font-family:Inter,Arial,sans-serif;line-height:1.5">
+<p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#555">Quick recap</p>
+<label>
+<span style="display:block;margin:0 0 14px;font-size:16px;color:#333">How many input neurons do we need for a 16 × 16 greyscale image?</span>
+<span style="display:flex;gap:8px"><input type="text" required pattern="\s*256\s*" placeholder="Type your answer" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><button type="button">Check</button></span>
+</label>
+<p class="nn-quiz-right" style="color:#245880">Correct. 16 × 16 = 256 pixels, with one input neuron per pixel.</p>
+<p class="nn-quiz-wrong" style="color:#ad514b">Not quite. Try again.</p>
+</figure>

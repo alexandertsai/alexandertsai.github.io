@@ -69,3 +69,15 @@ test('post ordering and asset removal stay in sync after edits', async (t) => {
   await prepareContent(root);
   assert.ok(!fs.existsSync(path.join(root, 'public/_content/blog/posts/newer/unused.png')));
 });
+
+test('reading time follows the prose as it changes, excluding HTML figure markup', async (t) => {
+  const { root, write } = fixture(t);
+  write('blog/posts/example/post.json', JSON.stringify({ title: 'Example', date: '2026-10-31' }));
+  write('blog/posts/example/figure.html', `<figure>${'0 1 '.repeat(1000)}</figure>`);
+  write('blog/posts/example/index.typ', 'word '.repeat(750) + '\n\n#html("figure.html")');
+  assert.equal((await prepareContent(root))[0].readingMinutes, 3);
+  write('blog/posts/example/index.typ', 'word '.repeat(1250));
+  assert.equal((await prepareContent(root))[0].readingMinutes, 5);
+  write('blog/posts/example/index.typ', 'A short post.');
+  assert.equal((await prepareContent(root))[0].readingMinutes, 1);
+});

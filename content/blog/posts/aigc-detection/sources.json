@@ -1,0 +1,70 @@
+{
+  "images": [
+    {
+      "file": "npr-image.webp",
+      "origin": "detect-aigc-poster/assets/pixel-patterns-npr.png",
+      "description": "Gridded face image, cropped from the NPR panel.",
+      "method": "Tan et al. Rethinking the up-sampling operations in CNN-based generative network for generalizable deepfake detection. CVPR 2024.",
+      "modifications": "Cropped to the image tile, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "npr-map.webp",
+      "origin": "detect-aigc-poster/assets/pixel-patterns-npr.png",
+      "description": "Neighbouring pixel relationship (NPR) map of the face image.",
+      "method": "Tan et al. Rethinking the up-sampling operations in CNN-based generative network for generalizable deepfake detection. CVPR 2024.",
+      "modifications": "Cropped to the map tile, contrast stretched, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "npr-image-zoom.webp",
+      "origin": "detect-aigc-poster/assets/pixel-patterns-npr.png",
+      "description": "Close-up of the eyes in the gridded face image.",
+      "method": "Tan et al. Rethinking the up-sampling operations in CNN-based generative network for generalizable deepfake detection. CVPR 2024.",
+      "modifications": "Cropped to a 260px eye region, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "npr-map-zoom.webp",
+      "origin": "detect-aigc-poster/assets/pixel-patterns-npr.png",
+      "description": "Close-up of the eyes in the NPR map.",
+      "method": "Tan et al. Rethinking the up-sampling operations in CNN-based generative network for generalizable deepfake detection. CVPR 2024.",
+      "modifications": "Cropped to the same 260px eye region, contrast stretched, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "spectral-mask.webp",
+      "origin": "detect-aigc-poster/assets/spectral-patterns.png",
+      "description": "Frequency mask M.",
+      "method": "Karageorgiou et al. Any-resolution AI-generated image detection by spectral learning. CVPR 2025.",
+      "modifications": "Cropped to the tile, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "spectral-high-pass.webp",
+      "origin": "detect-aigc-poster/assets/spectral-patterns.png",
+      "description": "High-pass version of the street image.",
+      "method": "Karageorgiou et al. Any-resolution AI-generated image detection by spectral learning. CVPR 2025.",
+      "modifications": "Cropped to the tile, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "spectral-mask-inverse.webp",
+      "origin": "detect-aigc-poster/assets/spectral-patterns.png",
+      "description": "Frequency mask 1 - M.",
+      "method": "Karageorgiou et al. Any-resolution AI-generated image detection by spectral learning. CVPR 2025.",
+      "modifications": "Cropped to the tile, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "spectral-low-pass.webp",
+      "origin": "detect-aigc-poster/assets/spectral-patterns.png",
+      "description": "Low-pass version of the street image.",
+      "method": "Karageorgiou et al. Any-resolution AI-generated image detection by spectral learning. CVPR 2025.",
+      "modifications": "Cropped to the tile, resized to 480px, converted to WebP."
+    },
+    {
+      "file": "sae-features.jpg",
+      "origin": "detect-aigc-poster/assets/rq3-sae-features.png",
+      "description": "Top-activating generated images for one sparse autoencoder feature.",
+      "modifications": "Resized to 1400px wide, converted to JPEG."
+    },
+    {
+      "file": "poster.webp",
+      "description": "Photo of Alexander presenting the poster at the AIM Intelligence Safety Conference."
+    }
+  ]
+}

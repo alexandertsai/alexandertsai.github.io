@@ -1,2 +1,3 @@
-body { margin: 24px; color: #242b29; }
+@font-face { font-family: Inter; src: url('/fonts/inter/Inter-Regular.ttf') format('truetype'); font-style: normal; font-weight: 400; font-display: swap; }
+body { margin: 24px; color: #333; font: 17px/1.7 Inter, Arial, sans-serif; }
 .typst-document > svg { display: block; width: 100%; height: auto; }

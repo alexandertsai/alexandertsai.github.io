@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300" role="img" aria-labelledby="title desc">
+<title id="title">A circuit inside a neural network</title><desc id="desc">A simplified feedforward network with five columns of neurons. A small connected subset across the hidden layers is highlighted in blue; other neurons and connections are grey.</desc>
+<rect width="640" height="300" fill="white"/>
+<path d="M56 95 L188 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 95 L188 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 95 L188 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 95 L188 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 150 L188 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 150 L188 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 150 L188 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 150 L188 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 205 L188 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 205 L188 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 205 L188 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 205 L188 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 65 L320 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 65 L320 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 65 L320 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 65 L320 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 120 L320 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 120 L320 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 120 L320 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 120 L320 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 175 L320 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 175 L320 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 175 L320 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 175 L320 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 230 L320 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 230 L320 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 230 L320 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M188 230 L320 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 65 L452 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 65 L452 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 65 L452 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 65 L452 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 120 L452 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 120 L452 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 120 L452 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 120 L452 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 175 L452 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 175 L452 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 175 L452 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 175 L452 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 230 L452 65" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 230 L452 120" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 230 L452 175" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M320 230 L452 230" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 65 L584 95" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 65 L584 150" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 65 L584 205" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 120 L584 95" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 120 L584 150" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 120 L584 205" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 175 L584 95" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 175 L584 150" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 175 L584 205" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 230 L584 95" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 230 L584 150" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M452 230 L584 205" fill="none" stroke="#dce1e5" stroke-width="1.3" />
+<path d="M56 150 L188 120" fill="none" stroke="#245880" stroke-width="3.6" />
+<path d="M56 205 L188 175" fill="none" stroke="#245880" stroke-width="3.6" />
+<path d="M188 120 L320 175" fill="none" stroke="#245880" stroke-width="3.6" />
+<path d="M188 175 L320 175" fill="none" stroke="#245880" stroke-width="3.6" />
+<path d="M320 175 L452 120" fill="none" stroke="#245880" stroke-width="3.6" />
+<path d="M452 120 L584 150" fill="none" stroke="#245880" stroke-width="3.6" />
+<circle cx="56" cy="95" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="56" cy="150" r="12" fill="#e9f1f7" stroke="#245880" stroke-width="2"/>
+<circle cx="56" cy="205" r="12" fill="#e9f1f7" stroke="#245880" stroke-width="2"/>
+<circle cx="188" cy="65" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="188" cy="120" r="12" fill="#e9f1f7" stroke="#245880" stroke-width="2"/>
+<circle cx="188" cy="175" r="12" fill="#e9f1f7" stroke="#245880" stroke-width="2"/>
+<circle cx="188" cy="230" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="320" cy="65" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="320" cy="120" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="320" cy="175" r="12" fill="#e9f1f7" stroke="#245880" stroke-width="2"/>
+<circle cx="320" cy="230" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="452" cy="65" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="452" cy="120" r="12" fill="#e9f1f7" stroke="#245880" stroke-width="2"/>
+<circle cx="452" cy="175" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="452" cy="230" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="584" cy="95" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<circle cx="584" cy="150" r="12" fill="#e9f1f7" stroke="#245880" stroke-width="2"/>
+<circle cx="584" cy="205" r="12" fill="#fff" stroke="#c9d0d6" stroke-width="1.5"/>
+<text x="56" y="274" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="18" fill="#777">Input</text>
+<text x="320" y="274" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="18" fill="#777">Hidden layers</text>
+<text x="584" y="274" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="18" fill="#777">Output</text>
+</svg>

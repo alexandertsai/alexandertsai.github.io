@@ -1,0 +1,59 @@
+{
+  "images": [
+    {
+      "file": "dog-eyes.png",
+      "url": "https://distill.pub/2017/feature-visualization/appendix/handpicked/mixed4a-00501.png",
+      "authors": [
+        "Chris Olah",
+        "Alexander Mordvintsev",
+        "Ludwig Schubert"
+      ],
+      "source": "https://distill.pub/2017/feature-visualization/",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "None"
+    },
+    {
+      "file": "birds.png",
+      "url": "https://distill.pub/2017/feature-visualization/appendix/handpicked/mixed4a-00505.png",
+      "authors": [
+        "Chris Olah",
+        "Alexander Mordvintsev",
+        "Ludwig Schubert"
+      ],
+      "source": "https://distill.pub/2017/feature-visualization/",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "None"
+    },
+    {
+      "file": "cat-fur.png",
+      "url": "https://distill.pub/2017/feature-visualization/appendix/handpicked/mixed4e-00809.png",
+      "authors": [
+        "Chris Olah",
+        "Alexander Mordvintsev",
+        "Ludwig Schubert"
+      ],
+      "source": "https://distill.pub/2017/feature-visualization/",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "modifications": "None"
+    }
+  ],
+  "diagrams": [
+    {
+      "file": "network-circuit.svg",
+      "description": "Original schematic of a highlighted subnetwork; no measured weights or activations."
+    },
+    {
+      "file": "dog-orientation.svg",
+      "description": "Original simplified schematic, based on Circuit 2: Oriented Dog Head Detection. Grey nodes and generic layer labels are illustrative.",
+      "source": "https://distill.pub/2020/circuits/zoom-in/#claim-2-dog"
+    },
+    {
+      "file": "shutdown-compliance.html",
+      "description": "Redrawn chart of Gemini 2.5 Pro compliance rates: task only 7%, shutdown warning 84%, clear precedence 100%; 1,000 episodes per condition.",
+      "source": "https://www.lesswrong.com/posts/wnzkjSmrgWZaBa2aC/self-preservation-or-instruction-ambiguity-examining-the"
+    }
+  ]
+}

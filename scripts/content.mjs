@@ -25,6 +25,20 @@ function writeIfChanged(file, text) {
   fs.writeFileSync(file, text);
 }
 
+function readingMinutes(source) {
+  const prose = source
+    .replace(/#(?:html|image)\([^)]*\)/g, ' ')
+    .replace(/#link\("[^"\n]*"\)/g, '')
+    .replace(/#(?:set|show)[^\n]*/g, ' ')
+    .replace(/#text\([^)]*\)/g, '')
+    .replace(/\$[^$]*\$/g, ' ')
+    .replace(/https?:\/\/\S+/g, ' ')
+    .replace(/\/\/[^\n]*/g, ' ')
+    .replace(/<[^>]*>/g, ' ');
+  const words = prose.match(/\p{L}[\p{L}\p{M}\p{N}'’−-]*/gu)?.length ?? 0;
+  return Math.max(1, Math.round(words / 250));
+}
+
 export async function prepareContent(root = process.cwd(), { includeDrafts = false } = {}) {
   const contentRoot = path.join(root, 'content');
   const outputRoot = path.join(root, 'public', '_content');
@@ -113,7 +127,7 @@ export async function prepareContent(root = process.cwd(), { includeDrafts = fal
           rendered = rendered.slice(0, position) + '<div data-audio-control></div>' + rendered.slice(position);
         }
       }
-      records.push({ section, slug, title: data.title ?? '', date, preview: data.preview ?? '', draft: data.draft ?? false, html: rendered });
+      records.push({ section, slug, title: data.title ?? '', date, preview: data.preview ?? '', draft: data.draft ?? false, readingMinutes: readingMinutes(content), html: rendered });
     }
   }
 

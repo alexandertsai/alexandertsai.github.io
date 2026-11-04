@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createSchool, sampleSpine } from "./koi-motion";
 import { createWakeField, createWaterSchools, rippleCurrent, rippleRadius, RIPPLE_DURATION, waterCurrent, type Ripple, type WaterPointer } from "./pond-water";
+import Ponyo from "./Ponyo";
 import "./pond.css";
 
 const TAU = Math.PI * 2;
@@ -106,11 +107,24 @@ function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn:
   ctx.beginPath(); ctx.moveTo(102, -7); ctx.quadraticCurveTo(99, 0, 102, 7); ctx.stroke();
 }
 
-export default function KoiPond({ small = false }: { small?: boolean }) {
+export default function KoiPond({ small = false, background = true }: { small?: boolean; background?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [visitor, setVisitor] = useState(false);
 
   useEffect(() => {
+    let sequence = "";
+    const key = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey || (event.target as Element).closest("input, textarea, [contenteditable]")) return;
+      sequence = (sequence + event.key.toLowerCase()).slice(-5);
+      if (sequence === "ponyo") setVisitor(value => !value);
+      if (event.key === "Escape") setVisitor(false);
+    };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  }, []);
+
+  useEffect(() => {
+    if (!background) return;
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
@@ -123,7 +137,6 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
     if (!ink) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let width = 0, height = 0, raf = 0, last = 0, time = 0, accumulator = 0;
-    let sequence = "";
     const ripples: Ripple[] = [];
     const school = createSchool(small);
     const current = (x: number, y: number, time: number) => {
@@ -191,12 +204,6 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
       wake.stamp(event.clientX, event.clientY, 5, .75);
       ripples.push({ x: event.clientX, y: event.clientY, born: time });
       if (ripples.length > 6) ripples.shift();
-    };
-    const key = (event: KeyboardEvent) => {
-      if (event.metaKey || event.ctrlKey || event.altKey || (event.target as Element).closest("input, textarea, [contenteditable]")) return;
-      sequence = (sequence + event.key.toLowerCase()).slice(-5);
-      if (sequence === "ponyo") setVisitor(value => !value);
-      if (event.key === "Escape") setVisitor(false);
     };
     const draw = (now: number) => {
       raf = requestAnimationFrame(draw);
@@ -309,19 +316,14 @@ export default function KoiPond({ small = false }: { small?: boolean }) {
     window.addEventListener("blur", leavePointer);
     document.documentElement.addEventListener("pointerleave", leavePointer);
     document.addEventListener("selectionchange", selectionChanged);
-    window.addEventListener("resize", resize); window.addEventListener("click", pointer); window.addEventListener("keydown", key);
+    window.addEventListener("resize", resize); window.addEventListener("click", pointer);
     raf = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("pointermove", movePointer); window.removeEventListener("blur", leavePointer); document.removeEventListener("selectionchange", selectionChanged); document.documentElement.removeEventListener("pointerleave", leavePointer); window.removeEventListener("scroll", invalidateMask); window.removeEventListener("resize", resize); window.removeEventListener("click", pointer); window.removeEventListener("keydown", key); };
-  }, [small]);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("pointermove", movePointer); window.removeEventListener("blur", leavePointer); document.removeEventListener("selectionchange", selectionChanged); document.documentElement.removeEventListener("pointerleave", leavePointer); window.removeEventListener("scroll", invalidateMask); window.removeEventListener("resize", resize); window.removeEventListener("click", pointer); };
+  }, [small, background]);
 
   return <>
-    <div className={`pond${small ? " pond-small" : ""}`} aria-hidden="true"><canvas ref={canvasRef} /><div className="pond-vignette" /></div>
-    <div className="pond-controls">
-      <button className="pond-secret" aria-label="Call a visitor to the pond" aria-pressed={visitor} title="Something in the water" onClick={() => setVisitor(value => !value)}>~ &gt;&lt; ~</button>
-    </div>
-    {visitor && <div className="ascii-ponyo" aria-hidden="true">
-      <pre><span>{"   .wwwww.   \n  w( o o )w  \n   \\  v  /   \n"}</span>{"  /SSSSSSS\\  \n / SSSSSSS \\ \n   SSSSSSS   \n"}<span>{"   /     \\   "}</span></pre>
-    </div>}
+    {background && <div className={`pond${small ? " pond-small" : ""}`} aria-hidden="true"><canvas ref={canvasRef} /><div className="pond-vignette" /></div>}
+    {visitor && <Ponyo />}
     <span className="sr-only" role="status">{visitor ? "Ponyo is visiting. Press Escape to send her home." : ""}</span>
   </>;
 }

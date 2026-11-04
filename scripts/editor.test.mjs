@@ -81,6 +81,31 @@ test('archived blog content and its media are excluded from builds', async (t) =
   assert.equal(fs.existsSync(path.join(root, 'public/_content/blog/posts/old-post/photo.png')), false);
 });
 
+test('post-local HTML figures render between Typst sections in previews and publication', async (t) => {
+  const { root, request } = await fixture(t);
+  const first = (await request('/api/posts/example', 'POST', post)).data;
+  const figure = path.join(root, 'content/blog/posts/example/faces.html');
+  fs.writeFileSync(figure, '<figure aria-label="Happy and frowning faces">Pixel faces<img src="pixel.svg" alt="Pixel"></figure>');
+  fs.writeFileSync(path.join(root, 'content/blog/posts/example/pixel.svg'), '<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><rect width="1" height="1"/></svg>');
+  const body = 'Before.\n\n#html("faces.html")\n\nAfter.';
+  const preview = await request('/api/posts/example/preview', 'POST', { body });
+  assert.equal(preview.status, 200);
+  assert.match(preview.data.html, /src="data:image\/svg\+xml;base64,/);
+  assert.match(preview.data.html, /<\/svg><\/div><div class="typst-html"[^>]*><figure/);
+  assert.match(preview.data.html, /<\/figure><\/div><div class="typst-document"><svg/);
+  assert.equal((await request('/api/posts/example', 'PUT', { ...first, body, draft: false })).status, 200);
+  const [published] = await prepareContent(root);
+  assert.equal(published.html.match(/Happy and frowning faces/g).length, 3);
+  fs.writeFileSync(figure, '<figure>Updated faces</figure>');
+  assert.match((await request('/api/posts/example/preview', 'POST', { body })).data.html, /Updated faces/);
+  fs.writeFileSync(path.join(root, 'outside.html'), '<p>Outside the post</p>');
+  assert.equal((await request('/api/posts/example/preview', 'POST', { body: '#html("../../../../outside.html")' })).status, 400);
+  fs.symlinkSync(path.join(root, 'outside.html'), path.join(root, 'content/blog/posts/example/linked.html'));
+  assert.equal((await request('/api/posts/example/preview', 'POST', { body: '#html("linked.html")' })).status, 400);
+  fs.writeFileSync(figure, '<img src="../../../../outside.html">');
+  assert.equal((await request('/api/posts/example/preview', 'POST', { body })).status, 400);
+});
+
 test('editing a URL moves the post and media while rejecting collisions and stale saves', async (t) => {
   const { root, request } = await fixture(t);
   const first = (await request('/api/posts/original', 'POST', post)).data;

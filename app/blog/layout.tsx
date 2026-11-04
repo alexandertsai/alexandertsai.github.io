@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="professional-blog">
-      <KoiPond small />
+      <KoiPond background={false} />
       {process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL && (
         <link rel="stylesheet" href={process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL} />
       )}
