@@ -3,7 +3,6 @@
 import { useEffect, useRef, type MouseEvent } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import content from "@/content/about/page.json";
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -46,7 +45,6 @@ export default function SiteHeader() {
         Writing
         {writing && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
       </Link>
-      <a href={content.resume} target="_blank" rel="noopener noreferrer">Résumé <span aria-hidden="true">↗</span></a>
     </nav>
   </header>;
 }

@@ -17,7 +17,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
       )}
       <SiteHeader />
       {children}
-      <footer className="site-footer site-width" data-pond-text><span>Alexander Tsai</span><a href="mailto:alexyrtsai@gmail.com">Get in touch ↗</a></footer>
+      <footer className="site-footer site-width" data-pond-text><a href="mailto:alexyrtsai@gmail.com">Get in touch ↗</a></footer>
     </div>
   );
 }

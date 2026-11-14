@@ -1,7 +1,6 @@
 {
   "name": "Alexander Tsai",
-  "about": "I'm a machine learning engineer working on **AI image detection**, interpretability, and content moderation at TikTok. I'm also currently a visiting student at UC Berkeley!",
-  "personal": "Outside of work, I play the drums and generally just love meeting people!",
+  "about": "I'm a machine learning engineer at TikTok, working on detecting AI content and interpretability. I was previously with Exoduspoint, developing quantitative strategies for credit default swaps. \n\nI am interested in how we can better understand the inner workings behind various multimodal models, particularly within the domains of AI safety and robotics. \n\n In my spare time, I write blogs and program drones. Connect with me on [X](https://x.com/alexyrtsai) to see more!",
   "facts": [
     {
       "label": "Based in",
@@ -23,11 +22,6 @@
       "label": "LinkedIn",
       "href": "https://www.linkedin.com/in/alexandertsaiyihrae",
       "icon": "linkedin"
-    },
-    {
-      "label": "GitHub",
-      "href": "https://github.com/alexandertsai",
-      "icon": "github"
     }
   ],
   "experience": [
@@ -51,7 +45,6 @@
       "location": "San Jose, CA · Singapore",
       "dates": "Jul 2025 – May 2026",
       "summary": "Built and deployed a content moderation pipeline with **Qwen3-VL and XGBoost**. Work revolved around improving a VLM's visual understanding through RL (GRPO) and optimizing inference (speculative decoding, batching, multithreading) for large-scale offline processing."
-
     },
     {
       "org": "Tradeweb",
@@ -115,9 +108,9 @@
       "href": "https://alexandertsai.github.io/cs180/"
     },
     {
-      "title": "Telegram MCP server",
-      "note": "An MCP server connecting Claude and Telegram.",
-      "href": "https://github.com/alexandertsai/mcp-telegram"
+      "title": "Agent Communication",
+      "note": "Lightweight messaging between local Claude, Codex, and Antigravity sessions working in the same repository.",
+      "href": "https://github.com/alexandertsai/agent-communication"
     }
   ],
   "skills": [

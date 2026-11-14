@@ -20,7 +20,7 @@ body { --site-mono: var(--font-jetbrains-mono), Menlo, Consolas, monospace; }
 .site-header .site-nav-active { position: absolute; left: 0; right: 0; bottom: 5px; height: 1px; margin: 0; background: var(--site-accent); }
 .home-shell, .professional-blog .blog-reader { animation: site-page-enter 200ms ease-out; }
 @keyframes site-page-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-.site-footer { position: relative; display: flex; justify-content: space-between; padding: 32px 0 84px; border-top: 1px solid var(--site-line); font-family: var(--site-mono); font-size: 11px; color: var(--site-muted); }
+.site-footer { position: relative; display: flex; justify-content: flex-end; padding: 32px 0 84px; border-top: 1px solid var(--site-line); font-family: var(--site-mono); font-size: 11px; color: var(--site-muted); }
 .site-footer a { transition: color 180ms; }
 .site-footer a:hover { color: var(--site-accent); }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 5px; border-radius: 2px; }

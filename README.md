@@ -138,6 +138,8 @@ Edit `content/about/page.json` for the introduction, contact links, experience, 
 
 The blog uses `NEXT_PUBLIC_ADOBE_FONTS_KIT_URL` for its Adobe Fonts stylesheet. Set it in `.env.local` and the build environment. Blog browser font stacks are shared in `public/typography.css`. Native Typst font configuration is described above.
 
+Use `\n` in the introduction string for a new line, or `\n\n` for a blank line between paragraphs. JSON strings cannot contain literal line breaks.
+
 ## ASCII koi homepage
 
 The homepage uses `app/(about)/KoiPond.tsx`, an original canvas renderer inspired by [ascii-sharks](https://github.com/stackedlol/ascii-sharks). Rounded koi bodies, barbels, patterned scales, and flowing fins are sampled into a grid of colored ASCII characters. Each fish steers toward changing destinations across the viewport, gives nearby koi room and makes occasional trips beyond the viewport before swimming back, and bends its body through turns. Run `npm run test:koi` to check roaming and containment at desktop and mobile sizes. Click open water for ripples. The scene respects reduced-motion preferences and pauses while the tab is hidden. At most four fish of varied sizes swim on the homepage; writing pages have a plain background. Each fish accelerates and slows independently, with smaller fish moving faster and gaining speed on downward passes. Ivory/vermilion, gold, blue-silver, and cream/charcoal palettes distinguish the four koi. Bodies follow the route their heads traveled, creating curved turns.

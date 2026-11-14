@@ -70,25 +70,24 @@ export default function Home() {
               ))}
             </ul>
           </nav>
-          <a className="home-scroll" href="#experience-heading">Selected experience <span aria-hidden="true">↓</span></a>
         </section>
         <div className="home-content">
           <section className="home-section" aria-labelledby="experience-heading">
             <Heading id="experience-heading">Industry experience</Heading>
-            <ol className="mt-5 grid gap-7">
+            <ol className="home-timeline mt-5 grid gap-7">
               {content.experience.map((job) => <TimelineEntry key={`${job.org}-${job.dates}`} entry={job} />)}
             </ol>
           </section>
 
           <section className="home-section" aria-labelledby="research-heading">
             <Heading id="research-heading">Research &amp; mentorship</Heading>
-            <ol className="mt-5 grid gap-7">
+            <ol className="home-timeline mt-5 grid gap-7">
               {content.research.map((item) => <TimelineEntry key={item.org} entry={item} />)}
             </ol>
           </section>
 
           <section className="home-section home-projects" aria-labelledby="projects-heading">
-            <Heading id="projects-heading">Selected projects</Heading>
+            <Heading id="projects-heading">Projects</Heading>
             <ol className="home-project-list">
               {content.projects.map((item, index) => (
                 <li key={item.href}>
@@ -143,7 +142,7 @@ export default function Home() {
         </div>
       </div>
 
-      <footer className="site-footer site-width" data-pond-text><span>{content.name}</span><a href="mailto:alexyrtsai@gmail.com">Get in touch ↗</a></footer>
+      <footer className="site-footer site-width" data-pond-text><a href="mailto:alexyrtsai@gmail.com">Get in touch ↗</a></footer>
     </main>
   );
 }

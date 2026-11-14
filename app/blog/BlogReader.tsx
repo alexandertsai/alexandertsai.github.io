@@ -9,15 +9,11 @@ export default async function BlogReader({ slug }: { slug: string }) {
 
   return (
     <div className="blog-reader">
-      {/* TODO: replace this mobile menu with something better, e.g. a /blog/ index page and a back link on posts. */}
       <nav className="blog-menu" aria-label="Posts menu">
         <details key={slug}>
           <summary>
-            <span className="blog-menu-text">
-              <span className="blog-menu-label">Articles · {posts.length}</span>
-              <span className="blog-menu-current">{post.title}</span>
-            </span>
-            <span className="blog-menu-icon" aria-hidden="true"><span /><span /><span /></span>
+            <span className="blog-menu-label">Browse articles<span className="blog-menu-count">{posts.length}</span></span>
+            <svg className="blog-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
           </summary>
           <ul className="blog-menu-panel">
             {posts.map((entry) => (
@@ -29,7 +25,6 @@ export default async function BlogReader({ slug }: { slug: string }) {
             ))}
           </ul>
         </details>
-        <span className="blog-menu-progress" aria-hidden="true" />
       </nav>
       <nav className="blog-sidebar" aria-label="Posts">
         <p className="blog-sidebar-label">Articles</p>
