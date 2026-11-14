@@ -62,9 +62,8 @@ export default function Home() {
             <ul className="home-links" data-pond-text>
               {contacts.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} title={link.label} {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                  <a href={link.href} aria-label={link.label} title={link.label} {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
                     <ContactIcon name={link.icon === "doc" ? "blog" : link.icon} />
-                    <span>{link.label}</span>
                   </a>
                 </li>
               ))}
