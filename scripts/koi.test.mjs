@@ -118,3 +118,20 @@ test('clicking a fish body builds a bounded escape response that settles natural
     assert.ok(fish.alarm < .005, 'the fish should calm down after clicking stops');
   }
 });
+
+test('a koi inside the hero text area swims out on desktop and mobile', () => {
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    const school = createSchool();
+    school.fish.splice(1);
+    const fish = school.fish[0];
+    const avoid = { left: 24, right: width * .7, top: 150, bottom: 600 };
+    fish.x = (avoid.right - 20) / width;
+    fish.y = 375 / height;
+    fish.angle = Math.PI;
+    fish.excursionAt = 100;
+    school.resetTrails(width, height);
+    for (let step = 1; step <= 720; step++) school.advance(1 / 60, step / 60, width, height, undefined, avoid);
+    const x = fish.x * width, y = fish.y * height;
+    assert.ok(x < avoid.left || x > avoid.right || y < avoid.top || y > avoid.bottom, 'fish should leave the text area within twelve seconds even when initially facing inward');
+  }
+});

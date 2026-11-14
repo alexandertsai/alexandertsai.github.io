@@ -163,6 +163,7 @@ export default function KoiPond({ small = false, background = true }: { small?: 
       waterPointer.x = event.clientX; waterPointer.y = event.clientY;
       waterPointer.active = event.pointerType !== "touch" && event.buttons === 0 && !hasSelection() && !(event.target as Element).closest("a, button, input, textarea, [contenteditable], .blog-article");
     };
+    let heroBounds: { left: number; right: number; top: number; bottom: number } | undefined;
     let mask = new Float32Array(0), maskDirty = true, lastMask = 0;
     const invalidateMask = () => {
       maskDirty = true;
@@ -170,6 +171,12 @@ export default function KoiPond({ small = false, background = true }: { small?: 
       pondOpacity = small ? .55 : .28 + .72 * Math.max(0, Math.min(1, remaining / (height * .65)));
     };
     const measureText = () => {
+      const heroText = hero?.querySelectorAll("h1, .home-intro, .home-links");
+      const rects = heroText ? Array.from(heroText, element => element.getBoundingClientRect()) : [];
+      heroBounds = rects.length && rects.some(rect => rect.bottom > 0 && rect.top < height) ? {
+        left: Math.min(...rects.map(rect => rect.left)), right: Math.max(...rects.map(rect => rect.right)),
+        top: Math.min(...rects.map(rect => rect.top)), bottom: Math.max(...rects.map(rect => rect.bottom)),
+      } : undefined;
       const cols = buffer.width, rows = buffer.height;
       mask = new Float32Array(cols * rows).fill(1);
       for (const element of document.querySelectorAll("[data-pond-text]")) {
@@ -221,7 +228,7 @@ export default function KoiPond({ small = false, background = true }: { small?: 
         let steps = 0;
         while (accumulator >= 1 / 60 && steps < 5) {
           const step = 1 / 60;
-          time += step; school.advance(step, time, width, height, current);
+          time += step; school.advance(step, time, width, height, current, heroBounds);
           const obstacles = school.fish.flatMap(swimmer => {
             const size = Math.max(.7, scale) * swimmer.size;
             return [0, 85, 155].map(distance => ({ ...sampleSpine(swimmer, distance * size, width, height), radius: 40 + size * 65 }));

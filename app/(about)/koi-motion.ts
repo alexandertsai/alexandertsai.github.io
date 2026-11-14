@@ -58,7 +58,7 @@ export function createSchool(small = false) {
         y: swimmer.y - Math.sin(swimmer.angle) * index * 3 / height,
       }));
     },
-    advance(dt: number, time: number, width: number, height: number, flow?: (x: number, y: number, time: number) => { x: number; y: number }) {
+    advance(dt: number, time: number, width: number, height: number, flow?: (x: number, y: number, time: number) => { x: number; y: number }, avoid?: { left: number; right: number; top: number; bottom: number }) {
       const previous = fish.map(swimmer => ({ x: swimmer.x, y: swimmer.y, size: swimmer.size }));
       fish.forEach((swimmer, index) => {
         swimmer.alarm *= Math.exp(-dt * .7);
@@ -104,6 +104,25 @@ export function createSchool(small = false) {
           const length = Math.max(1, awayLength);
           dx = dx / routeLength * (1 - blend) + awayX / length * blend;
           dy = dy / routeLength * (1 - blend) + awayY / length * blend;
+        }
+        if (avoid) {
+          const padding = 70 + swimmer.size * 45;
+          const x = swimmer.x * width, y = swimmer.y * height;
+          const aheadX = x + Math.cos(swimmer.angle) * 100;
+          const aheadY = y + Math.sin(swimmer.angle) * 100;
+          if (aheadX > avoid.left - padding && aheadX < avoid.right + padding && aheadY > avoid.top - padding && aheadY < avoid.bottom + padding) {
+            const exits = [
+              { distance: x - avoid.left + padding, x: -1, y: 0 },
+              { distance: avoid.right + padding - x, x: 1, y: 0 },
+              { distance: y - avoid.top + padding, x: 0, y: -1 },
+              { distance: avoid.bottom + padding - y, x: 0, y: 1 },
+            ];
+            const exit = exits.reduce((a, b) => a.distance < b.distance ? a : b);
+            const length = Math.max(1, Math.hypot(dx, dy));
+            dx = dx / length * .15 + exit.x * .85;
+            dy = dy / length * .15 + exit.y * .85;
+            swimmer.alarm = Math.max(swimmer.alarm, .55);
+          }
         }
         const desired = Math.atan2(dy, dx) + Math.sin(time * .4 + index * 3) * .08;
         const difference = Math.atan2(Math.sin(desired - swimmer.angle), Math.cos(desired - swimmer.angle));

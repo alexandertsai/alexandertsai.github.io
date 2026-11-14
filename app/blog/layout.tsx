@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import SiteHeader from "../components/SiteHeader";
-import KoiPond from "../(about)/KoiPond";
 import "./blog.css";
 
 export const metadata: Metadata = {
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="professional-blog">
-      <KoiPond background={false} />
       {process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL && (
         <link rel="stylesheet" href={process.env.NEXT_PUBLIC_ADOBE_FONTS_KIT_URL} />
       )}

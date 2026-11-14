@@ -56,7 +56,7 @@ export default function Home() {
       <div className="home-shell">
         <section className="home-hero" aria-label="About">
           <p className="home-eyebrow"><span />{content.facts[0].value}</p>
-          <h1 className="home-name">Alexander<br />Tsai<span>.</span></h1>
+          <h1 className="home-name" data-pond-text>Alexander Tsai</h1>
           <p className="home-intro" data-pond-text>{emphasize(content.about)}</p>
           <nav aria-label="Contact and links">
             <ul className="home-links" data-pond-text>
