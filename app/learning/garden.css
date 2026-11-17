@@ -55,9 +55,6 @@
 .learning #bloom .opt.left::before { content: none; }
 .learning #bloom .opt.left::after { content: " +"; color: var(--red); }
 .learning #bloom .opt:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
-.learning #bloom .how { position: absolute; left: 0; top: 0; white-space: nowrap; color: var(--dim); font-size: 10.5px;
-  transform: translate(-50%, 0) translateY(6px); opacity: 0; transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s, opacity 0.5s 0.15s; }
-.learning #bloom.open .how { transform: translate(-50%, 0) translateY(16px); opacity: 1; }
 @media (max-width: 640px) { .learning #bloom { --r: 58px; } }
 .learning.reading .tl, .learning.reading .bl { display: none; }
 @media (max-width: 640px) {
@@ -68,9 +65,19 @@
 .learning .reader {
   position: fixed; left: 44%; right: calc(var(--edge) + 48px); top: 50%; transform: translateY(calc(-50% + 8px));
   max-width: 560px; opacity: 0; pointer-events: none; transition: opacity 0.45s ease, transform 0.45s ease;
-  display: flex; flex-direction: column; gap: 22px;
+  display: flex; flex-direction: column; gap: 22px; max-height: calc(100vh - 220px);
 }
 .learning .reader > * { flex-shrink: 0; }
+.learning .reader .head { display: flex; flex-direction: column; gap: 22px; }
+.learning .reader .scroll {
+  flex-shrink: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 22px;
+  margin-right: -14px; padding-right: 14px; scrollbar-width: thin; scrollbar-color: rgba(222,222,252,0.18) transparent;
+  --fade-top: 0px; --fade-bottom: 0px;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--fade-top), #000 calc(100% - var(--fade-bottom)), transparent 100%);
+}
+.learning .reader .scroll > * { flex-shrink: 0; }
+.learning .reader .scroll.more-above { --fade-top: 28px; }
+.learning .reader .scroll.more-below { --fade-bottom: 36px; }
 .learning.reading .reader { opacity: 1; pointer-events: auto; transform: translateY(-50%); }
 .learning .reader .path { color: var(--dim); font-size: 11px; letter-spacing: 0.02em; }
 .learning .reader .path button { color: var(--dim); }
@@ -116,9 +123,7 @@
 .learning .reader .connections li:hover .unlink, .learning .reader .unlink:focus { opacity: 1; }
 .learning .reader .unlink:hover { color: var(--red); }
 @media (hover: none) { .learning .reader .unlink { opacity: 0.6; } }
-.learning .reader .connections li button.rel { color: var(--dim); margin-right: 8px; }
-.learning .reader .connections li button.rel::before, .learning .reader .connections li button.unlink::before { content: none; }
-.learning .reader .connections li button.rel:hover { color: var(--ink); text-decoration: underline dotted; text-decoration-color: var(--dim); text-underline-offset: 4px; }
+.learning .reader .connections li button.unlink::before { content: none; }
 .learning .reader .articles ul { gap: 7px; }
 .learning .reader .articles li { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
 .learning .reader .articles a { color: var(--ink); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -129,16 +134,18 @@
 .learning .reader .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .learning.notes .reader, .learning.notes-out .reader {
   left: auto; right: calc(var(--edge) + 48px); top: 50%; transform: translateY(-50%); width: 400px;
-  max-width: calc(100vw - 2 * var(--edge) - 16px); max-height: calc(100vh - 2 * var(--edge) - 40px); overflow-y: auto; gap: 18px;
-  scrollbar-width: none; transition: opacity 0.3s ease;
+  max-width: calc(100vw - 2 * var(--edge) - 16px); max-height: calc(100vh - 2 * var(--edge) - 120px); gap: 18px;
+  transition: opacity 0.3s ease;
 }
 .learning.notes .reader { opacity: 1; pointer-events: auto; }
 .learning.notes-out .reader { opacity: 0; pointer-events: none; }
 .learning.notes .reader .path, .learning.notes-out .reader .path { font-size: 10.5px; }
+.learning:is(.notes, .notes-out) .reader :is(.head, .scroll) { gap: 18px; }
 .learning.notes .reader .path:empty, .learning.notes-out .reader .path:empty { display: none; }
 @media (max-width: 640px) {
   .learning .reader { left: calc(var(--edge) + 8px); right: calc(var(--edge) + 8px); top: 42%; bottom: calc(var(--edge) + 30px); transform: translateY(8px);
-    overflow-y: auto; gap: 16px; max-width: none; }
+    gap: 16px; max-width: none; max-height: none; }
+  .learning .reader :is(.head, .scroll) { gap: 16px; }
   .learning.reading .reader { transform: none; }
   .learning .reader h2 { font-size: 22px; }
   .learning .reader .body { font-size: 14px; line-height: 1.85; }
@@ -153,7 +160,8 @@
 @keyframes learning-in { from { opacity: 0; } }
 .learning:not(.editable) :is(li.add, .unlink, .del) { display: none; }
 .learning:not(.editable) .reader section:not(:has(li:not(.add))) { display: none; }
-.learning:not(.editable) .reader .connections li button.rel { pointer-events: none; }
 .learning:not(.editable) .reader [contenteditable]:hover { box-shadow: none; }
 @media (max-width: 640px) { .learning .tl { top: 86px; } }
 @media (prefers-reduced-motion: reduce) { .learning > :is(canvas, .grain, .vignette) { animation: none; } }
+.learning :is(a, button):focus-visible { outline: 1px solid var(--red); outline-offset: 3px; border-radius: 0; }
+.learning .reader ul { line-height: 1.45; }

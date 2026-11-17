@@ -13,7 +13,7 @@ let stopping = false;
 let restarting = false;
 let server;
 
-// Saves edits made on the Learning page into content/learning/garden.json. Only runs alongside the dev server.
+// Serves and saves the Learning page's data in content/learning/garden.json. Only runs alongside the dev server.
 const gardenFile = path.join(process.cwd(), 'content/learning/garden.json');
 const gardenKeys = new Set(['saved', 'added', 'edits', 'deleted', 'links', 'unlinked', 'articles']);
 const localOrigin = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
@@ -21,9 +21,10 @@ const gardenSaver = http.createServer(async (req, res) => {
   const origin = req.headers.origin ?? '';
   if (!localOrigin.test(origin)) return res.writeHead(403).end();
   res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.writeHead(204).end();
+  if (req.method === 'GET' && req.url === '/garden') return res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }).end(fs.readFileSync(gardenFile));
   if (req.method !== 'POST' || req.url !== '/save') return res.writeHead(404).end();
   try {
     const chunks = [];
@@ -53,7 +54,8 @@ function launch() {
   });
 }
 
-const watcher = fs.watch('content', { recursive: true }, () => {
+const watcher = fs.watch('content', { recursive: true }, (event, file) => {
+  if (file?.split(path.sep)[0] === 'learning') return;
   clearTimeout(timer);
   timer = setTimeout(() => {
     pending = pending.then(async () => {

@@ -9,13 +9,23 @@ const saveUrl = process.env.NEXT_PUBLIC_GARDEN_SAVE_URL ?? "";
 
 export default function LearningGarden({ store, className }: { store: unknown; className: string }) {
   const host = useRef<HTMLDivElement>(null);
+  const initial = useRef(store);
   const editable = Boolean(saveUrl);
 
+  // Mount once: later renders (a dev refresh after each save) must not restart the garden.
+  // While editing, read the file itself so the page never starts from an older copy.
   useEffect(() => {
     endDeparture();
-    if (!host.current) return;
-    return mountGarden(host.current, store, { editable, saveUrl });
-  }, [store, editable]);
+    const element = host.current;
+    if (!element) return;
+    let stop: (() => void) | undefined, cancelled = false;
+    const start = (data: unknown) => { if (!cancelled) stop = mountGarden(element, data, { editable, saveUrl }); };
+    if (editable) fetch(saveUrl.replace(/\/save$/, "/garden"), { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : initial.current), () => initial.current)
+      .then(start, () => start(initial.current));
+    else start(initial.current);
+    return () => { cancelled = true; stop?.(); };
+  }, [editable]);
 
   const editing = editable ? "plaintext-only" : undefined;
   return (
@@ -50,15 +60,19 @@ export default function LearningGarden({ store, className }: { store: unknown; c
       </dl>
       <div id="bloom" aria-live="polite" />
       <article className="reader glow" id="reader" aria-live="polite">
-        <div className="path" id="r-path" />
-        <h2 id="r-title" contentEditable={editing} suppressContentEditableWarning spellCheck={false} aria-label="Concept title" />
-        <p className="body" id="r-note" contentEditable={editing} suppressContentEditableWarning aria-label="Notes" />
-        <section className="articles" id="r-articles" />
-        <div className="cols">
-          <section className="inside" id="r-inside" />
-          <section className="connections" id="r-connections" />
+        <header className="head">
+          <div className="path" id="r-path" />
+          <h2 id="r-title" contentEditable={editing} suppressContentEditableWarning spellCheck={false} aria-label="Concept title" />
+        </header>
+        <div className="scroll" id="r-scroll">
+          <p className="body" id="r-note" contentEditable={editing} suppressContentEditableWarning aria-label="Notes" />
+          <section className="articles" id="r-articles" />
+          <div className="cols">
+            <section className="inside" id="r-inside" />
+            <section className="connections" id="r-connections" />
+          </div>
+          <div className="del" id="r-del" />
         </div>
-        <div className="del" id="r-del" />
       </article>
     </div>
   );
