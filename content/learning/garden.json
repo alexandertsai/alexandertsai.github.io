@@ -1,5 +1,5 @@
 {
-  "saved": 1794872795196,
+  "saved": 1794897635542,
   "added": [
     {
       "id": "umwixasws",
@@ -18,6 +18,24 @@
       "title": "mechanistic interpretability",
       "note": "",
       "parent": "umwixb2wh"
+    },
+    {
+      "id": "umwk7yqze",
+      "title": "tools",
+      "note": "",
+      "parent": "umwiyr9o9"
+    },
+    {
+      "id": "umwk7yqzf",
+      "title": "concepts",
+      "note": "",
+      "parent": "umwiyr9o9"
+    },
+    {
+      "id": "umwk7yqzg",
+      "title": "superposition",
+      "note": "",
+      "parent": "umwk7yqzf"
     },
     {
       "id": "umwizxpma",
@@ -65,25 +83,25 @@
       "id": "umwj0gssf",
       "title": "sparse autoencoders",
       "note": "",
-      "parent": "umwiyr9o9"
+      "parent": "umwk7yqze"
     },
     {
       "id": "umwj0h6zo",
       "title": "circuits",
       "note": "",
-      "parent": "umwiyr9o9"
+      "parent": "umwk7yqzf"
     },
     {
       "id": "umwj0iacw",
       "title": "j-lens",
       "note": "",
-      "parent": "umwiyr9o9"
+      "parent": "umwk7yqze"
     },
     {
       "id": "umwj0infl",
       "title": "model diffing",
       "note": "",
-      "parent": "umwiyr9o9"
+      "parent": "umwk7yqze"
     },
     {
       "id": "umwj20i3k",
@@ -108,6 +126,18 @@
       "title": "Double Descent",
       "note": "",
       "parent": "umwj2nr3p"
+    },
+    {
+      "id": "umwk71qu8",
+      "title": "LLMs",
+      "note": "",
+      "parent": "umwixb2wh"
+    },
+    {
+      "id": "umwk71ytu",
+      "title": "vlm",
+      "note": "",
+      "parent": "umwk71qu8"
     }
   ],
   "edits": {
@@ -134,10 +164,24 @@
     "umwizxpma": {
       "title": "post training",
       "note": "How do you make models even better?"
+    },
+    "umwk71qu8": {
+      "title": "LLM",
+      "note": ""
+    },
+    "umwj0gssf": {
+      "title": "sparse autoencoders",
+      "note": "The objective of an SAE is to try and find interpretable features within models. For example, a feature corresponding to deception. In an ideal world we'd find that, and remove it. This has not been that successful.\n\nSAEs have two components: an encoder and a decoder. The basic idea: \n1. Take some intermediate representation (x) from the residual stream\n2. The encoder E is literally a large, wide matrix and a bias. We take ReLU(Ex + b). \n3. The decoder D is another matrix that maps the ReLU(Ex + b) back into the x's dimension.\n4. Apply loss and train encoder and decoder\n\nConsider this more concrete example:\n1. The intermediate representation is a 768x1 vector\n2. The encoder E is a 3072x768 matrix + a bias. ReLU(Ex + b) has dimensions 3072 x 1. \n3. We use the decoder D of dimensions 768 x 3072 (also has a bias). output = D ReLU(Ex + b) is another vector of 768x1 dimensions.\n\nSAEs have two types of losses. The reconstruction loss determines how well our output matches our input. To prevent the SAE from something that just reconstructs x, we also use a sparsity loss - forcing many parameters within the ReLU(Ex +b) to be zero. The hope is that this allows us to identify interpretable features (rows) within E."
     }
   },
   "deleted": [],
-  "links": [],
+  "links": [
+    [
+      "umwk71qu8",
+      "umwj20q3a",
+      "part of"
+    ]
+  ],
   "unlinked": [],
   "articles": {
     "umwj20q3a": [
@@ -150,6 +194,12 @@
       {
         "url": "https://openai.com/index/deep-double-descent/",
         "title": "Deep double descent"
+      }
+    ],
+    "umwj0gssf": [
+      {
+        "url": "https://arxiv.org/abs/2502.04382",
+        "title": "Sparse Autoencoders for Hypothesis Generation"
       }
     ]
   }
