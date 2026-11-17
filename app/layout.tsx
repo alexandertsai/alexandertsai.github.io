@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "./components/site.css";
@@ -22,6 +22,13 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: { card: "summary_large_image", title: "Alexander Tsai" },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3f1e9" },
+    { media: "(prefers-color-scheme: dark)", color: "#161a17" },
+  ],
 };
 
 export default function RootLayout({

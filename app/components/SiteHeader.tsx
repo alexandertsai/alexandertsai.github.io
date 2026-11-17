@@ -3,6 +3,7 @@
 import { useEffect, useRef, type MouseEvent } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { depart, DEPART_MS } from "./depart";
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -11,6 +12,7 @@ export default function SiteHeader() {
   const animation = useRef<Animation | null>(null);
   const navigation = useRef<ReturnType<typeof setTimeout> | null>(null);
   const writing = pathname === "/blog" || pathname.startsWith("/blog/");
+  const learning = pathname === "/learning" || pathname.startsWith("/learning/");
 
   useEffect(() => () => {
     animation.current?.cancel();
@@ -32,7 +34,10 @@ export default function SiteHeader() {
       { transform: `translateX(${current.left - origin.left}px)`, width: `${current.width}px` },
       { transform: `translateX(${target.left - origin.left}px)`, width: `${target.width}px` },
     ], { duration: 220, easing: "cubic-bezier(.22, 1, .36, 1)", fill: "forwards" });
-    if (href !== pathname) navigation.current = setTimeout(() => router.push(href), 180);
+    if (href === pathname) return;
+    const into = href === "/learning/" && !learning;
+    if (into) depart();
+    navigation.current = setTimeout(() => router.push(href), into ? DEPART_MS : 180);
   }
 
   return <header className="site-header site-width" data-pond-text>
@@ -44,6 +49,10 @@ export default function SiteHeader() {
       <Link href="/blog/" aria-current={writing ? "page" : undefined} onClick={(event) => navigate(event, "/blog/")}>
         Writing
         {writing && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
+      </Link>
+      <Link href="/learning/" aria-current={learning ? "page" : undefined} onClick={(event) => navigate(event, "/learning/")}>
+        Learning
+        {learning && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
       </Link>
     </nav>
   </header>;

@@ -6,8 +6,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   background: var(--site-bg);
-  color: #242c29;
-  color-scheme: light;
+  color: var(--site-ink);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

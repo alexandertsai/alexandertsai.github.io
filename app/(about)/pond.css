@@ -1,4 +1,4 @@
-.pond { position: fixed; inset: 0; z-index: -1; pointer-events: none; background-image: linear-gradient(#34483a04 1px, transparent 1px), linear-gradient(90deg, #34483a04 1px, transparent 1px); background-size: 7px 10px; }
+.pond { position: fixed; inset: 0; z-index: -1; pointer-events: none; background-image: linear-gradient(color-mix(in srgb, var(--site-grid) 1.6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--site-grid) 1.6%, transparent) 1px, transparent 1px); background-size: 7px 10px; }
 .pond canvas { width: 100%; height: 100%; display: block; }
 .pond-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 45% 43%, transparent 48%, color-mix(in srgb, var(--site-bg) 12%, transparent) 100%); }
 .pond-small canvas { opacity: .62; }

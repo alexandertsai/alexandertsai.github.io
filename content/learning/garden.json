@@ -1,0 +1,156 @@
+{
+  "saved": 1794872795196,
+  "added": [
+    {
+      "id": "umwixasws",
+      "title": "machine learning",
+      "note": "",
+      "parent": "root"
+    },
+    {
+      "id": "umwixb2wh",
+      "title": "artifical intelligence",
+      "note": "",
+      "parent": "root"
+    },
+    {
+      "id": "umwiyr9o9",
+      "title": "mechanistic interpretability",
+      "note": "",
+      "parent": "umwixb2wh"
+    },
+    {
+      "id": "umwizxpma",
+      "title": "model training",
+      "note": "",
+      "parent": "umwixb2wh"
+    },
+    {
+      "id": "umwizymrr",
+      "title": "supervised fine-tuning",
+      "note": "",
+      "parent": "umwizxpma"
+    },
+    {
+      "id": "umwizyqff",
+      "title": "reinforcement learning",
+      "note": "",
+      "parent": "umwizxpma"
+    },
+    {
+      "id": "umwizzwm2",
+      "title": "reward models",
+      "note": "",
+      "parent": "umwizyqff"
+    },
+    {
+      "id": "umwj01xjg",
+      "title": "learning algorithms",
+      "note": "",
+      "parent": "umwizyqff"
+    },
+    {
+      "id": "umwj021w0",
+      "title": "grpo",
+      "note": "",
+      "parent": "umwj01xjg"
+    },
+    {
+      "id": "umwj022hi",
+      "title": "dpo",
+      "note": "",
+      "parent": "umwj01xjg"
+    },
+    {
+      "id": "umwj0gssf",
+      "title": "sparse autoencoders",
+      "note": "",
+      "parent": "umwiyr9o9"
+    },
+    {
+      "id": "umwj0h6zo",
+      "title": "circuits",
+      "note": "",
+      "parent": "umwiyr9o9"
+    },
+    {
+      "id": "umwj0iacw",
+      "title": "j-lens",
+      "note": "",
+      "parent": "umwiyr9o9"
+    },
+    {
+      "id": "umwj0infl",
+      "title": "model diffing",
+      "note": "",
+      "parent": "umwiyr9o9"
+    },
+    {
+      "id": "umwj20i3k",
+      "title": "robotics",
+      "note": "",
+      "parent": "root"
+    },
+    {
+      "id": "umwj20q3a",
+      "title": "VLA",
+      "note": "",
+      "parent": "umwj20i3k"
+    },
+    {
+      "id": "umwj2nr3p",
+      "title": "phenomena",
+      "note": "",
+      "parent": "umwixasws"
+    },
+    {
+      "id": "umwj2ojaq",
+      "title": "Double Descent",
+      "note": "",
+      "parent": "umwj2nr3p"
+    }
+  ],
+  "edits": {
+    "umwj20q3a": {
+      "title": "Visual-Language Action Models",
+      "note": "VLAs take in both:\n- natural language instructions e.g. \"move banana to the left\" \n- visual observations e.g. image of the banana on the table \nand output a sequence of actions for a robot to undertake. For example, they could output a sequence of numbers representing translations and rotations a robot arm must do.\n\nThey are essentially fine-tuned VLMs that are able to output sequences of robot actions instead of regular text."
+    },
+    "umwj2nr3p": {
+      "title": "phenomena",
+      "note": "Interesting things we've observed"
+    },
+    "umwj2ojaq": {
+      "title": "Double Descent",
+      "note": "Classical modern machine learning describes the \"bias vs variance\" tradeoff - as model complexity increases, our model tends to perform worst on testing data and better on training data, essentially overfitting. \n\nDouble descent proves this is not true, and that as models become sufficiently large, variance starts to dip again, allowing us to achieve models with low bias and variance."
+    },
+    "umwizyqff": {
+      "title": "reinforcement learning",
+      "note": ""
+    },
+    "umwiyr9o9": {
+      "title": "mechanistic interpretability",
+      "note": "Studying how neural networks work"
+    },
+    "umwizxpma": {
+      "title": "post training",
+      "note": "How do you make models even better?"
+    }
+  },
+  "deleted": [],
+  "links": [],
+  "unlinked": [],
+  "articles": {
+    "umwj20q3a": [
+      {
+        "url": "https://deepmind.google/blog/rt-2-new-model-translates-vision-and-language-into-action/",
+        "title": "RT-2: New model translates vision and language into action"
+      }
+    ],
+    "umwj2ojaq": [
+      {
+        "url": "https://openai.com/index/deep-double-descent/",
+        "title": "Deep double descent"
+      }
+    ]
+  }
+}

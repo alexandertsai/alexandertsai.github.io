@@ -4,6 +4,7 @@ export type Swimmer = {
   alarm: number; threatX: number; threatY: number;
   excursionAt: number; excursionUntil: number; excursion: boolean; variant: number; depth: number; phase: number;
   trail: { x: number; y: number }[];
+  fleeAt?: number; fleeAngle?: number; fleeSpin?: number;
 };
 
 export function sampleSpine(fish: Swimmer, distance: number, width: number, height: number) {
@@ -20,6 +21,26 @@ export function sampleSpine(fish: Swimmer, distance: number, width: number, heig
     previous = { x, y, angle };
   }
   return { x: previous.x - Math.cos(previous.angle) * distance, y: previous.y - Math.sin(previous.angle) * distance, angle: previous.angle };
+}
+
+// Fleeing: a fast whirl on the spot, then a sprint straight off the nearest side of the screen.
+function bolt(swimmer: Swimmer, dt: number, time: number, width: number, height: number) {
+  const age = time - (swimmer.fleeAt ?? time);
+  const difference = Math.atan2(Math.sin((swimmer.fleeAngle ?? 0) - swimmer.angle), Math.cos((swimmer.fleeAngle ?? 0) - swimmer.angle));
+  const desiredTurn = age < .26 ? (swimmer.fleeSpin ?? 1) * 13 : Math.max(-9, Math.min(9, difference * 9));
+  swimmer.turn += (desiredTurn - swimmer.turn) * Math.min(1, dt * 14);
+  swimmer.angle += swimmer.turn * dt;
+  const desiredSpeed = age < .22 ? swimmer.speed * 1.6 : 2200 * Math.max(.6, Math.min(1, width / 1000));
+  swimmer.velocity += (desiredSpeed - swimmer.velocity) * Math.min(1, dt * 6);
+  swimmer.alarm = 1;
+  swimmer.x += Math.cos(swimmer.angle) * swimmer.velocity * dt / width;
+  swimmer.y += Math.sin(swimmer.angle) * swimmer.velocity * dt / height;
+  swimmer.phase += dt * (2.4 + Math.min(swimmer.velocity, 140) / 22) * 1.8;
+  const latest = swimmer.trail[0];
+  if (!latest || Math.hypot((swimmer.x - latest.x) * width, (swimmer.y - latest.y) * height) >= 2) {
+    swimmer.trail.unshift({ x: swimmer.x, y: swimmer.y });
+    if (swimmer.trail.length > 320) swimmer.trail.pop();
+  }
 }
 
 export function createSchool(small = false) {
@@ -52,6 +73,15 @@ export function createSchool(small = false) {
       closest.alarm = Math.min(1, closest.alarm + .35 + .25 * (1 - nearest));
       closest.threatX = x; closest.threatY = y;
     },
+    flee(time: number, width: number, height: number) {
+      for (const swimmer of fish) {
+        const outward = Math.atan2((swimmer.y - .5) * height, (swimmer.x - .5) * width);
+        const difference = Math.atan2(Math.sin(outward - swimmer.angle), Math.cos(outward - swimmer.angle));
+        swimmer.fleeAt = time;
+        swimmer.fleeAngle = outward;
+        swimmer.fleeSpin = difference < 0 ? -1 : 1;
+      }
+    },
     resetTrails(width: number, height: number) {
       for (const swimmer of fish) swimmer.trail = Array.from({ length: 210 }, (_, index) => ({
         x: swimmer.x - Math.cos(swimmer.angle) * index * 3 / width,
@@ -61,6 +91,7 @@ export function createSchool(small = false) {
     advance(dt: number, time: number, width: number, height: number, flow?: (x: number, y: number, time: number) => { x: number; y: number }, avoid?: { left: number; right: number; top: number; bottom: number }) {
       const previous = fish.map(swimmer => ({ x: swimmer.x, y: swimmer.y, size: swimmer.size }));
       fish.forEach((swimmer, index) => {
+        if (swimmer.fleeAt !== undefined) return bolt(swimmer, dt, time, width, height);
         swimmer.alarm *= Math.exp(-dt * .7);
         const distance = Math.hypot((swimmer.targetX - swimmer.x) * width, (swimmer.targetY - swimmer.y) * height);
         if (!swimmer.excursion && time >= swimmer.excursionAt && fish.filter(other => other.excursion).length < 2) {

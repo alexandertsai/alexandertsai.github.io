@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createSchool, sampleSpine } from "./koi-motion";
 import { createWakeField, createWaterSchools, rippleCurrent, rippleRadius, RIPPLE_DURATION, waterCurrent, type Ripple, type WaterPointer } from "./pond-water";
 import Ponyo from "./Ponyo";
+import { DEPART_EVENT } from "../components/depart";
 import "./pond.css";
 
 const TAU = Math.PI * 2;
@@ -13,6 +14,11 @@ const PALETTES = [
   { shade: ["#242e32", "#526062", "#303e43"], patch: "#e65127", fin: "#556c72" },
   { shade: ["#95a9af", "#e7eee9", "#b7c8c9"], patch: "#252e33", fin: "#9eb8be" },
 ];
+
+const WATER = {
+  light: { wake: "44,115,117", minnow: "70,101,108", ripple: "57,105,115" },
+  dark: { wake: "104,170,166", minnow: "128,156,160", ripple: "112,164,170" },
+};
 
 function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn: number, alarm: number) {
   const palette = PALETTES[variant % PALETTES.length];
@@ -136,6 +142,7 @@ export default function KoiPond({ small = false, background = true }: { small?: 
     const ink = texture.getContext("2d");
     if (!ink) return;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const scheme = window.matchMedia("(prefers-color-scheme: dark)");
     let width = 0, height = 0, raf = 0, last = 0, time = 0, accumulator = 0;
     const ripples: Ripple[] = [];
     const school = createSchool(small);
@@ -212,6 +219,12 @@ export default function KoiPond({ small = false, background = true }: { small?: 
       ripples.push({ x: event.clientX, y: event.clientY, born: time });
       if (ripples.length > 6) ripples.shift();
     };
+    const flee = () => {
+      school.flee(time, width, height);
+      minnows.splash(width / 2, height / 2);
+      for (const swimmer of school.fish) ripples.push({ x: swimmer.x * width, y: swimmer.y * height, born: time });
+      if (ripples.length > 6) ripples.splice(0, ripples.length - 6);
+    };
     const draw = (now: number) => {
       raf = requestAnimationFrame(draw);
       if (now - last < 32) return;
@@ -266,6 +279,8 @@ export default function KoiPond({ small = false, background = true }: { small?: 
       });
       if (maskDirty || now - lastMask > 750) { measureText(); lastMask = now; }
       const pixels = paint.getImageData(0, 0, cols, rows).data;
+      const dark = scheme.matches;
+      const water = dark ? WATER.dark : WATER.light;
       ctx.globalAlpha = pondOpacity;
       ctx.font = "10px Menlo, Consolas, monospace"; ctx.textBaseline = "top";
       const occupied = new Uint8Array(cols * rows);
@@ -277,7 +292,7 @@ export default function KoiPond({ small = false, background = true }: { small?: 
         const shadowCell = Math.max(0, y - 2) * cols + Math.max(0, x - 2);
         const shadow = pixels[shadowCell * 4 + 3] > 40 ? .3 : 1;
         const alpha = Math.min(.55, Math.sqrt(energy) * .5) * caustic * mask[i] * shadow;
-        ctx.fillStyle = `rgba(44,115,117,${alpha})`;
+        ctx.fillStyle = `rgba(${water.wake},${alpha})`;
         const dot = energy > .35 ? 3 : 2;
         ctx.fillRect(x * 7 + 4, y * 10 + 6, dot, dot);
       }
@@ -287,13 +302,17 @@ export default function KoiPond({ small = false, background = true }: { small?: 
         occupied[i] = 1;
         const glint = Math.min(1, Math.max(Math.abs(f.turn) / 4, f.alarm));
         const alpha = (.17 + f.depth * .35 + glint * .25) * mask[i];
-        ctx.fillStyle = `rgba(70,101,108,${alpha})`; ctx.fillText("-", x * 7, y * 10);
+        ctx.fillStyle = `rgba(${water.minnow},${alpha})`; ctx.fillText("-", x * 7, y * 10);
       }
       const chars = ".:;=+x%S8@";
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
         const offset = (y * cols + x) * 4;
         if (pixels[offset + 3] < 40) continue;
-        const r = pixels[offset], g = pixels[offset + 1], b = pixels[offset + 2];
+        let r = pixels[offset], g = pixels[offset + 1], b = pixels[offset + 2];
+        if (dark) {
+          const lift = .5 * (1 - (r * .3 + g * .59 + b * .11) / 255);
+          r += (232 - r) * lift; g += (236 - g) * lift; b += (230 - b) * lift;
+        }
         const noise = ((x * 37 + y * 71) % 101) / 101;
         const coverage = pixels[offset + 3] / 255;
         const marking = r > g * 1.2;
@@ -312,7 +331,7 @@ export default function KoiPond({ small = false, background = true }: { small?: 
         const progress = age / RIPPLE_DURATION;
         const radius = rippleRadius(progress, width, height);
         const opacity = Math.pow(1 - progress, 1.8) * .42;
-        ctx.strokeStyle = `rgba(57,105,115,${opacity})`; ctx.lineWidth = 2;
+        ctx.strokeStyle = `rgba(${water.ripple},${opacity})`; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.ellipse(ripple.x, ripple.y, radius, radius * .76, 0, 0, TAU); ctx.stroke();
       }
 
@@ -324,8 +343,9 @@ export default function KoiPond({ small = false, background = true }: { small?: 
     document.documentElement.addEventListener("pointerleave", leavePointer);
     document.addEventListener("selectionchange", selectionChanged);
     window.addEventListener("resize", resize); window.addEventListener("click", pointer);
+    window.addEventListener(DEPART_EVENT, flee);
     raf = requestAnimationFrame(draw);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("pointermove", movePointer); window.removeEventListener("blur", leavePointer); document.removeEventListener("selectionchange", selectionChanged); document.documentElement.removeEventListener("pointerleave", leavePointer); window.removeEventListener("scroll", invalidateMask); window.removeEventListener("resize", resize); window.removeEventListener("click", pointer); };
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("pointermove", movePointer); window.removeEventListener("blur", leavePointer); document.removeEventListener("selectionchange", selectionChanged); document.documentElement.removeEventListener("pointerleave", leavePointer); window.removeEventListener("scroll", invalidateMask); window.removeEventListener("resize", resize); window.removeEventListener("click", pointer); window.removeEventListener(DEPART_EVENT, flee); };
   }, [small, background]);
 
   return <>
