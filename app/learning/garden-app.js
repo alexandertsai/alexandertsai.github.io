@@ -561,10 +561,11 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   let fit = null;
   function fitPlant(node) {
     const m = Math.min(W, H), Smax = small ? m * 0.3 : m * 0.34, pad = 28;
-    const r = $("reader").getBoundingClientRect();
+    // where the text starts in the reading view (left: 44% in garden.css), not where the reader is now:
+    // arriving from the notes panel, it is still on the right while this runs
     const box = small
       ? { x0: 16, x1: W - 16, y0: 120, y1: Math.max(200, H * 0.42 - 20) }
-      : { x0: 40, x1: Math.max(240, r.left - 48), y0: 120, y1: H - 70 };
+      : { x0: 40, x1: Math.max(240, W * 0.44 - 48), y0: 120, y1: H - 70 };
     const aw = box.x1 - box.x0 - pad, ah = box.y1 - box.y0 - pad;
     const pl = scene(node).plants[0], P = figure(node), A = anchors(node);
     ctx.font = `400 ${small ? 11 : 12}px ${FONT}`;
@@ -598,7 +599,10 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     const { x0, x1, y0, y1, lab } = all, reach = (S) => Math.max(x1 * S, ...lab.map(([x, , w]) => x * S + w));
     let S = Math.min(Smax, ah / (y1 - y0), aw / (x1 - x0));
     for (let it = 0; it < 3; it++) S = Math.min(Smax, ah / (y1 - y0), Math.max(10, (aw - (reach(S) - x1 * S)) / (x1 - x0)));
-    return { node, W, H, yaw: best.yaw, S, cx: (box.x0 + box.x1) / 2 - (x0 * S + reach(S)) / 2, cy: (box.y0 + box.y1) / 2 - ((y0 + y1) / 2) * S, spin: false };
+    // centred in the free space, moved left only as far as its labels need to clear the text
+    let cx = (box.x0 + box.x1) / 2 - ((x0 + x1) / 2) * S;
+    cx = Math.max(Math.min(cx, box.x1 - pad / 2 - reach(S)), box.x0 + pad / 2 - x0 * S);
+    return { node, W, H, yaw: best.yaw, S, cx, cy: (box.y0 + box.y1) / 2 - ((y0 + y1) / 2) * S, spin: false };
   }
 
   /* ---------------- drawing ---------------- */
@@ -650,7 +654,9 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     for (const it of [...items].sort((a, b) => a.y - b.y)) {
       ctx.font = labelFont(it.big); it.w = ctx.measureText(lower(it.n.title)).width;
       // a label that would run off the right edge sits to the left of its cross instead
-      it.flip = it.x + 12 + it.w > W - 8 && it.x - 12 - it.w > 8;
+      // in the reading view, the text's left edge is the limit (left: 44% in garden.css)
+      const edge = reading() && !small ? W * 0.44 - 16 : W - 8;
+      it.flip = it.x + 12 + it.w > edge && it.x - 12 - it.w > 8;
       const h = it.big ? 17 : 16, x0 = it.flip ? it.x - 12 - it.w : it.x + 12, x1 = x0 + it.w;
       let ly = it.y;
       for (let guard = 0; guard < items.length; guard++) {
@@ -781,8 +787,8 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   }
 
   /* ---------------- fauna: small creatures carry each connection between related concepts ---------------- */
-  // Each connection has its own creature, the same every time: a bird, butterfly, bee or moth.
-  const KINDS = ["bird", "butterfly", "bee", "moth"];
+  // Each connection has its own creature, the same every time: a bird, butterfly, bee, moth, dragonfly or firefly.
+  const KINDS = ["bird", "butterfly", "bee", "moth", "dragonfly", "firefly"];
   let fauna = [], faunaNode = null, nextSpawn = 0;
 
   // Where a concept is on screen in the settled garden: its plant's crown, its leaf on a plant, or its plot.
@@ -842,19 +848,23 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     for (const c of fauna) {
       const A = c.from(), B = c.to();
       if (!A || !B) continue;
-      const u = (now - c.t0) / c.dur, e = u < 0.5 ? 2 * u * u : 1 - 2 * (1 - u) * (1 - u);
+      const u = (now - c.t0) / c.dur;
+      let e = u < 0.5 ? 2 * u * u : 1 - 2 * (1 - u) * (1 - u);
+      if (c.kind === "dragonfly") { const k = Math.min(3, Math.floor(u * 4)), f = u * 4 - k; e = (k + (f < 0.45 ? 0 : 1 - Math.pow(1 - (f - 0.45) / 0.55, 3))) / 4; } // hovers, then darts
       const dx = B[0] - A[0], dy = B[1] - A[1], d = Math.hypot(dx, dy) || 1, nx = -dy / d, ny = dx / d;
       const lift = Math.min(160, 0.35 * d), C = [(A[0] + B[0]) / 2 + nx * c.side * 0.2 * d, (A[1] + B[1]) / 2 - lift];
       const at = (t) => {
         const q = 1 - t; let x = q * q * A[0] + 2 * q * t * C[0] + t * t * B[0], y = q * q * A[1] + 2 * q * t * C[1] + t * t * B[1];
-        const w = c.kind === "bee" ? 5 * Math.sin(t * 46 + c.seed) : c.kind === "butterfly" || c.kind === "moth" ? 9 * Math.sin(t * 15 + c.seed) : 0;
-        return [x + nx * w, y + ny * w + (c.kind === "butterfly" ? 4 * Math.sin(t * 31 + c.seed) : 0)];
+        const w = c.kind === "bee" ? 5 * Math.sin(t * 46 + c.seed) : c.kind === "butterfly" || c.kind === "moth" ? 9 * Math.sin(t * 15 + c.seed) : c.kind === "firefly" ? 14 * Math.sin(t * 7 + c.seed) : 0;
+        return [x + nx * w, y + ny * w + (c.kind === "butterfly" ? 4 * Math.sin(t * 31 + c.seed) : c.kind === "firefly" ? 6 * Math.sin(t * 11 + c.seed) : 0)];
       };
       const env = c === caught ? 1 : Math.min(1, u / 0.12, (1 - u) / 0.12);
       // the connection it carries: a faint dotted wake behind it
       wctx.fillStyle = `rgba(222,222,252,${0.32 * env})`;
       for (let k = 0; k <= 40; k++) { const t = (k / 40) * e; const [x, y] = at(t); wctx.fillRect(x - 0.6, y - 0.6, 1.2, 1.2); }
-      const [x, y] = at(e), [x2, y2] = at(Math.min(1, e + 0.01)), th = Math.atan2(y2 - y, x2 - x), t = now / 1000 + c.seed;
+      const t = now / 1000 + c.seed, hover = c.kind === "dragonfly" ? 1.5 * Math.sin(t * 9) : 0;
+      let [x, y] = at(e); y += hover;
+      const [x2, y2] = at(Math.min(1, e + 0.01)), th = Math.atan2(y2 + hover - y, x2 - x);
       c.x = x; c.y = y;
       if (c === caught) $("bloom").style.transform = `translate(${x}px, ${y}px)`;
       wctx.save(); wctx.translate(x, y); wctx.rotate(th); wctx.scale(1.6, 1.6);
@@ -863,6 +873,23 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       if (c.kind === "bird") {
         const f = Math.sin(t * 11), tip = 7 + 2 * f;
         for (const sd of [-1, 1]) { wctx.moveTo(2.5, 0); wctx.quadraticCurveTo(-0.5, sd * (3 - 2 * f), -3.5, sd * tip); }
+      } else if (c.kind === "dragonfly") {
+        // a long thin tail, and two pairs of narrow wings that blur as they beat
+        wctx.moveTo(-9, 0); wctx.lineTo(2, 0);
+        wctx.moveTo(3.6, 0); wctx.arc(2.8, 0, 0.8, 0, Math.PI * 2);
+        const f = 0.55 + 0.45 * Math.abs(Math.sin(t * 70));
+        for (const sd of [-1, 1]) for (const [bx, ang] of [[1.2, 0.4], [-0.4, -0.35]]) {
+          const len = 4.6 * f, cx = bx + Math.sin(ang) * len, cy = sd * Math.cos(ang) * len, rot = -sd * ang;
+          wctx.moveTo(cx + Math.cos(rot) * 1.0, cy + Math.sin(rot) * 1.0); wctx.ellipse(cx, cy, 1.0, len, rot, 0, Math.PI * 2);
+        }
+      } else if (c.kind === "firefly") {
+        // a small body under a slow pulse of light
+        const glow = (0.25 + 0.75 * Math.pow(Math.max(0, Math.sin(t * 2.6)), 2)) * env, g = wctx.createRadialGradient(-1.5, 0, 0, -1.5, 0, 7);
+        g.addColorStop(0, `rgba(255,244,190,${0.85 * glow})`); g.addColorStop(1, "rgba(255,244,190,0)");
+        wctx.fillStyle = g; wctx.fillRect(-9, -8, 15, 16);
+        wctx.moveTo(2, 0); wctx.ellipse(0, 0, 2, 0.9, 0, 0, Math.PI * 2);
+        const f = 0.4 + 0.6 * Math.abs(Math.sin(t * 40));
+        for (const sd of [-1, 1]) { wctx.moveTo(0.5, sd * 0.6); wctx.lineTo(-1.5, sd * (0.6 + 2.6 * f)); }
       } else if (c.kind === "bee") {
         wctx.arc(0, 0, 1.6, 0, Math.PI * 2);
         const f = 0.4 + 0.6 * Math.abs(Math.sin(t * 60));
@@ -883,7 +910,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   function catchCreature(c) {
     release(true);
     caught = c;
-    const ids = [...new Set(c.ends)].filter((id) => byId[id]), n = ids.length, r = small ? 58 : 74;
+    const ids = [...new Set(c.ends)].filter((id) => byId[id] && id !== view.node.id), n = ids.length, r = small ? 58 : 74;
     const el = $("bloom");
     // side by side on wide screens; above and below on phones, where names would run off the edge
     el.innerHTML = `<div class="hush"></div><div class="ring"></div>` + ids.map((id, i) => {

@@ -1,5 +1,5 @@
 {
-  "saved": 1794897635542,
+  "saved": 1794973948420,
   "added": [
     {
       "id": "umwixasws",
@@ -134,10 +134,142 @@
       "parent": "umwixb2wh"
     },
     {
-      "id": "umwk71ytu",
+      "id": "umwlgpkgm",
+      "title": "inference",
+      "note": "",
+      "parent": "umwixb2wh"
+    },
+    {
+      "id": "umwlgqbcv",
       "title": "vlm",
       "note": "",
       "parent": "umwk71qu8"
+    },
+    {
+      "id": "umwlgqbx7",
+      "title": "llm",
+      "note": "",
+      "parent": "umwk71qu8"
+    },
+    {
+      "id": "umwlgrszb",
+      "title": "decoding strategies",
+      "note": "",
+      "parent": "umwlgpkgm"
+    },
+    {
+      "id": "umwlgrxfx",
+      "title": "greedy decoding",
+      "note": "",
+      "parent": "umwlgrszb"
+    },
+    {
+      "id": "umwlgryrr",
+      "title": "beam search",
+      "note": "",
+      "parent": "umwlgrszb"
+    },
+    {
+      "id": "umwlgt1md",
+      "title": "inference parameters",
+      "note": "",
+      "parent": "umwlgpkgm"
+    },
+    {
+      "id": "umwlgt6rn",
+      "title": "temperature",
+      "note": "",
+      "parent": "umwlgt1md"
+    },
+    {
+      "id": "umwlgtgm2",
+      "title": "top-k",
+      "note": "",
+      "parent": "umwlgt1md"
+    },
+    {
+      "id": "umwlgticb",
+      "title": "top-;",
+      "note": "",
+      "parent": "umwlgt1md"
+    },
+    {
+      "id": "umwlgy8ux",
+      "title": "constrained decoding",
+      "note": "",
+      "parent": "umwlgrszb"
+    },
+    {
+      "id": "umwlh3050",
+      "title": "cot monitoring",
+      "note": "",
+      "parent": "umwk7yqze"
+    },
+    {
+      "id": "umwlh6qe1",
+      "title": "inference phases",
+      "note": "",
+      "parent": "umwlgpkgm"
+    },
+    {
+      "id": "umwlh6v7h",
+      "title": "prefill",
+      "note": "",
+      "parent": "umwlh6qe1"
+    },
+    {
+      "id": "umwlh6vxc",
+      "title": "decode",
+      "note": "",
+      "parent": "umwlh6qe1"
+    },
+    {
+      "id": "umwlhav29",
+      "title": "general optimisations",
+      "note": "",
+      "parent": "umwlgpkgm"
+    },
+    {
+      "id": "umwlhb019",
+      "title": "KV cache",
+      "note": "",
+      "parent": "umwlhav29"
+    },
+    {
+      "id": "umwlhpunw",
+      "title": "speculative decoding",
+      "note": "",
+      "parent": "umwlgrszb"
+    },
+    {
+      "id": "umwljuysy",
+      "title": "ViT",
+      "note": "",
+      "parent": "umwk71qu8"
+    },
+    {
+      "id": "umwljzeo4",
+      "title": "terminology",
+      "note": "",
+      "parent": "umwixb2wh"
+    },
+    {
+      "id": "umwljzler",
+      "title": "autoregressive",
+      "note": "",
+      "parent": "umwljzeo4"
+    },
+    {
+      "id": "umwljzrh2",
+      "title": "multimodal",
+      "note": "",
+      "parent": "umwljzeo4"
+    },
+    {
+      "id": "umwlk1ho5",
+      "title": "token",
+      "note": "",
+      "parent": "umwljzeo4"
     }
   ],
   "edits": {
@@ -159,27 +291,101 @@
     },
     "umwiyr9o9": {
       "title": "mechanistic interpretability",
-      "note": "Studying how neural networks work"
+      "note": "The fascinating study of how neural networks work."
     },
     "umwizxpma": {
       "title": "post training",
       "note": "How do you make models even better?"
     },
     "umwk71qu8": {
-      "title": "LLM",
+      "title": "models",
       "note": ""
     },
     "umwj0gssf": {
       "title": "sparse autoencoders",
-      "note": "The objective of an SAE is to try and find interpretable features within models. For example, a feature corresponding to deception. In an ideal world we'd find that, and remove it. This has not been that successful.\n\nSAEs have two components: an encoder and a decoder. The basic idea: \n1. Take some intermediate representation (x) from the residual stream\n2. The encoder E is literally a large, wide matrix and a bias. We take ReLU(Ex + b). \n3. The decoder D is another matrix that maps the ReLU(Ex + b) back into the x's dimension.\n4. Apply loss and train encoder and decoder\n\nConsider this more concrete example:\n1. The intermediate representation is a 768x1 vector\n2. The encoder E is a 3072x768 matrix + a bias. ReLU(Ex + b) has dimensions 3072 x 1. \n3. We use the decoder D of dimensions 768 x 3072 (also has a bias). output = D ReLU(Ex + b) is another vector of 768x1 dimensions.\n\nSAEs have two types of losses. The reconstruction loss determines how well our output matches our input. To prevent the SAE from something that just reconstructs x, we also use a sparsity loss - forcing many parameters within the ReLU(Ex +b) to be zero. The hope is that this allows us to identify interpretable features (rows) within E."
+      "note": "The objective of an SAE is to try and find interpretable features within models. For example, a feature corresponding to deception. In an ideal world we'd find that, and remove it. This has not been that successful.\n\nSAEs have two components: an encoder and a decoder. The basic idea: \n1. Take some intermediate representation (x) from the residual stream\n2. The encoder E is literally a large, wide matrix and a bias. We take ReLU(Ex + b). \n3. The decoder D is another matrix that maps the ReLU(Ex + b) back into the x's dimension.\n4. Apply loss and train encoder and decoder\n\nConsider this more concrete example:\n1. The intermediate representation is a 768x1 vector.\n2. The encoder E is a 3072x768 matrix + a bias. ReLU(Ex + b_e) has dimensions 3072 x 1. \n3. We use the decoder D of dimensions 768 x 3072 (also has a bias). output = D ReLU(Ex + b_e) + b_d is another vector of 768x1 dimensions.\n\nSAEs have two types of losses. The reconstruction loss determines how well our output matches our input. To prevent the SAE from learning a dense identity map (trivially reconstructing x), we also use a sparsity loss - forcing many activations within the ReLU(Ex +b) to be zero. The hope is that this allows us to identify interpretable features (columns) within D."
+    },
+    "umwlgticb": {
+      "title": "top-p",
+      "note": "Top-p (or nucleus sampling) means keeping the top most likely tokens until their cumulative probability is more than or equal to p. Typically 0.8 to 0.95."
+    },
+    "umwlgtgm2": {
+      "title": "top-k",
+      "note": "Keep the most probable k tokens."
+    },
+    "umwlgt1md": {
+      "title": "inference parameters",
+      "note": "How do we alter the process of when a model generates a response?"
+    },
+    "umwlgt6rn": {
+      "title": "temperature",
+      "note": "A value more than or equal to zero. Lower temperature (0-0.3) make models deterministic, they output fixed, typically rigid-sounding responses. High temperature (past 1) can make models go crazy. Typically we elect around 0.7."
+    },
+    "umwlgy8ux": {
+      "title": "constrained decoding",
+      "note": "You ensure the model outputs some kind of structured output. This is useful when you want the model to output a very specific format, e.g. valid JSON only. We do this by masking invalid tokens and setting them to negative infinity.\n\nThis guarantees a valid output but not a good one. If your model was going to violate the constraints anyway, the output is probably going to be bad."
+    },
+    "umwlh3050": {
+      "title": "cot monitoring",
+      "note": "Chain-of-Thought monitoring is essentially reading the model's  reasoning and from there understanding it's thoughts and intents. We would hope that if the model was cheating on a task, it would expose this through its CoT."
+    },
+    "umwlh6v7h": {
+      "title": "prefill",
+      "note": "Prefill is the act of running the entire prompt through the model just once. The weights of each layer are read from memory once and used for all the prompt tokens. This process is compute-bound."
+    },
+    "umwlh6vxc": {
+      "title": "decode",
+      "note": "Decoding is the process of generating tokens one at a time. The weights of each layer are ready again and again for each new token. In each layer the new tokens attend to the keys and values of the previous layers (reading the KV cache). Decode is memory bandwidth bound."
+    },
+    "umwlhb019": {
+      "title": "KV cache",
+      "note": "When our LLM is generating a response, the keys and values of previously generated tokens do not change. To avoid continuously recomputing these values, we cache them. This process is memory-bound. \n\nKV cache grows linearly, potentially causing KV caches to overtake model weights themselves memory-usage for extremely long sequences."
+    },
+    "umwlhpunw": {
+      "title": "speculative decoding",
+      "note": "This is a technique used to drastically speed up inference. Not to be confused with greedy decoding - they can actually be used together. We ask a smaller, faster model to generate k tokens (e.g. generate four tokens) and pass these into our larger model. The larger model treats verifying these as a prefill phase, instead of a decode phase, significantly improving latency. If the four tokens are good, keep them. Else, keep the longest acceptable run (first two tokens could be good, last two bad), generate the next token yourself, and continue speculating.\n\nThere is clever math that proves this technique is identical in distribution to having the big model generate the answer itself. \n\nAlmost all models being served today likely use some form of speculative decoding."
+    },
+    "umwlgqbx7": {
+      "title": "llm",
+      "note": "Large language models are predominantly based on the transformer architecture, introduced by researchers at Google in 2017. They surged in popularity after OpenAI launched ChatGPT in November 2022. The term originally referred to models that processed only text, but it now also covers multimodal models that accept images, audio or video alongside text.\n\nResearchers have also explored alternatives, such as the Mamba architecture and diffusion-based generation. Even so, the autoregressive transformer remains the centre of attention."
+    },
+    "umwlgqbcv": {
+      "title": "vlm",
+      "note": "Vision Language Models (VLM) take in both images and text. They are multimodal. The simple idea is to use a Vision Transformer to convert the image into a type of embedding the regular Language Model can accept. This lets images \"mix\" with text, enabling VLMs to answer questions containing both images and text."
+    },
+    "umwljuysy": {
+      "title": "ViT",
+      "note": "Vision Transformers apply the transformer architecture towards  images. They process images in patches (e.g. a 14x14 square) and typically transform each patch into an embedding. Most VLMs consist combining an LLM and a ViT together."
+    },
+    "umwljzler": {
+      "title": "autoregressive",
+      "note": "Referring to the act of generating a current value using past values. We often say \"LLMs are autoregressive\", meaning they generate text one token at a time, based on the prompt given + their previously generated tokens."
+    },
+    "umwlk1ho5": {
+      "title": "tokens",
+      "note": "Tokens are the fundamental units of data that LLMs process. Tokens are often words, parts of words or punctuation. For example, the word \"hello\" could be one token. The world \"multiplayer\" might instead be split into two - \"multi\" and \"player\". The full stop at the end of a sentence is often a token too. \n\nToken consumption generally refers to: how many words is your model taking in and outputting? A rough rule is 1 token = 4 characters. Long conversations or model outputs typically lead to high token consumption and incur high costs.\n\n*In practice, leading spaces (\" hello\") are often part of a token."
+    },
+    "umwljzrh2": {
+      "title": "multimodal",
+      "note": "Multimodal refers to different modalities: image, video, or audio. Non-multimodal models typically refer to models that can only process text."
     }
   },
   "deleted": [],
   "links": [
     [
-      "umwk71qu8",
-      "umwj20q3a",
-      "part of"
+      "umwlhpunw",
+      "umwlh6v7h",
+      "related"
+    ],
+    [
+      "umwlhpunw",
+      "umwlh6vxc",
+      "related"
+    ],
+    [
+      "umwlgqbcv",
+      "umwlgqbx7",
+      "related"
     ]
   ],
   "unlinked": [],
@@ -200,6 +406,64 @@
       {
         "url": "https://arxiv.org/abs/2502.04382",
         "title": "Sparse Autoencoders for Hypothesis Generation"
+      }
+    ],
+    "umwj0iacw": [
+      {
+        "url": "https://emma-x1.github.io/writing/jlens",
+        "title": "Understanding the J-lens"
+      }
+    ],
+    "umwlgy8ux": [
+      {
+        "url": "https://arxiv.org/abs/2408.02442",
+        "title": "Impact of Format Restrictions on Performance of LLMs"
+      }
+    ],
+    "umwlh3050": [
+      {
+        "url": "https://openai.com/index/evaluating-chain-of-thought-monitorability/",
+        "title": "Evaluating chain-of-thought monitorability"
+      }
+    ],
+    "umwlhpunw": [
+      {
+        "url": "https://arxiv.org/abs/2211.17192",
+        "title": "Fast Inference from Transformers via Speculative Decoding"
+      }
+    ],
+    "umwlgqbx7": [
+      {
+        "url": "https://arxiv.org/abs/1706.03762",
+        "title": "Attention is All You Need"
+      },
+      {
+        "url": "https://openai.com/index/chatgpt/",
+        "title": "Introducing ChatGPT"
+      }
+    ],
+    "umwlk1ho5": [
+      {
+        "url": "https://www.lesswrong.com/posts/aPeJE8bSo6rAFoLqg/solidgoldmagikarp-plus-prompt-generation",
+        "title": "SolidGoldMagikarp"
+      }
+    ],
+    "umwiyr9o9": [
+      {
+        "url": "https://colah.github.io/",
+        "title": "Chris Olah Blog"
+      },
+      {
+        "url": "https://www.lennysnewsletter.com/p/a-mind-expanding-conversation-on",
+        "title": "Emmanual Ameisen on mech interp"
+      },
+      {
+        "url": "https://80000hours.org/podcast/episodes/chris-olah-interpretability-research/",
+        "title": "Chis Olah: what is going in neural networks?"
+      },
+      {
+        "url": "https://80000hours.org/podcast/episodes/neel-nanda-mechanistic-interpretability/",
+        "title": "Neel Nanda: what is going in AI?"
       }
     ]
   }
