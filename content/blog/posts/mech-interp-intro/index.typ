@@ -2,11 +2,11 @@ Prerequisites: #link("/blog/neural-networks/")[what is a neural network?]
 
 Neural networks are often thought of as things that perform tasks that we cannot write programs to do. For example, it is almost impossible to manually write a function to differentiate between a picture of a cat and a dog. You can, however, train a neural network to do this task (very well)! At the heart of this network are many weights (numbers) that are performing many simple mathematical operations with our input image. However, due to the sheer number of these weights and operations, we don't really know how exactly the network works. The study of the inner workings of a network can be thought of as *mechanistic interpretability*.
 
-One of the foundational pieces of mechanistic interpretability work was Google Brain's #link("https://distill.pub/2017/feature-visualization/")[Feature Visualisation] on an image classification model. They studied certain groups of neurons by generating images from noise that would cause these neurons to activate strongly (leading to rather bizarre results).
+One of the foundational pieces of mechanistic interpretability work was Google Brain's #link("https://distill.pub/2017/feature-visualization/")[Feature Visualization] on an image classification model. They studied certain groups of neurons by generating images from noise that would cause these neurons to activate strongly (leading to rather bizarre results).
 
 #html("feature-visualization.html")
 
-In the examples above, we see repeated eyes, bird-like shapes and striped fur. They're visualisations of what an image that is optimised to strongly activate particular neurons in the network would look like.
+In the examples above, we see repeated eyes, bird-like shapes and striped fur. They're visualizations of what an image that is optimized to strongly activate particular neurons in the network would look like.
 
 What I found quite fascinating is that neurons had learned to respond to certain textures and parts of objects. A neuron might respond to fur or eyes, rather than a whole dog. One example they cite is where a brownish spoon caused a "dog fur neuron" to activate, simply because it had a "fur-like" texture.
 

@@ -9,6 +9,7 @@
   --site-grid: #34483a;
   --site-selection-bg: #eed5c1;
   --site-selection-ink: #382c23;
+  --site-depart-bg: #f3f1e9;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -22,6 +23,7 @@
     --site-grid: #e4e3dc;
     --site-selection-bg: #5a3a2a;
     --site-selection-ink: #f3e6dc;
+    --site-depart-bg: #000;
     color-scheme: dark;
   }
 }
@@ -51,5 +53,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 }
 @media (prefers-reduced-motion: reduce) { .site-header *, .site-header *::after, .site-footer * { transition: none; } }
 @media (prefers-reduced-motion: reduce) { .home-shell, .professional-blog .blog-reader { animation: none; } }
-#site-depart { position: fixed; inset: 0; z-index: 100; background: #000; animation: site-depart 450ms cubic-bezier(.4, 0, .9, .6) 450ms both; }
+#site-depart { position: fixed; inset: 0; z-index: 100; background: var(--site-depart-bg); animation: site-depart 450ms cubic-bezier(.4, 0, .9, .6) 450ms both; }
 @keyframes site-depart { from { opacity: 0; } }
+@property --return-hole { syntax: "<length>"; inherits: false; initial-value: 80vmax; }
+#site-return { position: fixed; inset: 0; z-index: 100; background: radial-gradient(circle at 50% 50%, transparent calc(var(--return-hole) - 24vmax), var(--site-depart-bg) var(--return-hole)); }

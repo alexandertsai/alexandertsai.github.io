@@ -37,7 +37,30 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   const cv = document.getElementById("plate"), ctx = cv.getContext("2d");
   const wire = document.createElement("canvas"), wctx = wire.getContext("2d");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const RED = "#ff3b2e";
+  const darkMedia = matchMedia("(prefers-color-scheme: dark)");
+  let dark = darkMedia.matches;
+  on(darkMedia, "change", (e) => { dark = e.matches; });
+  const THEMES = {
+    dark: {
+      bg: "#000", bgFade0: "rgba(0,0,0,0)",
+      floor: "220,220,250", floorK: 0.42, plotK: 1, tick: "235,235,250", tickK: 1.8,
+      wire: "222,222,252", wireBase: 0.55, wireDepth: 0.35, wireLit: 1,
+      red: "#ff3b2e", redGlow: "rgba(255,70,50,0.8)", redBlur: 8, redLine: "rgba(255,59,46,0.55)",
+      label: "rgba(222,222,234,0.95)", labelHot: "rgba(250,250,255,1)", labelHalo: "#000",
+      wake: "222,222,252", wakeK: 0.32, fauna: "240,240,255", faunaK: 0.95,
+      firefly: "255,244,190", fireflyK: 0.85,
+    },
+    light: {
+      bg: "#f3f1e9", bgFade0: "rgba(243,241,233,0)",
+      floor: "48,62,54", floorK: 0.24, plotK: 0.72, tick: "36,48,42", tickK: 1.35,
+      wire: "38,52,45", wireBase: 0.44, wireDepth: 0.34, wireLit: 0.96,
+      red: "#b84326", redGlow: "rgba(184,67,38,0.22)", redBlur: 4, redLine: "rgba(184,67,38,0.5)",
+      label: "rgba(36,44,41,0.92)", labelHot: "rgba(17,23,21,1)", labelHalo: "#f3f1e9",
+      wake: "48,62,54", wakeK: 0.28, fauna: "32,42,37", faunaK: 0.88,
+      firefly: "218,148,32", fireflyK: 0.55,
+    },
+  };
+  const pal = () => (dark ? THEMES.dark : THEMES.light);
   let W, H, DPR, small;
 
   /* ---------------- edits ---------------- */
@@ -467,6 +490,13 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     history.replaceState(history.state, "", node === root ? "#" : `#${node.id}`);
   }
   on(document, "click", (e) => {
+    const hint = e.target.closest("#g-hint [data-hint]");
+    if (hint) {
+      if (hint.dataset.hint === "find") openFind();
+      if (hint.dataset.hint === "keys") $("keys").hidden = !$("keys").hidden;
+      return;
+    }
+    if (!$("keys").hidden && !e.target.closest("#keys")) $("keys").hidden = true;
     const b = e.target.closest("#crumbs [data-id], #reader [data-id], #bloom [data-id]");
     if (b) go(byId[b.dataset.id]);
   });
@@ -622,9 +652,9 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     return g;
   }
   function floor(project, ly, alpha = 1) {
-    const { ext, n } = ground(ly.node);
+    const { ext, n } = ground(ly.node), th = pal();
     const T = (x, y, z) => project(x * ly.scale + ly.off[0], y * ly.scale + ly.off[1], z * ly.scale + ly.off[2], [0, 0, 0]);
-    ctx.strokeStyle = `rgba(220,220,250,${0.42 * ly.alpha * alpha})`; ctx.lineWidth = 1; ctx.setLineDash([7, 7]);
+    ctx.strokeStyle = `rgba(${th.floor},${th.floorK * ly.alpha * alpha})`; ctx.lineWidth = 1; ctx.setLineDash([7, 7]);
     for (let i = 0; i <= n; i++) {
       const v = -ext + (2 * ext * i) / n;
       let a = T(v, FLOOR, -ext), b = T(v, FLOOR, ext);
@@ -637,13 +667,13 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
 
   // A nested garden's plot: a small dashed square of ground with a tick at each corner.
   function plot(project, ly, pl) {
-    const r = (pl.r * ground(pl.node).ext) / 1.45, [x, y, z] = pl.pos, a = ly.alpha * (pl.nested ? 0.22 : 0.4);
+    const r = (pl.r * ground(pl.node).ext) / 1.45, [x, y, z] = pl.pos, th = pal(), a = ly.alpha * (pl.nested ? 0.22 : 0.4) * th.plotK;
     const P = (dx, dz) => project((x + dx) * ly.scale + ly.off[0], (y + 0.002) * ly.scale + ly.off[1], (z + dz) * ly.scale + ly.off[2], [0, 0, 0]);
     const c = [P(-r, -r), P(r, -r), P(r, r), P(-r, r)];
-    ctx.strokeStyle = `rgba(220,220,250,${a})`; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+    ctx.strokeStyle = `rgba(${th.floor},${a})`; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
     ctx.beginPath(); c.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.strokeStyle = `rgba(235,235,250,${a * 1.8})`;
+    ctx.strokeStyle = `rgba(${th.tick},${a * th.tickK})`;
     for (const p of c) { ctx.beginPath(); ctx.moveTo(p[0] - 3, p[1]); ctx.lineTo(p[0] + 3, p[1]); ctx.moveTo(p[0], p[1] - 3); ctx.lineTo(p[0], p[1] + 3); ctx.stroke(); }
   }
 
@@ -669,19 +699,19 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     }
   }
   function cross(x, y, label, hot, big, ly = y, flip = false) {
-    const arm = hot ? 8 : 6;
-    ctx.strokeStyle = RED; ctx.lineWidth = 1.6;
-    ctx.shadowColor = "rgba(255,70,50,0.8)"; ctx.shadowBlur = 8;
+    const arm = hot ? 8 : 6, th = pal();
+    ctx.strokeStyle = th.red; ctx.lineWidth = 1.6;
+    ctx.shadowColor = th.redGlow; ctx.shadowBlur = th.redBlur;
     ctx.beginPath(); ctx.moveTo(x - arm, y); ctx.lineTo(x + arm, y); ctx.moveTo(x, y - arm); ctx.lineTo(x, y + arm); ctx.stroke();
     if (!label) { ctx.shadowBlur = 0; return; }
     if (Math.abs(ly - y) > 1) {
-      ctx.shadowBlur = 0; ctx.lineWidth = 0.8; ctx.strokeStyle = "rgba(255,59,46,0.55)";
+      ctx.shadowBlur = 0; ctx.lineWidth = 0.8; ctx.strokeStyle = th.redLine;
       const s = flip ? -1 : 1;
       ctx.beginPath(); ctx.moveTo(x + s * (arm + 1), y); ctx.lineTo(x + s * 9, ly); ctx.stroke();
     }
     ctx.font = labelFont(big); ctx.textAlign = flip ? "right" : "left"; ctx.textBaseline = "middle";
-    ctx.fillStyle = hot ? "rgba(250,250,255,1)" : "rgba(222,222,234,0.95)";
-    ctx.shadowColor = "#000"; ctx.shadowBlur = 8;
+    ctx.fillStyle = hot ? th.labelHot : th.label;
+    ctx.shadowColor = th.labelHalo; ctx.shadowBlur = 8;
     const tx = flip ? x - 12 : x + 12;
     ctx.fillText(label, tx, ly); ctx.fillText(label, tx, ly);
     ctx.textAlign = "left";
@@ -703,8 +733,9 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     const project = projector(view, lay.cx, lay.cy, lay.S);
     const layers = view.layers(now), settled = !view.outer && !view.fade;
 
+    const th = pal();
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = th.bg; ctx.fillRect(0, 0, W, H);
     for (const ly of layers) if (ly.alpha > 0.01) {
       floor(project, ly, (reading() && settled) || shown ? 0.45 : 1);
       for (const pl of scene(ly.node).plots) plot(project, ly, pl);
@@ -712,7 +743,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     // fade the ground out before it reaches the text: below the plant on phones, beside it elsewhere
     if (reading()) {
       const cut = small ? H * 0.42 - 8 : W * 0.44 - 24, fade = small ? ctx.createLinearGradient(0, cut - 40, 0, cut) : ctx.createLinearGradient(cut - 60, 0, cut, 0);
-      fade.addColorStop(0, "rgba(0,0,0,0)"); fade.addColorStop(1, "#000");
+      fade.addColorStop(0, th.bgFade0); fade.addColorStop(1, th.bg);
       ctx.fillStyle = fade;
       if (small) ctx.fillRect(0, cut - 40, W, H - cut + 40); else ctx.fillRect(cut - 60, 0, W - cut + 60, H);
     }
@@ -739,7 +770,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
             if (tmp[0] < x0) x0 = tmp[0]; if (tmp[0] > x1) x1 = tmp[0]; if (tmp[1] < y0) y0 = tmp[1]; if (tmp[1] > y1) y1 = tmp[1];
           }
           const z = (zsum / (i1 - i0 + 1) - oz) / Math.max(0.2, s);
-          wctx.strokeStyle = `rgba(222,222,252,${ly.alpha * base * (lit ? 1 : 0.55 + 0.35 * Math.max(-1, Math.min(1, -z)))})`;
+          wctx.strokeStyle = `rgba(${th.wire},${ly.alpha * base * (lit ? th.wireLit : th.wireBase + th.wireDepth * Math.max(-1, Math.min(1, -z)))})`;
           wctx.lineWidth = lit ? 1.2 : pl.nested ? 0.75 : 0.9;
           wctx.stroke();
         }
@@ -754,8 +785,14 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     lastGroups = groups;
     drawFauna(now, layers[layers.length - 1], project, settled);
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.globalCompositeOperation = "lighter";
-    ctx.filter = `blur(${4 * DPR}px)`; ctx.globalAlpha = 0.85; ctx.drawImage(wire, 0, 0);
+    if (dark) {
+      ctx.globalCompositeOperation = "lighter";
+      ctx.filter = `blur(${4 * DPR}px)`; ctx.globalAlpha = 0.85; ctx.drawImage(wire, 0, 0);
+    } else {
+      ctx.globalCompositeOperation = "multiply";
+      ctx.filter = `blur(${3 * DPR}px)`; ctx.globalAlpha = 0.16; ctx.drawImage(wire, 0, 0);
+    }
+    ctx.globalCompositeOperation = "source-over";
     ctx.filter = "none"; ctx.globalAlpha = 1; ctx.drawImage(wire, 0, 0);
     ctx.restore();
 
@@ -858,9 +895,9 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
         const w = c.kind === "bee" ? 5 * Math.sin(t * 46 + c.seed) : c.kind === "butterfly" || c.kind === "moth" ? 9 * Math.sin(t * 15 + c.seed) : c.kind === "firefly" ? 14 * Math.sin(t * 7 + c.seed) : 0;
         return [x + nx * w, y + ny * w + (c.kind === "butterfly" ? 4 * Math.sin(t * 31 + c.seed) : c.kind === "firefly" ? 6 * Math.sin(t * 11 + c.seed) : 0)];
       };
-      const env = c === caught ? 1 : Math.min(1, u / 0.12, (1 - u) / 0.12);
+      const env = c === caught ? 1 : Math.min(1, u / 0.12, (1 - u) / 0.12), thf = pal();
       // the connection it carries: a faint dotted wake behind it
-      wctx.fillStyle = `rgba(222,222,252,${0.32 * env})`;
+      wctx.fillStyle = `rgba(${thf.wake},${thf.wakeK * env})`;
       for (let k = 0; k <= 40; k++) { const t = (k / 40) * e; const [x, y] = at(t); wctx.fillRect(x - 0.6, y - 0.6, 1.2, 1.2); }
       const t = now / 1000 + c.seed, hover = c.kind === "dragonfly" ? 1.5 * Math.sin(t * 9) : 0;
       let [x, y] = at(e); y += hover;
@@ -868,7 +905,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       c.x = x; c.y = y;
       if (c === caught) $("bloom").style.transform = `translate(${x}px, ${y}px)`;
       wctx.save(); wctx.translate(x, y); wctx.rotate(th); wctx.scale(1.6, 1.6);
-      wctx.strokeStyle = `rgba(240,240,255,${0.95 * env})`; wctx.lineWidth = 0.7;
+      wctx.strokeStyle = `rgba(${thf.fauna},${thf.faunaK * env})`; wctx.lineWidth = 0.7;
       wctx.beginPath();
       if (c.kind === "bird") {
         const f = Math.sin(t * 11), tip = 7 + 2 * f;
@@ -885,7 +922,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       } else if (c.kind === "firefly") {
         // a small body under a slow pulse of light
         const glow = (0.25 + 0.75 * Math.pow(Math.max(0, Math.sin(t * 2.6)), 2)) * env, g = wctx.createRadialGradient(-1.5, 0, 0, -1.5, 0, 7);
-        g.addColorStop(0, `rgba(255,244,190,${0.85 * glow})`); g.addColorStop(1, "rgba(255,244,190,0)");
+        g.addColorStop(0, `rgba(${thf.firefly},${thf.fireflyK * glow})`); g.addColorStop(1, `rgba(${thf.firefly},0)`);
         wctx.fillStyle = g; wctx.fillRect(-9, -8, 15, 16);
         wctx.moveTo(2, 0); wctx.ellipse(0, 0, 2, 0.9, 0, 0, Math.PI * 2);
         const f = 0.4 + 0.6 * Math.abs(Math.sin(t * 40));

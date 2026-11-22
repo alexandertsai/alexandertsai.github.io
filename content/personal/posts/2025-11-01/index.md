@@ -2,11 +2,11 @@ So yesterday I accidentally deleted my entire HDFS drive. For context, every per
 
 `global_path/users/alexander.tsai/all_other_folders`
 
-And I was clearing out some folders that I didn't need any more by running `!hdfs dfs -rm` commands within a notebook. Before I realised it, I had accidentally:
+And I was clearing out some folders that I didn't need any more by running `!hdfs dfs -rm` commands within a notebook. Before I realized it, I had accidentally:
 
 `rm -r global_path/users/alexander.tsai`
 
-Don't even ask me HOW I accidentally ran that command. I think I meant to `ls` but obviously I did not do that. As you might know, this command removes (rm) all folders inside this directory recursively (-r). In simple terms it deletes everything. I think people always make jokes about the intern deleting the entire database but I had seriously done it now. Like I couldn't fathom how could you possibly accidentally delete everything but today I finally get it. Literally as I ran that command I realised what I had done and I tried to press the interrupt button in Jupyter but it just happened too fast...
+Don't even ask me HOW I accidentally ran that command. I think I meant to `ls` but obviously I did not do that. As you might know, this command removes (rm) all folders inside this directory recursively (-r). In simple terms it deletes everything. I think people always make jokes about the intern deleting the entire database but I had seriously done it now. Like I couldn't fathom how could you possibly accidentally delete everything but today I finally get it. Literally as I ran that command I realized what I had done and I tried to press the interrupt button in Jupyter but it just happened too fast...
 
 What followed was a message saying that everything in my directory had been moved to another directory (.Trash) or something. I wasn't super super panicked by this point because I was like "okay, at least it still exists". But now I had to figure out how to move it back into the right place. Just to confirm, I tried to access my folder again with:
 

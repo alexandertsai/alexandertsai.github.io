@@ -198,8 +198,9 @@ export default function AudioScroller() {
   return createPortal(
     <div className="mb-4">
       <button
+        type="button"
         onClick={enabled ? disable : enable}
-        className="group inline-flex items-center gap-1.5 text-[13px] tracking-[0.04em] text-black [font-family:inherit]"
+        className="group inline-flex cursor-pointer items-center gap-1.5 text-[13px] tracking-[0.04em] text-[#c98468] transition-colors hover:text-[#e6e5df] [font-family:inherit]"
       >
         <span
           className={`inline-block transition-all duration-300 group-hover:-translate-x-[3px] group-hover:opacity-100 ${

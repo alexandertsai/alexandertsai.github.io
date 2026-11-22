@@ -1,3 +1,4 @@
+import Link from "next/link";
 import SiteHeader from "../components/SiteHeader";
 import content from "@/content/about/page.json";
 import KoiPond from "./KoiPond";
@@ -8,16 +9,18 @@ import "./home.css";
 type Entry = (typeof content.experience)[number] | (typeof content.research)[number];
 
 function inlineLinks(text: string) {
-  return text.split(/(\[[^\]]+\]\(https?:\/\/[^\s)]+\))/g).map((part, index) => {
-    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
-    return link ? <a key={index} className="home-link" href={link[2]} target="_blank" rel="noopener noreferrer">{link[1]}</a> : part;
+  return text.split(/(\[[^\]]+\]\((?:https?:\/\/|\/)[^\s)]*\))/g).map((part, index) => {
+    const link = part.match(/^\[([^\]]+)\]\(((?:https?:\/\/|\/)[^\s)]*)\)$/);
+    if (!link) return part;
+    return link[2].startsWith("/")
+      ? <Link key={index} className="home-link" href={link[2]}>{link[1]}</Link>
+      : <a key={index} className="home-link" href={link[2]} target="_blank" rel="noopener noreferrer">{link[1]}</a>;
   });
 }
 
-function emphasize(text: string, focused = false) {
+function emphasize(text: string) {
   const parts = text.split(/\*\*(.+?)\*\*/g);
-  const highlight = parts.findIndex((part, index) => index % 2 && /\d[\d.,]*\s*(?:%|×)/.test(part));
-  return parts.map((part, index) => index % 2 && (!focused || index === (highlight < 0 ? 1 : highlight)) ? <strong key={index}>{inlineLinks(part)}</strong> : inlineLinks(part));
+  return parts.map((part, index) => index % 2 ? <strong key={index}>{inlineLinks(part)}</strong> : inlineLinks(part));
 }
 
 function Heading({ id, children, className = "" }: { id: string; children: React.ReactNode; className?: string }) {
@@ -37,7 +40,7 @@ function TimelineEntry({ entry }: { entry: Entry }) {
         <p className="home-meta home-dates">{entry.dates}</p>
         {entry.location && <p className="home-location">{entry.location}</p>}
       </div>
-      <p className="home-summary" data-pond-text>{emphasize(entry.summary, true)}</p>
+      <p className="home-summary" data-pond-text>{emphasize(entry.summary)}</p>
     </li>
   );
 }

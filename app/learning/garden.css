@@ -1,22 +1,51 @@
 .learning {
-  --black: #000;
-  --ink: #e4e4ee;
-  --dim: #6c6c76;
-  --wire: #dcdcfa;
-  --red: #ff3b2e;
+  --bg: #f3f1e9;
+  --ink: #242c29;
+  --body: #3d4742;
+  --strong: #111715;
+  --dim: #69736b;
+  --red: #b84326;
+  --panel: rgba(243, 241, 233, 0.92);
+  --sugg-bg: rgba(243, 241, 233, 0.96);
+  --dash: rgba(44, 58, 50, 0.24);
+  --ring: rgba(44, 58, 50, 0.3);
+  --hush: rgba(243, 241, 233, 0.92);
+  --thumb: rgba(44, 58, 50, 0.22);
   --mono: var(--font-plex-mono), "SF Mono", Menlo, monospace;
   --edge: 32px;
-  color-scheme: dark;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  .learning {
+    --bg: #000;
+    --ink: #e4e4ee;
+    --body: #d7d7e3;
+    --strong: #fff;
+    --dim: #6c6c76;
+    --red: #ff3b2e;
+    --panel: rgba(0, 0, 0, 0.88);
+    --sugg-bg: rgba(0, 0, 0, 0.92);
+    --dash: rgba(222, 222, 252, 0.25);
+    --ring: rgba(222, 222, 252, 0.32);
+    --hush: rgba(0, 0, 0, 0.9);
+    --thumb: rgba(222, 222, 252, 0.18);
+    color-scheme: dark;
+  }
 }
 .learning * { box-sizing: border-box; }
-.learning { position: fixed; inset: 0; z-index: 0; margin: 0; background: var(--black); color: var(--ink); font: 400 10.5px/1 var(--mono); overflow: hidden; -webkit-font-smoothing: antialiased; }
+.learning { position: fixed; inset: 0; z-index: 0; margin: 0; background: var(--bg); color: var(--ink); font: 400 10.5px/1 var(--mono); overflow: hidden; -webkit-font-smoothing: antialiased; }
 .learning canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; }
 .learning button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
 .learning button:focus-visible { outline: 1px solid var(--red); outline-offset: 3px; }
-.learning .glow { text-shadow: 0 0 6px rgba(225, 225, 255, 0.35); }
-.learning .grain { position: fixed; inset: -50%; pointer-events: none; opacity: 0.07; mix-blend-mode: screen;
+.learning .glow { text-shadow: none; }
+.learning .grain { position: fixed; inset: -50%; pointer-events: none; opacity: 0.045; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
-.learning .vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0,0,0,0.6) 100%); }
+.learning .vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(42, 48, 40, 0.09) 100%); }
+@media (prefers-color-scheme: dark) {
+  .learning .glow { text-shadow: 0 0 6px rgba(225, 225, 255, 0.35); }
+  .learning .grain { opacity: 0.07; mix-blend-mode: screen; }
+  .learning .vignette { background: radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.6) 100%); }
+}
 .learning .tl { position: fixed; top: calc(var(--edge) + 14px); left: calc(var(--edge) + 8px); color: var(--dim); font-size: 11px; }
 .learning .tl button { color: var(--dim); }
 .learning .tl button:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
@@ -27,11 +56,17 @@
 .learning .bl button:hover { color: var(--ink); }
 .learning .bl input { width: 240px; background: none; border: 0; border-bottom: 1px solid var(--red); color: var(--ink); font: inherit; padding: 2px 0; outline: none; }
 .learning .bl input::placeholder { color: var(--dim); }
+.learning .br { position: fixed; right: calc(var(--edge) + 8px); bottom: calc(var(--edge) + 14px); z-index: 5; display: flex; align-items: baseline; gap: 9px; font-size: 11px; color: var(--dim); opacity: 0.78; transition: opacity 0.2s; }
+.learning .br:hover { opacity: 1; }
+.learning .br button { color: var(--dim); transition: color 0.18s; }
+.learning .br button:hover { color: var(--ink); }
+.learning .br i { font-style: normal; color: var(--red); opacity: 0.85; }
+.learning:has(.keys:not([hidden])) .br { display: none; }
 .learning .keys { position: fixed; right: calc(var(--edge) + 8px); bottom: calc(var(--edge) + 14px); margin: 0; z-index: 30;
-  display: grid; grid-template-columns: auto auto; gap: 9px 18px; font-size: 12px; padding: 16px 18px; background: rgba(0,0,0,0.85); border: 1px dashed rgba(222,222,252,0.25); }
+  display: grid; grid-template-columns: auto auto; gap: 9px 18px; font-size: 12px; padding: 16px 18px; background: var(--panel); border: 1px dashed var(--dash); }
 .learning .keys[hidden], .learning .undo[hidden] { display: none; }
 .learning .undo { position: fixed; left: 50%; bottom: calc(var(--edge) + 14px); transform: translateX(-50%); z-index: 30; display: flex; gap: 14px; align-items: baseline;
-  font-size: 12px; color: var(--dim); padding: 8px 14px; background: rgba(0,0,0,0.85); border: 1px dashed rgba(222,222,252,0.25); white-space: nowrap;
+  font-size: 12px; color: var(--dim); padding: 8px 14px; background: var(--panel); border: 1px dashed var(--dash); white-space: nowrap;
   transition: opacity 0.6s ease; }
 .learning .undo.gone { opacity: 0; pointer-events: none; }
 .learning .undo button { color: var(--ink); }
@@ -41,20 +76,20 @@
 .learning .keys dd { margin: 0; color: var(--ink); }
 .learning #bloom { position: fixed; left: 0; top: 0; width: 0; height: 0; pointer-events: none; z-index: 20; --r: 74px; }
 .learning #bloom .ring { position: absolute; left: calc(-1 * var(--r)); top: calc(-1 * var(--r)); width: calc(2 * var(--r)); height: calc(2 * var(--r));
-  border: 1px dashed rgba(222,222,252,0.32); border-radius: 50%; transform: scale(0.15) rotate(-40deg); opacity: 0;
+  border: 1px dashed var(--ring); border-radius: 50%; transform: scale(0.15) rotate(-40deg); opacity: 0;
   transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.45s; }
 .learning #bloom.open .ring { transform: none; opacity: 1; }
 .learning #bloom .hush { position: absolute; left: -300px; top: -300px; width: 600px; height: 600px; border-radius: 50%; opacity: 0; transition: opacity 0.6s;
-  background: radial-gradient(circle, transparent 0, rgba(0,0,0,0.9) 6%, rgba(0,0,0,0.9) 46%, transparent 72%); }
+  background: radial-gradient(circle, transparent 0, var(--hush) 6%, var(--hush) 46%, transparent 72%); }
 .learning #bloom.open .hush { opacity: 1; }
-.learning #bloom .opt { position: absolute; left: 0; top: 0; white-space: nowrap; pointer-events: auto; color: #f2f2fa; font-size: 13px; padding: 6px 4px;
-  transform: translate(var(--ax), -50%) scale(0.6); opacity: 0; text-shadow: 0 0 8px #000, 0 0 2px #000;
+.learning #bloom .opt { position: absolute; left: 0; top: 0; white-space: nowrap; pointer-events: auto; color: var(--ink); font-size: 13px; padding: 6px 4px;
+  transform: translate(var(--ax), -50%) scale(0.6); opacity: 0; text-shadow: 0 0 8px var(--bg), 0 0 2px var(--bg);
   transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d), opacity 0.5s var(--d); }
 .learning #bloom.open .opt { transform: translate(calc(var(--ax) + var(--x)), calc(-50% + var(--y))) scale(1); opacity: 1; }
 .learning #bloom .opt::before { content: "+ "; color: var(--red); }
 .learning #bloom .opt.left::before { content: none; }
 .learning #bloom .opt.left::after { content: " +"; color: var(--red); }
-.learning #bloom .opt:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
+.learning #bloom .opt:hover { color: var(--strong); text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
 @media (max-width: 640px) { .learning #bloom { --r: 58px; } }
 .learning.reading .tl, .learning.reading .bl { display: none; }
 @media (max-width: 640px) {
@@ -71,7 +106,7 @@
 .learning .reader .head { display: flex; flex-direction: column; gap: 22px; }
 .learning .reader .scroll {
   flex-shrink: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 22px;
-  margin-right: -14px; padding-right: 14px; scrollbar-width: thin; scrollbar-color: rgba(222,222,252,0.18) transparent;
+  margin-right: -14px; padding-right: 14px; scrollbar-width: thin; scrollbar-color: var(--thumb) transparent;
   --fade-top: 0px; --fade-bottom: 0px;
   mask-image: linear-gradient(to bottom, transparent 0, #000 var(--fade-top), #000 calc(100% - var(--fade-bottom)), transparent 100%);
 }
@@ -83,15 +118,15 @@
 .learning .reader .path button { color: var(--dim); }
 .learning .reader .path button:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
 .learning .reader h2 { margin: 0; font: 500 28px/1.15 var(--mono); letter-spacing: -0.01em; color: var(--ink); outline: none; }
-.learning .reader .body { margin: 0; font-size: 15px; line-height: 1.95; color: #d7d7e3; outline: none; white-space: pre-wrap; min-height: 2em; }
+.learning .reader .body { margin: 0; font-size: 15px; line-height: 1.95; color: var(--body); outline: none; white-space: pre-wrap; min-height: 2em; }
 .learning .reader [contenteditable] { cursor: text; transition: box-shadow 0.2s; }
-.learning .reader [contenteditable]:hover { box-shadow: 0 1px 0 rgba(222,222,252,0.18); }
+.learning .reader [contenteditable]:hover { box-shadow: 0 1px 0 var(--dash); }
 .learning .reader [contenteditable]:focus { box-shadow: 0 1px 0 var(--red); }
 .learning .reader .body:empty::before { content: "…"; color: var(--dim); }
 .learning .reader h3 { margin: 0 0 10px; font: 400 10.5px/1 var(--mono); color: var(--dim); text-transform: lowercase; }
 .learning .reader ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; font-size: 13px; }
 .learning .reader li button { color: var(--ink); }
-.learning .reader li button:hover, .learning .reader li button.sel { color: #fff; text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
+.learning .reader li button:hover, .learning .reader li button.sel { color: var(--strong); text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
 .learning .reader .inside li button::before { content: "+ "; color: var(--red); }
 .learning .reader .connections li button::before { content: "→ "; color: var(--red); }
 .learning .reader .del { font-size: 10.5px; color: var(--dim); display: flex; gap: 14px; flex-wrap: wrap; align-items: baseline; }
@@ -103,16 +138,16 @@
 .learning .reader li.add input { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--red); color: var(--ink); font: inherit; padding: 2px 0; outline: none; }
 .learning .reader li.add input::placeholder { color: var(--dim); }
 .learning .reader li.add { position: relative; }
-.learning .reader .sugg { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; gap: 0; z-index: 2; background: rgba(0,0,0,0.92); font-size: 13px; }
+.learning .reader .sugg { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; gap: 0; z-index: 2; background: var(--sugg-bg); font-size: 13px; }
 .learning .reader .connections .sugg li, .learning .find .sugg li { display: block; padding: 4px 0 4px 14px; color: var(--dim); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
 .learning .sugg li b { font-weight: 400; color: var(--ink); }
-.learning .sugg li.on { color: #b9b9c6; }
+.learning .sugg li.on { color: var(--body); }
 .learning .sugg li.on::before { content: "→"; color: var(--red); position: absolute; left: 0; }
-.learning .sugg li:hover b, .learning .sugg li.on b { color: #fff; }
+.learning .sugg li:hover b, .learning .sugg li.on b { color: var(--strong); }
 .learning .sugg .in { margin-left: 10px; font-size: 10.5px; color: var(--dim); }
 .learning .sugg .none { cursor: default; }
 .learning .find { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); width: min(460px, calc(100vw - 40px)); z-index: 40;
-  padding: 16px 18px 12px; background: rgba(0,0,0,0.9); border: 1px dashed rgba(222,222,252,0.25); font-size: 13px; }
+  padding: 16px 18px 12px; background: var(--panel); border: 1px dashed var(--dash); font-size: 13px; }
 .learning .find[hidden] { display: none; }
 .learning .find input { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--red); color: var(--ink); font: inherit; font-size: 15px; padding: 2px 0 6px; outline: none; }
 .learning .find input::placeholder { color: var(--dim); }
@@ -128,7 +163,7 @@
 .learning .reader .articles li { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
 .learning .reader .articles a { color: var(--ink); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .learning .reader .articles a::before { content: "↗ "; color: var(--red); }
-.learning .reader .articles a:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
+.learning .reader .articles a:hover { color: var(--strong); text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
 .learning .reader .articles .site { color: var(--dim); font-size: 10.5px; flex-shrink: 0; }
 .learning .reader .articles li:hover .unlink, .learning .reader .articles .unlink:focus { opacity: 1; }
 .learning .reader .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -152,9 +187,9 @@
   .learning .reader .cols { grid-template-columns: 1fr; gap: 16px; }
   .learning.notes .reader, .learning.notes-out .reader { top: 44%; bottom: calc(var(--edge) + 14px); left: calc(var(--edge) + 8px); right: calc(var(--edge) + 8px); width: auto; max-height: none; transform: none; }
   .learning .tl { right: calc(var(--edge) + 8px); line-height: 1.4; }
-  .learning.notes .bl { display: none; }
+  .learning.notes .bl, .learning:is(.reading, .notes) .br { display: none; }
 }
-.learning .site-header { --site-ink: #e4e4ee; --site-muted: #6c6c76; --site-accent: #ff3b2e; --site-line: transparent; z-index: 10; pointer-events: none; font-size: 11px; line-height: 1.7; }
+.learning .site-header { --site-ink: var(--ink); --site-muted: var(--dim); --site-accent: var(--red); --site-line: transparent; z-index: 10; pointer-events: none; font-size: 11px; line-height: 1.7; }
 .learning .site-header nav { pointer-events: auto; }
 .learning > :is(canvas, .grain, .vignette) { animation: learning-in 900ms ease-out both; }
 @keyframes learning-in { from { opacity: 0; } }

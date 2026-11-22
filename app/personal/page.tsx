@@ -41,7 +41,7 @@ export default async function Personal() {
               <article
                 key={post.slug}
                 className="animate-pop-in mb-6 rounded-lg border border-[#ffffff18] p-5"
-                style={{ animationDelay: `${index * 0.05}s` }}
+                style={{ animationDelay: `${Math.min(index * 0.04, 0.25)}s` }}
               >
                 {post.title && (
                   <h2 className="mb-3 text-[28px] font-bold leading-tight text-[#e6e5df]">{post.title}</h2>

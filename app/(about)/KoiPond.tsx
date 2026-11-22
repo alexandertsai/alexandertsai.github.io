@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { createSchool, sampleSpine } from "./koi-motion";
 import { createWakeField, createWaterSchools, rippleCurrent, rippleRadius, RIPPLE_DURATION, waterCurrent, type Ripple, type WaterPointer } from "./pond-water";
 import Ponyo from "./Ponyo";
-import { DEPART_EVENT } from "../components/depart";
+import { DEPART_EVENT, isReturning, openReturn } from "../components/depart";
 import "./pond.css";
 
 const TAU = Math.PI * 2;
 const PALETTES = [
   { shade: ["#7e979a", "#d4ded8", "#a4b8b6"], patch: "#df4423", fin: "#b6c7c6" },
   { shade: ["#aa6c16", "#efbb48", "#ce8c21"], patch: "#f4d87a", fin: "#d49e37" },
-  { shade: ["#242e32", "#526062", "#303e43"], patch: "#e65127", fin: "#556c72" },
+  { shade: ["#cf6a34", "#3f72a3", "#c86230"], patch: "#e1e7e6", fin: "#7f9fbd" },
   { shade: ["#95a9af", "#e7eee9", "#b7c8c9"], patch: "#252e33", fin: "#9eb8be" },
 ];
 
@@ -73,7 +73,7 @@ function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn:
   shade.addColorStop(0, palette.shade[0]); shade.addColorStop(.45, palette.shade[1]); shade.addColorStop(1, palette.shade[2]);
   ctx.fillStyle = shade; ctx.fillRect(-115, -95, 235, 190);
   ctx.fillStyle = palette.patch;
-  const patches = variant === 1 ? [[53, -5, 32, 26], [-22, 8, 22, 25]] : [[75, 0, 22, 24], [9, -9, 32, 26], [-63, 3, 18, 18]];
+  const patches = variant === 1 ? [[53, -5, 32, 26], [-22, 8, 22, 25]] : variant === 2 ? [[86, 0, 20, 23]] : [[75, 0, 22, 24], [9, -9, 32, 26], [-63, 3, 18, 18]];
   for (const [x, y, rx, ry] of patches) {
     ctx.beginPath();
     for (let i = 0; i <= 24; i++) {
@@ -83,12 +83,6 @@ function koi(ctx: CanvasRenderingContext2D, time: number, variant: number, turn:
       if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     }
     ctx.fill();
-  }
-  if (variant === 2) {
-    ctx.fillStyle = "#e9ece0";
-    for (const [x, y, r] of [[35, 22, 16], [-20, -18, 19], [-77, 2, 10]]) {
-      ctx.beginPath(); ctx.ellipse(x, y + bend(x), r, r * .7, .5, 0, TAU); ctx.fill();
-    }
   }
   if (variant === 3) {
     ctx.fillStyle = "#e34622"; ctx.beginPath(); ctx.ellipse(81, 0, 13, 18, 0, 0, TAU); ctx.fill();
@@ -337,6 +331,10 @@ export default function KoiPond({ small = false, background = true }: { small?: 
 
     };
     resize();
+    if (isReturning()) {
+      if (!motion.matches) { school.arrive(time, width, height); school.resetTrails(width, height); }
+      openReturn();
+    }
     window.addEventListener("scroll", invalidateMask, { passive: true });
     window.addEventListener("pointermove", movePointer, { passive: true });
     window.addEventListener("blur", leavePointer);

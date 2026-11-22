@@ -1,5 +1,5 @@
 {
-  "saved": 1794973948420,
+  "saved": 1794990825521,
   "added": [
     {
       "id": "umwixasws",
@@ -9,7 +9,7 @@
     },
     {
       "id": "umwixb2wh",
-      "title": "artifical intelligence",
+      "title": "artificial intelligence",
       "note": "",
       "parent": "root"
     },
@@ -225,7 +225,7 @@
     },
     {
       "id": "umwlhav29",
-      "title": "general optimisations",
+      "title": "general optimizations",
       "note": "",
       "parent": "umwlgpkgm"
     },
@@ -283,7 +283,7 @@
     },
     "umwj2ojaq": {
       "title": "Double Descent",
-      "note": "Classical modern machine learning describes the \"bias vs variance\" tradeoff - as model complexity increases, our model tends to perform worst on testing data and better on training data, essentially overfitting. \n\nDouble descent proves this is not true, and that as models become sufficiently large, variance starts to dip again, allowing us to achieve models with low bias and variance."
+      "note": "Classical modern machine learning describes the \"bias vs variance\" tradeoff - as model complexity increases, our model tends to perform worse on testing data and better on training data, essentially overfitting. \n\nDouble descent proves this is not true, and that as models become sufficiently large, variance starts to dip again, allowing us to achieve models with low bias and variance."
     },
     "umwizyqff": {
       "title": "reinforcement learning",
@@ -319,7 +319,7 @@
     },
     "umwlgt6rn": {
       "title": "temperature",
-      "note": "A value more than or equal to zero. Lower temperature (0-0.3) make models deterministic, they output fixed, typically rigid-sounding responses. High temperature (past 1) can make models go crazy. Typically we elect around 0.7."
+      "note": "A value more than or equal to zero. Lower temperature (0-0.3) makes models deterministic, they output fixed, typically rigid-sounding responses. High temperature (past 1) can make models go crazy. Typically we elect around 0.7."
     },
     "umwlgy8ux": {
       "title": "constrained decoding",
@@ -327,7 +327,7 @@
     },
     "umwlh3050": {
       "title": "cot monitoring",
-      "note": "Chain-of-Thought monitoring is essentially reading the model's  reasoning and from there understanding it's thoughts and intents. We would hope that if the model was cheating on a task, it would expose this through its CoT."
+      "note": "Chain-of-Thought monitoring is essentially reading the model's reasoning and from there understanding its thoughts and intents. We would hope that if the model was cheating on a task, it would expose this through its CoT."
     },
     "umwlh6v7h": {
       "title": "prefill",
@@ -335,11 +335,11 @@
     },
     "umwlh6vxc": {
       "title": "decode",
-      "note": "Decoding is the process of generating tokens one at a time. The weights of each layer are ready again and again for each new token. In each layer the new tokens attend to the keys and values of the previous layers (reading the KV cache). Decode is memory bandwidth bound."
+      "note": "Decoding is the process of generating tokens one at a time. The weights of each layer are read again and again for each new token. In each layer the new tokens attend to the keys and values of the previous layers (reading the KV cache). Decode is memory bandwidth bound."
     },
     "umwlhb019": {
       "title": "KV cache",
-      "note": "When our LLM is generating a response, the keys and values of previously generated tokens do not change. To avoid continuously recomputing these values, we cache them. This process is memory-bound. \n\nKV cache grows linearly, potentially causing KV caches to overtake model weights themselves memory-usage for extremely long sequences."
+      "note": "When our LLM is generating a response, the keys and values of previously generated tokens do not change. To avoid continuously recomputing these values, we cache them. This process is memory-bound. \n\nKV cache grows linearly, potentially causing KV caches to overtake model weights themselves in memory usage for extremely long sequences."
     },
     "umwlhpunw": {
       "title": "speculative decoding",
@@ -347,7 +347,7 @@
     },
     "umwlgqbx7": {
       "title": "llm",
-      "note": "Large language models are predominantly based on the transformer architecture, introduced by researchers at Google in 2017. They surged in popularity after OpenAI launched ChatGPT in November 2022. The term originally referred to models that processed only text, but it now also covers multimodal models that accept images, audio or video alongside text.\n\nResearchers have also explored alternatives, such as the Mamba architecture and diffusion-based generation. Even so, the autoregressive transformer remains the centre of attention."
+      "note": "Large language models are predominantly based on the transformer architecture, introduced by researchers at Google in 2017. They surged in popularity after OpenAI launched ChatGPT in November 2022. The term originally referred to models that processed only text, but it now also covers multimodal models that accept images, audio or video alongside text.\n\nResearchers have also explored alternatives, such as the Mamba architecture and diffusion-based generation. Even so, the autoregressive transformer remains the center of attention."
     },
     "umwlgqbcv": {
       "title": "vlm",
@@ -355,7 +355,7 @@
     },
     "umwljuysy": {
       "title": "ViT",
-      "note": "Vision Transformers apply the transformer architecture towards  images. They process images in patches (e.g. a 14x14 square) and typically transform each patch into an embedding. Most VLMs consist combining an LLM and a ViT together."
+      "note": "Vision Transformers apply the transformer architecture towards images. They process images in patches (e.g. a 14x14 square) and typically transform each patch into an embedding. Most VLMs consist of combining an LLM and a ViT together."
     },
     "umwljzler": {
       "title": "autoregressive",
@@ -363,7 +363,7 @@
     },
     "umwlk1ho5": {
       "title": "tokens",
-      "note": "Tokens are the fundamental units of data that LLMs process. Tokens are often words, parts of words or punctuation. For example, the word \"hello\" could be one token. The world \"multiplayer\" might instead be split into two - \"multi\" and \"player\". The full stop at the end of a sentence is often a token too. \n\nToken consumption generally refers to: how many words is your model taking in and outputting? A rough rule is 1 token = 4 characters. Long conversations or model outputs typically lead to high token consumption and incur high costs.\n\n*In practice, leading spaces (\" hello\") are often part of a token."
+      "note": "Tokens are the fundamental units of data that LLMs process. Tokens are often words, parts of words or punctuation. For example, the word \"hello\" could be one token. The word \"multiplayer\" might instead be split into two - \"multi\" and \"player\". The full stop at the end of a sentence is often a token too. \n\nToken consumption generally refers to: how many words is your model taking in and outputting? A rough rule is 1 token = 4 characters. Long conversations or model outputs typically lead to high token consumption and incur high costs.\n\n*In practice, leading spaces (\" hello\") are often part of a token."
     },
     "umwljzrh2": {
       "title": "multimodal",
@@ -385,6 +385,11 @@
     [
       "umwlgqbcv",
       "umwlgqbx7",
+      "related"
+    ],
+    [
+      "umwljuysy",
+      "umwlgqbcv",
       "related"
     ]
   ],
@@ -455,15 +460,21 @@
       },
       {
         "url": "https://www.lennysnewsletter.com/p/a-mind-expanding-conversation-on",
-        "title": "Emmanual Ameisen on mech interp"
+        "title": "Emmanuel Ameisen on mech interp"
       },
       {
         "url": "https://80000hours.org/podcast/episodes/chris-olah-interpretability-research/",
-        "title": "Chis Olah: what is going in neural networks?"
+        "title": "Chris Olah: what is going on in neural networks?"
       },
       {
         "url": "https://80000hours.org/podcast/episodes/neel-nanda-mechanistic-interpretability/",
-        "title": "Neel Nanda: what is going in AI?"
+        "title": "Neel Nanda: what is going on in AI?"
+      }
+    ],
+    "umwj0infl": [
+      {
+        "url": "https://transformer-circuits.pub/2024/model-diffing/index.html",
+        "title": "Stage-Wise Model Diffing"
       }
     ]
   }

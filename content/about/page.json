@@ -1,6 +1,6 @@
 {
   "name": "Alexander Tsai",
-  "about": "I'm a machine learning engineer at TikTok, working on detecting AI content and interpretability. I was previously with Exoduspoint, developing quantitative strategies for credit default swaps. \n\nI am interested in how we can better understand the inner workings behind various multimodal models, particularly within the domains of AI safety and robotics. \n\n In my spare time, I write blogs and program drones. Connect with me on [X](https://x.com/alexyrtsai) to see more!",
+  "about": "I'm a machine learning engineer at TikTok, working on detecting AI content and interpretability. I was previously with ExodusPoint, developing quantitative strategies for credit default swaps.\n\nI am interested in how we can better understand the inner workings behind various multimodal models, particularly within the domains of AI safety and robotics.\n\nIn my spare time, I [write blogs](/blog/) and program drones. Connect with me on [X](https://x.com/alexyrtsai) to see more!",
   "facts": [
     {
       "label": "Based in",
@@ -13,6 +13,11 @@
   ],
   "resume": "/_content/about/resume.pdf",
   "links": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/alexandertsai",
+      "icon": "github"
+    },
     {
       "label": "Email",
       "href": "mailto:alexyrtsai@gmail.com",
@@ -35,28 +40,28 @@
       "title": "Machine Learning Engineer Intern",
       "location": "San Jose, CA",
       "dates": "Sep 2026 – Present",
-      "summary": "Developed an **AI-generated image classifier** with **99.85% precision and 76% recall** on production data. Experiments were focused around OOD generalisation, robustness to compression, and interpretability. Global deployment is projected to reduce refund abuse losses by over $4M annually."
+      "summary": "Developed an **AI-generated image classifier** with **99.85% precision and 76% recall** on production data. Experiments were focused around generalization to out-of-distribution data, robustness to compression, and visual interpretability (the hardest part)."
     },
     {
       "org": "ExodusPoint Capital Management",
       "title": "Quantitative Research Intern",
       "location": "New York, NY",
       "dates": "May – Aug 2026",
-      "summary": "Working primarily on Credit Default Swaps. Developed a **credit-market trading signal** from six years of intraday data. Also build a model to infer trade direction and volume from public order books."
+      "summary": "Worked primarily on credit markets. I explored several potential approaches towards credit world models. Some interesting questions: what features should we model on levels vs changes? How can we numerically represent certain events e.g. the fed announcing a rate hike?"
     },
     {
       "org": "TikTok",
       "title": "Machine Learning Engineer Intern",
       "location": "San Jose, CA · Singapore",
       "dates": "Jul 2025 – May 2026",
-      "summary": "Built and deployed a content moderation pipeline with **Qwen3-VL and XGBoost**. Work revolved around improving a VLM's visual understanding through RL (GRPO) and optimizing inference (speculative decoding, batching, multithreading) for large-scale offline processing."
+      "summary": "Built and deployed a content moderation pipeline with **Qwen3-VL and XGBoost**. Focused heavily on improving visual understanding for VLMs through RL (GRPO) and optimizing inference (speculative decoding, batching, multithreading) for large-scale offline processing."
     },
     {
       "org": "Tradeweb",
       "title": "Data Science Intern",
       "location": "New York, NY",
       "dates": "May – Jul 2025",
-      "summary": "Built an **XGBoost** transaction-cost model using five years of trades totaling $4.7T in notional volume. Hyperparameter optimization and feature engineering with SHAP graphs reduced **RMSE by 21%** over baseline."
+      "summary": "Built an **XGBoost** transaction-cost model for mortgage-backed securities over 5 years of trade data. Hyperparameter optimization and feature engineering with SHAP graphs reduced **RMSE by 21%** over baseline."
     }
   ],
   "research": [
@@ -84,7 +89,7 @@
     },
     {
       "school": "Singapore Management University",
-      "detail": "B.S. in Human-Computer Interactions",
+      "detail": "B.S. in Human-Computer Interaction",
       "dates": "Aug 2023 – May 2027 (expected)",
       "note": ""
     }
@@ -96,7 +101,7 @@
       "href": "https://reachalliance.org/wp-content/uploads/2024/05/FINAL_Financial-Literacy-Ai.pdf"
     },
     {
-      "title": "Behavioural Sciences and Conversational AI",
+      "title": "Behavioral Sciences and Conversational AI",
       "venue": "TEDx talk",
       "href": "https://www.youtube.com/watch?v=3C1R1JlOQEk"
     }

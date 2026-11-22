@@ -4,8 +4,11 @@ export type Swimmer = {
   alarm: number; threatX: number; threatY: number;
   excursionAt: number; excursionUntil: number; excursion: boolean; variant: number; depth: number; phase: number;
   trail: { x: number; y: number }[];
-  fleeAt?: number; fleeAngle?: number; fleeSpin?: number;
+  fleeAt?: number; fleeAngle?: number; fleeSpin?: number; arriveAt?: number;
 };
+
+const ARRIVAL_SECONDS = 2.1;
+const ARRIVAL_SURGE = 11;
 
 export function sampleSpine(fish: Swimmer, distance: number, width: number, height: number) {
   const head = { x: fish.x * width, y: fish.y * height, angle: fish.angle };
@@ -80,6 +83,22 @@ export function createSchool(small = false) {
         swimmer.fleeAt = time;
         swimmer.fleeAngle = outward;
         swimmer.fleeSpin = difference < 0 ? -1 : 1;
+      }
+    },
+    // Arriving: each fish starts just past the edge nearest its usual spot and dashes back in towards it.
+    arrive(time: number, width: number, height: number) {
+      for (const swimmer of fish) {
+        const dx = (swimmer.x - .5) * width, dy = (swimmer.y - .5) * height;
+        const length = Math.max(1, Math.hypot(dx, dy));
+        const ux = dx / length, uy = dy / length;
+        const edge = Math.min(Math.abs(ux) > 1e-3 ? width / 2 / Math.abs(ux) : Infinity, Math.abs(uy) > 1e-3 ? height / 2 / Math.abs(uy) : Infinity);
+        const reach = edge + 40 + 60 * swimmer.size;
+        swimmer.targetX = swimmer.x; swimmer.targetY = swimmer.y;
+        swimmer.x = .5 + ux * reach / width; swimmer.y = .5 + uy * reach / height;
+        swimmer.angle = Math.atan2(-uy, -ux);
+        swimmer.turn = 0;
+        swimmer.arriveAt = time;
+        swimmer.velocity = swimmer.speed * (1 + ARRIVAL_SURGE);
       }
     },
     resetTrails(width: number, height: number) {
@@ -166,7 +185,8 @@ export function createSchool(small = false) {
         const descending = Math.max(0, Math.sin(swimmer.angle));
         const descentBoost = 1 + Math.max(0, 1 - relativeSize) * descending * .6;
         const cruise = .8 + .2 * Math.sin(time * (.35 + index * .07) + index * 2);
-        const desiredSpeed = swimmer.speed * cruise * descentBoost * (1 + swimmer.alarm * .9);
+        const surge = swimmer.arriveAt === undefined ? 0 : Math.max(0, 1 - (time - swimmer.arriveAt) / ARRIVAL_SECONDS);
+        const desiredSpeed = swimmer.speed * cruise * descentBoost * (1 + swimmer.alarm * .9) * (1 + surge * surge * ARRIVAL_SURGE);
         swimmer.velocity += (desiredSpeed - swimmer.velocity) * Math.min(1, dt * 1.5);
         const speed = swimmer.velocity * Math.min(1, width / 650);
         swimmer.x += Math.cos(swimmer.angle) * speed * dt / width;

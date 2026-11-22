@@ -58,7 +58,17 @@ p:has(> img) + p > em:only-child {
   }
 }
 
-.personal-journal { color: var(--site-ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.personal-journal {
+  --site-bg: #080a09;
+  --site-ink: #e6e5df;
+  --site-copy: #c5c9bb;
+  --site-muted: #8a9286;
+  --site-accent: #c98468;
+  --site-line: #ffffff18;
+  color-scheme: dark;
+  color: var(--site-ink);
+  font-family: var(--site-sans);
+}
 .personal-journal article { border-radius: 0; border-width: 0 0 1px; padding: 28px 0 36px; margin-bottom: 14px; }
 .personal-journal article > div:first-of-type { line-height: 1.9; color: #c5c9bb; }
 .personal-journal article h2, .personal-journal article h3 { font-weight: 500; letter-spacing: -.025em; }

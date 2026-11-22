@@ -112,7 +112,7 @@ export function createEditorServer(root = process.cwd()) {
         const file = path.join(path.dirname(fileURLToPath(import.meta.url)), 'editor', staticFiles[url.pathname]);
         return send(200, fs.readFileSync(file), mime[path.extname(file)]);
       }
-      if (req.method === 'GET' && /^\/fonts\/inter\/Inter-(Regular|Italic|SemiBold|Bold|BoldItalic)\.ttf$/.test(url.pathname)) {
+      if (req.method === 'GET' && /^\/fonts\/(inter\/Inter-(Regular|Italic|SemiBold|Bold|BoldItalic)|personal-sans\/PersonalSans-[A-Za-z]+)\.ttf$/.test(url.pathname)) {
         const file = fileURLToPath(new URL(`../public${url.pathname}`, import.meta.url));
         return send(200, fs.readFileSync(file), 'font/ttf');
       }

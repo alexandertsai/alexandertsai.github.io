@@ -2,7 +2,7 @@ Imagine you've just come back from volunteering at a pet shelter. Your camera ga
 
 #html("camera-gallery.html")
 
-You want to organise it and place cats in one album and dogs in another, but you've taken too many photos. You think back to your Introduction to Python class and try to write a Python script to do this. Pretty soon, you realise each image is too complex, and there isn't any reasonable function you could write to differentiate a dog from a cat.
+You want to organize it and place cats in one album and dogs in another, but you've taken too many photos. You think back to your Introduction to Python class and try to write a Python script to do this. Pretty soon, you realize each image is too complex, and there isn't any reasonable function you could write to differentiate a dog from a cat.
 
 This is where *neural networks* come in! They can be thought of as really intelligent programs that can perform tasks human-written code cannot (must note: there are also many tasks where simply writing code would be much better, e.g. mathematical operations).
 
@@ -16,7 +16,7 @@ To represent images in a more computer-friendly form, let's try to represent thi
 
 Now we've got a list of 64 numbers (read left to right, row by row). For the happy face, this list starts with $[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, dots]$ and ends with eight zeros.
 
-For my next trick, I'll do something radical. What if, WHAT IF we initialised two lists of length 64 filled with a bunch of random numbers?
+For my next trick, I'll do something radical. What if, WHAT IF we initialized two lists of length 64 filled with a bunch of random numbers?
 
 #html("weight-lists.html")
 
@@ -40,11 +40,11 @@ Now, I did mention we skipped past a few things. One thing I can't afford to ski
   numbering: none,
 )
 
-The other thing I skipped is how these networks are trained. How do we know the random numbers we are multiplying by are indeed the right numbers to classify images? They use something called *backpropagation*. The math behind this process is not impossible, but it is frankly pretty long-winded and took me a while to wrap my head around when I first learnt it.
+The other thing I skipped is how these networks are trained. How do we know the random numbers we are multiplying by are indeed the right numbers to classify images? They use something called *backpropagation*. The math behind this process is not impossible, but it is frankly pretty long-winded and took me a while to wrap my head around when I first learned it.
 
 A simplified version is as such: you have the prediction that your neural network makes, e.g. this image is a smiling face. You also have the truth, e.g. this image is *actually* a frowning face! If your neural network very confidently says, "Nope, this guy is smiling", the neural network is punished like crazy with a large error (we call this the *loss*) and we use that error to adjust its *weights* (the things we multiply each number by, e.g. 1.2, −0.9, 0.3). Backpropagation helps us calculate how to adjust those weights, and *gradient descent* makes the updates. If the neural network confidently gets it right, the error is much less and we don't change weights much. This is pretty intuitive! If you're constantly getting things wrong as a network, we need to change you. If you're already getting things right, we probably shouldn't alter your values too much.
 
-#text(size: 9.75pt, fill: rgb("#666666"))[*Technical note:* Backpropagation calculates how the loss changes with each weight. An optimiser such as gradient descent uses those gradients to update the weights.]
+#text(size: 9.75pt, fill: rgb("#666666"))[*Technical note:* Backpropagation calculates how the loss changes with each weight. An optimizer such as gradient descent uses those gradients to update the weights.]
 
 #html("recap-quiz.html")
 
@@ -52,10 +52,10 @@ Below is what our example network would look like in a diagram. There are 64 neu
 
 #html("network-diagram.html")
 
-Real networks often take in far larger inputs and are much larger in size. Sufficiently large networks can perform our actual (and far more complex) dog vs cat classification task really well. All we do is increase the number of neurons in the hidden layer, increase the number of input neurons (so we can input higher-resolution images), and maybe add another hidden layer. To deal with images that have colour that can't be represented by 0s and 1s, you can actually convert the image to a greyscale one, and say: bright pixels we'll represent as 1, and dark pixels we'll represent as 0. Grey-ish pixels can be represented somewhere in between (e.g. 0.7).
+Real networks often take in far larger inputs and are much larger in size. Sufficiently large networks can perform our actual (and far more complex) dog vs cat classification task really well. All we do is increase the number of neurons in the hidden layer, increase the number of input neurons (so we can input higher-resolution images), and maybe add another hidden layer. To deal with images that have color that can't be represented by 0s and 1s, you can actually convert the image to a grayscale one, and say: bright pixels we'll represent as 1, and dark pixels we'll represent as 0. Gray-ish pixels can be represented somewhere in between (e.g. 0.7).
 
 #html("input-recap.html")
 
-On the lowest level, it's really just bits and pieces of math! Today, these neural networks power most of the magical things we see around us. Self-driving cars, ChatGPT, bots in video games, and much more. In the next couple of blog posts, I'd like to talk a bit more about how we can actually understand these networks, and what other cool areas they get applied in.
+On the lowest level, it's really just bits and pieces of math! Today, these neural networks power most of the magical things we see around us. Self-driving cars, ChatGPT, bots in video games, and much more. In the next couple of blog posts, I'd like to talk a bit more about #link("/blog/mech-interp-intro/")[how we can actually understand these networks], and what other cool areas they get applied in.
 
 *Note*: This article has skipped over lots of technical details for the sake of understandability. Please do not use this for interview preparation.

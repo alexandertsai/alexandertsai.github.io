@@ -10,6 +10,20 @@ const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], var
 export const metadata: Metadata = {
   title: "Learning | Alexander Tsai",
   description: "What I am learning, drawn as a garden of concepts.",
+  openGraph: {
+    title: "Learning | Alexander Tsai",
+    description: "What I am learning, drawn as a garden of concepts.",
+    url: "/learning/",
+    siteName: "Alexander Tsai",
+    type: "website",
+    images: ["/opengraph-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Learning | Alexander Tsai",
+    description: "What I am learning, drawn as a garden of concepts.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function Learning() {

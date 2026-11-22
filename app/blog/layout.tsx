@@ -5,6 +5,20 @@ import "./blog.css";
 export const metadata: Metadata = {
   title: "Blog | Alexander Tsai",
   description: "Writing by Alexander Tsai.",
+  openGraph: {
+    title: "Blog | Alexander Tsai",
+    description: "Writing by Alexander Tsai.",
+    url: "/blog/",
+    siteName: "Alexander Tsai",
+    type: "website",
+    images: ["/opengraph-image.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | Alexander Tsai",
+    description: "Writing by Alexander Tsai.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {

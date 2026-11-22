@@ -36,6 +36,13 @@ export default function LearningGarden({ store, className }: { store: unknown; c
       <SiteHeader />
       <nav className="tl glow" id="crumbs" aria-label="Where you are" />
       <div className="bl glow" id="g-add" />
+      <div className="br glow" id="g-hint">
+        <span>drag</span>
+        <span aria-hidden="true">·</span>
+        <button type="button" data-hint="find"><i>f</i> find</button>
+        <span aria-hidden="true">·</span>
+        <button type="button" data-hint="keys"><i>?</i> keys</button>
+      </div>
       <div className="undo glow" id="undo" hidden aria-live="polite" />
       <div className="find" id="find" hidden>
         <input id="f-q" type="text" placeholder="find a concept" autoComplete="off" spellCheck={false} aria-label="Find a concept" role="combobox" aria-expanded="false" aria-controls="f-sugg" />

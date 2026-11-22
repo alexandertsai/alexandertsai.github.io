@@ -16,10 +16,10 @@ export default function ProjectFigure({ href }: { href: string }) {
     return { x: [30, 78, 115][node] + Math.cos(angle) * spread, y: [69, 27, 67][node] + Math.sin(angle) * spread, r: 2.7, warm: node === 1 };
   });
   return <svg className="home-project-figure" viewBox="0 0 145 100" aria-hidden="true" focusable="false">
-    {index === 3 && <path d="M35 48h18m-4-4 4 4-4 4m38-4h20m-4-4 4 4-4 4M125 72v10H19V72" fill="none" stroke="#587b7d" strokeOpacity=".4" strokeWidth=".7" />}
-    {index === 2 && <path d="m30 69 48-42 37 40Z" fill="none" stroke="#587b7d" strokeOpacity=".4" strokeWidth=".7" />}
-    {index === 0 && <path d="M13 50h119M70 6v88" stroke="#587b7d" strokeOpacity=".22" strokeWidth=".6" />}
+    {index === 3 && <path d="M35 48h18m-4-4 4 4-4 4m38-4h20m-4-4 4 4-4 4M125 72v10H19V72" className="line" fill="none" strokeOpacity=".4" strokeWidth=".7" />}
+    {index === 2 && <path d="m30 69 48-42 37 40Z" className="line" fill="none" strokeOpacity=".4" strokeWidth=".7" />}
+    {index === 0 && <path d="M13 50h119M70 6v88" className="line" strokeOpacity=".22" strokeWidth=".6" />}
     {points.map((point, i) => <ellipse key={i} cx={point.x} cy={point.y} rx={point.r} ry={point.r * .83}
-      transform={`rotate(${i * 37} ${point.x} ${point.y})`} fill={point.warm ? "#c75b37" : i % 3 ? "#537f83" : "#b59046"} opacity={.5 + i % 4 * .14} />)}
+      transform={`rotate(${i * 37} ${point.x} ${point.y})`} className={point.warm ? "warm" : i % 3 ? "teal" : "gold"} opacity={.5 + i % 4 * .14} />)}
   </svg>;
 }

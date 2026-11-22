@@ -2,6 +2,19 @@
 @source "../app";
 @source "../lib";
 
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-Light.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-LightItalic.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-LightItalic.ttf') format('truetype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-Regular.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-Italic.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-Italic.ttf') format('truetype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-Medium.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-MediumItalic.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-MediumItalic.ttf') format('truetype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-SemiBold.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-SemiBoldItalic.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-SemiBoldItalic.ttf') format('truetype'); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-Bold.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-BoldItalic.woff') format('woff'), url('/fonts/personal-sans/PersonalSans-BoldItalic.ttf') format('truetype'); font-weight: 700; font-style: italic; font-display: swap; }
+
+:root { --site-sans: "Personal Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -9,7 +22,7 @@ body {
   margin: 0;
   background: var(--site-bg);
   color: var(--site-ink);
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: var(--site-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
