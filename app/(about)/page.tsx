@@ -110,7 +110,7 @@ export default function Home() {
                 {content.education.map((item) => (
                   <li key={item.school}>
                     <p className="font-semibold leading-snug">{item.school}</p>
-                    <p className="text-[15px]">{item.detail}</p>
+                    <p className="home-detail">{item.detail}</p>
                     <p className="home-meta">{item.note ? `${item.dates} · ${item.note}` : item.dates}</p>
                   </li>
                 ))}
@@ -119,7 +119,7 @@ export default function Home() {
               <ul className="mt-5 grid gap-4">
                 {content.talks.map((item) => (
                   <li key={item.href}>
-                    <a className="home-link text-[15px] font-medium" href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
+                    <a className="home-link font-medium" href={item.href} target="_blank" rel="noopener noreferrer">{item.title}</a>
                     <p className="home-meta">{item.venue}</p>
                   </li>
                 ))}

@@ -5,10 +5,28 @@ import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
 import { remark } from 'remark';
 import html from 'remark-html';
+import sharp from 'sharp';
 import { renderTypstPost } from './typst.mjs';
 
 const mediaExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif', '.mp3', '.wav', '.ogg', '.m4a', '.mp4', '.webm', '.pdf']);
 const escapeHtml = (value) => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+const imageExtensions = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif', 'image/svg+xml': 'svg', 'image/avif': 'avif' };
+const converted = new Map();
+
+// Photos and screenshots become WebP when that is smaller; other formats are kept as they are.
+async function compressImage(mime, bytes) {
+  const hash = createHash('sha256').update(bytes).digest('hex').slice(0, 16);
+  if (!converted.has(hash)) {
+    let result = { bytes, ext: imageExtensions[mime] };
+    if (mime === 'image/png' || mime === 'image/jpeg') {
+      const webp = await sharp(bytes).webp({ quality: 82, effort: 5 }).toBuffer();
+      if (webp.length < bytes.length) result = { bytes: webp, ext: 'webp' };
+    }
+    converted.set(hash, { ...result, name: `${hash}.${result.ext}` });
+  }
+  return converted.get(hash);
+}
 
 function filesIn(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -109,8 +127,32 @@ export async function prepareContent(root = process.cwd(), { includeDrafts = fal
         };
       }
 
+      // Each post is typeset at three widths; each width is its own file so readers download only the one they see.
+      // Images Typst embeds are written out once as files the widths share.
+      async function writeLayouts(layouts) {
+        const folder = `${section}/posts/${slug}`;
+        const urls = {};
+        for (const [name, markup] of Object.entries(layouts)) {
+          let output = markup;
+          for (const uri of new Set(markup.match(/data:image\/[a-z0-9.+-]+;base64,[A-Za-z0-9+/=]+/gi) ?? [])) {
+            const mime = uri.slice(5, uri.indexOf(';')).toLowerCase();
+            if (!imageExtensions[mime]) continue;
+            const image = await compressImage(mime, Buffer.from(uri.slice(uri.indexOf(',') + 1), 'base64'));
+            assets.set(`${folder}/images/${image.name}`, image.bytes);
+            output = output.split(uri).join(`/_content/${folder}/images/${image.name}`);
+          }
+          const bytes = Buffer.from(output);
+          assets.set(`${folder}/layout-${name}.html`, bytes);
+          urls[name] = `/_content/${folder}/layout-${name}.html?v=${createHash('sha256').update(bytes).digest('hex').slice(0, 10)}`;
+        }
+        return urls;
+      }
+
+      const layouts = section === 'blog'
+        ? await writeLayouts(renderTypstPost(content, directory, { fontDirectory: path.join(contentRoot, 'blog/fonts') }))
+        : undefined;
       let rendered = section === 'blog'
-        ? renderTypstPost(content, directory, { fontDirectory: path.join(contentRoot, 'blog/fonts') })
+        ? ''
         : String(await remark().use(localMedia).use(html, { sanitize: false }).process(content));
       if (section === 'personal') {
         const audio = new Map(filesIn(directory).filter((file) => path.extname(file) === '.mp3').map((file) => [path.basename(file, '.mp3'), addAsset(file)]));
@@ -127,7 +169,7 @@ export async function prepareContent(root = process.cwd(), { includeDrafts = fal
           rendered = rendered.slice(0, position) + '<div data-audio-control></div>' + rendered.slice(position);
         }
       }
-      records.push({ section, slug, title: data.title ?? '', date, preview: data.preview ?? '', draft: data.draft ?? false, readingMinutes: readingMinutes(content), html: rendered });
+      records.push({ section, slug, title: data.title ?? '', date, preview: data.preview ?? '', draft: data.draft ?? false, readingMinutes: readingMinutes(content), html: rendered, ...(layouts && { layouts }) });
     }
   }
 

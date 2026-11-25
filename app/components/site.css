@@ -1,30 +1,33 @@
 :root {
-  --site-bg: #f3f1e9;
-  --site-ink: #242c29;
-  --site-copy: #46514b;
-  --site-muted: #69736b;
-  --site-accent: #a54f2d;
-  --site-line: #34483a24;
+  --site-bg: #000;
+  --site-ink: #e4e4ee;
+  --site-copy: #d7d7e3;
+  --site-muted: #8e8e9b;
+  --site-accent: #ff3b2e;
+  --site-line: #dedefc1f;
   --site-mono: Menlo, Consolas, monospace;
-  --site-grid: #34483a;
-  --site-selection-bg: #eed5c1;
-  --site-selection-ink: #382c23;
-  --site-depart-bg: #f3f1e9;
-  color-scheme: light;
+  --site-text-prose: 18px;
+  --site-text-body: 17px;
+  --site-text-secondary: 15px;
+  --site-grid: #dedefc;
+  --site-selection-bg: #4a1a16;
+  --site-selection-ink: #f6eeee;
+  --site-link-line: #d7d7e34d;
+  color-scheme: dark;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
-    --site-bg: #161a17;
-    --site-ink: #e4e3dc;
-    --site-copy: #b4b9ae;
-    --site-muted: #8a9286;
-    --site-accent: #d98a64;
-    --site-line: #e4e3dc1f;
-    --site-grid: #e4e3dc;
-    --site-selection-bg: #5a3a2a;
-    --site-selection-ink: #f3e6dc;
-    --site-depart-bg: #000;
-    color-scheme: dark;
+    --site-bg: #f3f1e9;
+    --site-ink: #242c29;
+    --site-copy: #46514b;
+    --site-muted: #5f685f;
+    --site-accent: #a54f2d;
+    --site-line: #34483a24;
+    --site-grid: #34483a;
+    --site-selection-bg: #eed5c1;
+    --site-selection-ink: #382c23;
+    --site-link-line: #71846b66;
+    color-scheme: light;
   }
 }
 body { --site-mono: var(--font-jetbrains-mono), Menlo, Consolas, monospace; }
@@ -53,7 +56,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 }
 @media (prefers-reduced-motion: reduce) { .site-header *, .site-header *::after, .site-footer * { transition: none; } }
 @media (prefers-reduced-motion: reduce) { .home-shell, .professional-blog .blog-reader { animation: none; } }
-#site-depart { position: fixed; inset: 0; z-index: 100; background: var(--site-depart-bg); animation: site-depart 450ms cubic-bezier(.4, 0, .9, .6) 450ms both; }
+#site-depart { position: fixed; inset: 0; z-index: 100; background: var(--site-bg); animation: site-depart 400ms cubic-bezier(.4, 0, .9, .6) 300ms both; }
 @keyframes site-depart { from { opacity: 0; } }
 @property --return-hole { syntax: "<length>"; inherits: false; initial-value: 80vmax; }
-#site-return { position: fixed; inset: 0; z-index: 100; background: radial-gradient(circle at 50% 50%, transparent calc(var(--return-hole) - 24vmax), var(--site-depart-bg) var(--return-hole)); }
+#site-return { position: fixed; inset: 0; z-index: 100; background: radial-gradient(circle at 50% 50%, transparent calc(var(--return-hole) - 24vmax), var(--site-bg) var(--return-hole)); }

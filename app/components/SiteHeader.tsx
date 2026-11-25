@@ -14,6 +14,11 @@ export default function SiteHeader() {
   const writing = pathname === "/blog" || pathname.startsWith("/blog/");
   const learning = pathname === "/learning" || pathname.startsWith("/learning/");
 
+  useEffect(() => {
+    router.prefetch("/");
+    router.prefetch("/learning/");
+  }, [router]);
+
   useEffect(() => () => {
     animation.current?.cancel();
     if (navigation.current) clearTimeout(navigation.current);
@@ -39,7 +44,7 @@ export default function SiteHeader() {
     const home = href === "/" && learning;
     if (into) depart();
     if (home) returnHome();
-    navigation.current = setTimeout(() => router.push(href), into ? DEPART_MS : home ? RETURN_MS : 180);
+    navigation.current = setTimeout(() => router.push(href), into ? DEPART_MS : home ? RETURN_MS : 50);
   }
 
   return <header className="site-header site-width" data-pond-text>
@@ -48,13 +53,13 @@ export default function SiteHeader() {
         Home
         {pathname === "/" && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
       </Link>
-      <Link href="/blog/" aria-current={writing ? "page" : undefined} onClick={(event) => navigate(event, "/blog/")}>
-        Writing
-        {writing && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
-      </Link>
       <Link href="/learning/" aria-current={learning ? "page" : undefined} onClick={(event) => navigate(event, "/learning/")}>
         Learning
         {learning && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
+      </Link>
+      <Link href="/blog/" aria-current={writing ? "page" : undefined} onClick={(event) => navigate(event, "/blog/")}>
+        Writing
+        {writing && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
       </Link>
     </nav>
   </header>;

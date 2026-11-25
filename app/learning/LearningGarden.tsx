@@ -15,16 +15,19 @@ export default function LearningGarden({ store, className }: { store: unknown; c
   // Mount once: later renders (a dev refresh after each save) must not restart the garden.
   // While editing, read the file itself so the page never starts from an older copy.
   useEffect(() => {
-    endDeparture();
     const element = host.current;
-    if (!element) return;
-    let stop: (() => void) | undefined, cancelled = false;
-    const start = (data: unknown) => { if (!cancelled) stop = mountGarden(element, data, { editable, saveUrl }); };
+    if (!element) { endDeparture(); return; }
+    let stop: (() => void) | undefined, cancelled = false, frame = 0;
+    const start = (data: unknown) => {
+      if (cancelled) return;
+      stop = mountGarden(element, data, { editable, saveUrl });
+      frame = requestAnimationFrame(() => { frame = requestAnimationFrame(endDeparture); });
+    };
     if (editable) fetch(saveUrl.replace(/\/save$/, "/garden"), { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : initial.current), () => initial.current)
       .then(start, () => start(initial.current));
     else start(initial.current);
-    return () => { cancelled = true; stop?.(); };
+    return () => { cancelled = true; cancelAnimationFrame(frame); stop?.(); };
   }, [editable]);
 
   const editing = editable ? "plaintext-only" : undefined;

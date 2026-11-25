@@ -39,8 +39,11 @@ test('browser workflow creates a draft, persists an image, previews, and prepare
   response = await request('/api/posts/example', 'PUT', { ...first, body, draft: false });
   assert.equal(response.status, 200);
   const [published] = await prepareContent(root);
-  assert.match(published.html, /data:image\/png;base64/);
-  assert.match(published.html, /typst-layout-small/);
+  assert.deepEqual(Object.keys(published.layouts), ['small', 'medium', 'large']);
+  const small = fs.readFileSync(path.join(root, 'public', published.layouts.small.split('?')[0]), 'utf8');
+  assert.match(small, /<svg/);
+  assert.doesNotMatch(small, /data:image\/png;base64/);
+  assert.match(small, /\/_content\/blog\/posts\/example\/images\/[0-9a-f]{16}\.(png|webp)/);
   assert.ok(fs.existsSync(path.join(root, "content/blog/posts/example/index.typ")));
   assert.ok(fs.existsSync(path.join(root, "content/blog/posts/example/post.json")));
   assert.equal(fs.existsSync(path.join(root, "content/blog/posts/example/index.md")), false);
@@ -95,7 +98,11 @@ test('post-local HTML figures render between Typst sections in previews and publ
   assert.match(preview.data.html, /<\/figure><\/div><div class="typst-document"><svg/);
   assert.equal((await request('/api/posts/example', 'PUT', { ...first, body, draft: false })).status, 200);
   const [published] = await prepareContent(root);
-  assert.equal(published.html.match(/Happy and frowning faces/g).length, 3);
+  for (const url of Object.values(published.layouts)) {
+    const layout = fs.readFileSync(path.join(root, 'public', url.split('?')[0]), 'utf8');
+    assert.match(layout, /Happy and frowning faces/);
+    assert.match(layout, /<img src="\/_content\/blog\/posts\/example\/images\/[0-9a-f]{16}\.svg"/);
+  }
   fs.writeFileSync(figure, '<figure>Updated faces</figure>');
   assert.match((await request('/api/posts/example/preview', 'POST', { body })).data.html, /Updated faces/);
   fs.writeFileSync(path.join(root, 'outside.html'), '<p>Outside the post</p>');

@@ -1,7 +1,8 @@
 export const DEPART_EVENT = "site:depart";
-export const DEPART_MS = 950;
+export const DEPART_MS = 700;
 
 const OVERLAY_ID = "site-depart";
+let departTimer: ReturnType<typeof setTimeout> | undefined;
 
 // The page text dissolves and the koi pond's fish flee; once the water is empty it fades to black.
 export function depart() {
@@ -17,19 +18,22 @@ export function depart() {
     ], { duration: 380, easing: "ease-out", fill: "forwards" });
   }
   window.dispatchEvent(new Event(DEPART_EVENT));
-  window.setTimeout(endDeparture, 5000);
+  clearTimeout(departTimer);
+  departTimer = setTimeout(endDeparture, DEPART_MS + 5000);
 }
 
 export function endDeparture() {
   const overlay = document.getElementById(OVERLAY_ID);
   if (!overlay || overlay.dataset.ending) return;
   overlay.dataset.ending = "1";
-  overlay.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: "ease-out", fill: "forwards" }).finished.then(() => overlay.remove(), () => overlay.remove());
+  clearTimeout(departTimer);
+  overlay.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 360, easing: "ease-out", fill: "forwards" }).finished.then(() => overlay.remove(), () => overlay.remove());
 }
 
-export const RETURN_MS = 700;
+export const RETURN_MS = 600;
 const RETURN_ID = "site-return";
 let returning = false;
+let returnTimer: ReturnType<typeof setTimeout> | undefined;
 
 // Leaving Learning: the garden rushes toward the viewer as darkness closes in from the edges.
 export function returnHome() {
@@ -44,7 +48,8 @@ export function returnHome() {
     { transform: "scale(2.8)", filter: "blur(8px)" },
   ], { duration: RETURN_MS, easing: "cubic-bezier(.55, 0, .85, .35)", fill: "forwards" });
   returning = true;
-  window.setTimeout(() => { returning = false; document.getElementById(RETURN_ID)?.remove(); }, RETURN_MS + 5000);
+  clearTimeout(returnTimer);
+  returnTimer = setTimeout(() => { returning = false; document.getElementById(RETURN_ID)?.remove(); }, RETURN_MS + 5000);
 }
 
 export function isReturning() {
@@ -56,10 +61,11 @@ export function openReturn() {
   const overlay = document.getElementById(RETURN_ID);
   if (!overlay || overlay.dataset.opening) return;
   overlay.dataset.opening = "1";
+  clearTimeout(returnTimer);
   overlay.getAnimations().forEach((animation) => animation.cancel());
   for (const element of document.querySelectorAll<HTMLElement>("main.home > :not(.pond)")) {
-    element.animate([{ transform: "scale(.96)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 850, easing: "cubic-bezier(.2, .7, .2, 1)" });
+    element.animate([{ transform: "scale(.96)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 650, easing: "cubic-bezier(.2, .7, .2, 1)" });
   }
-  overlay.animate([{ "--return-hole": "0vmax" }, { "--return-hole": "80vmax" }], { duration: 1000, easing: "cubic-bezier(.3, .6, .3, 1)", fill: "forwards" })
-    .finished.then(() => { returning = false; overlay.remove(); }, () => overlay.remove());
+  overlay.animate([{ "--return-hole": "0vmax" }, { "--return-hole": "80vmax" }], { duration: 650, easing: "cubic-bezier(.3, .6, .3, 1)", fill: "forwards" })
+    .finished.then(() => { returning = false; overlay.remove(); }, () => { returning = false; overlay.remove(); });
 }

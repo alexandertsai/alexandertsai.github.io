@@ -14,7 +14,6 @@
   opacity: 0;
 }
 
-/* Invisible scroll anchors for the audio-on-scroll feature */
 .audio-marker {
   display: inline-block;
   width: 0;
@@ -35,18 +34,17 @@ figure img {
 }
 
 figcaption {
-  color: #9ca3af;
+  color: var(--site-muted);
   font-size: 0.813rem;
   margin-top: 0.5rem;
   font-style: italic;
 }
 
-/* Image captions: italic text after an image (markdown syntax) */
 p:has(> img) + p > em:only-child {
   display: block;
   text-align: center;
   font-size: 0.813rem;
-  color: #9ca3af;
+  color: var(--site-muted);
   font-style: italic;
   margin-top: -0.75rem;
 }
@@ -59,17 +57,18 @@ p:has(> img) + p > em:only-child {
 }
 
 .personal-journal {
-  --site-bg: #080a09;
-  --site-ink: #e6e5df;
-  --site-copy: #c5c9bb;
-  --site-muted: #8a9286;
-  --site-accent: #c98468;
-  --site-line: #ffffff18;
+  --site-bg: #000;
+  --site-ink: #e4e4ee;
+  --site-copy: #d7d7e3;
+  --site-muted: #8e8e9b;
+  --site-accent: #ff3b2e;
+  --site-line: #dedefc1f;
   color-scheme: dark;
+  background: var(--site-bg);
   color: var(--site-ink);
   font-family: var(--site-sans);
 }
-.personal-journal article { border-radius: 0; border-width: 0 0 1px; padding: 28px 0 36px; margin-bottom: 14px; }
-.personal-journal article > div:first-of-type { line-height: 1.9; color: #c5c9bb; }
-.personal-journal article h2, .personal-journal article h3 { font-weight: 500; letter-spacing: -.025em; }
+.personal-journal article { border-radius: 0; border-width: 0 0 1px; border-color: var(--site-line); padding: 28px 0 36px; margin-bottom: 14px; }
+.personal-journal article > div:first-of-type { line-height: 1.9; color: var(--site-copy); }
+.personal-journal article h2, .personal-journal article h3 { font-weight: 500; letter-spacing: -.025em; color: var(--site-ink); }
 .personal-journal article > div:last-child { color: var(--site-muted); opacity: 1; font-family: var(--site-mono); font-size: 10px; }

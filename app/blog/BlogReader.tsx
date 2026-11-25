@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatBlogDate, getBlogPost, getBlogPosts } from "@/lib/blog";
+import BlogContent from "./BlogContent";
+import { LAYOUT_QUERIES, type Layouts } from "./layouts";
 
 export default async function BlogReader({ slug }: { slug: string }) {
   const posts = getBlogPosts();
@@ -49,7 +51,8 @@ export default async function BlogReader({ slug }: { slug: string }) {
           <span aria-hidden="true"> · </span>
           <span>Approx. {post.readingMinutes} min read</span>
         </div>
-        <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.html }} />
+        {LAYOUT_QUERIES.map(([name, query]) => <link key={name} rel="preload" as="fetch" href={(post.layouts as Layouts)[name]} media={query} crossOrigin="anonymous" />)}
+        <BlogContent layouts={post.layouts as Layouts} />
       </article></main>
     </div>
   );

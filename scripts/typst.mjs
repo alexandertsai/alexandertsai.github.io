@@ -12,7 +12,7 @@ export function createTypstRenderer(directory, { fontDirectory } = {}) {
   const renderText = (source, { width = 600 } = {}) => {
     if (typeof source !== 'string') throw new Error('Typst source must be text.');
     const pixels = Math.min(1200, Math.max(240, Math.round(Number(width) || 600)));
-    const preamble = `#set page(width: ${pixels * 0.75}pt, height: auto, margin: 0pt, fill: none)\n#set text(font: ("Personal Sans", "Inter", "Libertinus Serif"), size: 12.75pt, fill: rgb("#333333"), hyphenate: false)\n#set par(leading: 0.9em, spacing: 2em, justify: false)\n#show link: set text(fill: rgb("#245880"))\n#show link: underline\n#show figure.caption: set text(size: 9.75pt, fill: rgb("#666666"))\n`;
+    const preamble = `#set page(width: ${pixels * 0.75}pt, height: auto, margin: 0pt, fill: none)\n#set text(font: ("Personal Sans", "Inter", "Libertinus Serif"), size: 13.5pt, fill: rgb("#333333"), hyphenate: false)\n#set par(leading: 0.9em, spacing: 2em, justify: false)\n#show link: underline.with(stroke: 0.75pt + rgb("#245880"), offset: 3.5pt)\n#show figure.caption: set text(size: 10.5pt, fill: rgb("#666666"))\n`;
     compiler.mapShadow(main, Buffer.from(preamble + source));
     const started = performance.now();
     try {
@@ -72,5 +72,5 @@ export function createTypstRenderer(directory, { fontDirectory } = {}) {
 export function renderTypstPost(source, directory, options) {
   const render = createTypstRenderer(directory, options);
   const layouts = [['small', 360], ['medium', 520], ['large', 680]];
-  return layouts.map(([name, width]) => `<div class="typst-layout typst-layout-${name}">${render(source, { width }).html}</div>`).join('');
+  return Object.fromEntries(layouts.map(([name, width]) => [name, render(source, { width }).html]));
 }
