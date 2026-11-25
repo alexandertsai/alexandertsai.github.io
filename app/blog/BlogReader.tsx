@@ -51,8 +51,8 @@ export default async function BlogReader({ slug }: { slug: string }) {
           <span aria-hidden="true"> · </span>
           <span>Approx. {post.readingMinutes} min read</span>
         </div>
-        {LAYOUT_QUERIES.map(([name, query]) => <link key={name} rel="preload" as="fetch" href={(post.layouts as Layouts)[name]} media={query} crossOrigin="anonymous" />)}
-        <BlogContent layouts={post.layouts as Layouts} />
+        {LAYOUT_QUERIES.map(([name, query]) => <link key={name} rel="preload" as="fetch" href={(post.layouts as Layouts)[name]} media={query} crossOrigin="anonymous" fetchPriority="high" />)}
+        <BlogContent layouts={post.layouts as Layouts} others={posts.filter((entry) => entry.slug !== slug).map((entry) => entry.layouts as Layouts)} />
       </article></main>
     </div>
   );
