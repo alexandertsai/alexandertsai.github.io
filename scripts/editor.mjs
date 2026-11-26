@@ -10,7 +10,7 @@ const mime = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/jav
 const revision = (text) => createHash('sha256').update(text).digest('hex');
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-export function createEditorServer(root = process.cwd()) {
+export function createEditorServer(root = process.cwd(), { editorFonts } = {}) {
   root = fs.realpathSync(root);
   const posts = path.join(root, 'content/blog/posts');
   fs.mkdirSync(posts, { recursive: true });
@@ -67,6 +67,11 @@ export function createEditorServer(root = process.cwd()) {
         input = JSON.parse(Buffer.concat(chunks).toString());
       }
       if (req.method === 'GET' && url.pathname === '/typography.css') return send(200, fs.readFileSync(path.join(root, 'public/typography.css')), 'text/css');
+      if (req.method === 'GET' && url.pathname === '/site-theme.css') return send(200, fs.readFileSync(new URL('../app/components/site.css', import.meta.url)), 'text/css');
+      if (req.method === 'GET' && url.pathname === '/blog-theme.css') return send(200, fs.readFileSync(new URL('../app/blog/blog.css', import.meta.url)), 'text/css');
+      if (req.method === 'GET' && editorFonts && url.pathname === '/fonts/IBMPlexMono-Regular.ttf') {
+        return send(200, fs.readFileSync(new URL('IBMPlexMono-Regular.ttf', editorFonts)), 'font/ttf');
+      }
       if (req.method === 'GET' && url.pathname === '/api/posts') {
         return send(200, fs.readdirSync(posts).filter((slug) => slugPattern.test(slug) && fs.existsSync(path.join(posts, slug, 'index.typ'))).map(read).sort((a, b) => String(b.date).localeCompare(String(a.date))));
       }

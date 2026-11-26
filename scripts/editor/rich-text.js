@@ -229,6 +229,7 @@ export function createWritingSurface(surface, renderFragment, onChange) {
       if (!Number.isFinite(height) || height < 1) return;
       frame.style.height = Math.min(height, 12_000) + 'px';
       if (state.inline && Number.isFinite(width) && width > 0) frame.style.width = Math.min(width, 680) + 'px';
+      frame.dataset.rendered = '';
     }
   });
 

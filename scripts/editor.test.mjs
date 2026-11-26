@@ -45,6 +45,12 @@ test('one-line equations compile at their natural width and visual editor assets
     assert.equal(response.status, 200);
     assert.match(response.headers.get('content-type'), /^text\/javascript/);
   }
+  for (const [asset, selector] of [['/site-theme.css', '--site-bg'], ['/blog-theme.css', '.typst-document']]) {
+    const response = await fetch(origin + asset);
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get('content-type'), /^text\/css/);
+    assert.ok((await response.text()).includes(selector));
+  }
 });
 
 test('Typst files without metadata open as drafts and gain metadata when saved', async (t) => {
