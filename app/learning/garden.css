@@ -200,3 +200,25 @@
 @media (prefers-reduced-motion: reduce) { .learning > :is(canvas, .grain, .vignette, .tl, .bl, .br) { animation: none; } }
 .learning :is(a, button):focus-visible { outline: 1px solid var(--red); outline-offset: 3px; border-radius: 0; }
 .learning .reader ul { line-height: 1.45; }
+
+.learning .garden-surface { display: contents; }
+.learning .garden-surface > canvas { animation: learning-float-up 1150ms cubic-bezier(.16, 1, .3, 1) backwards; }
+.learning .garden-surface > :is(.tl, .bl, .br) { animation: learning-ui-float 900ms cubic-bezier(.16, 1, .3, 1) 180ms backwards; }
+.learning .garden-surface > :is(.grain, .vignette) { animation: learning-in 900ms ease-out both; }
+.learning .grain { opacity: .025; }
+.learning #creature { position: fixed; top: -20px; left: -20px; width: 40px; height: 40px; z-index: 18; border-radius: 50%; }
+.learning #creature:focus-visible { border-radius: 50%; }
+.learning .bloom-relation { position: absolute; left: 0; top: 28px; transform: translateX(-50%); color: var(--dim);
+  font-size: 10.5px; white-space: nowrap; opacity: 0; transition: opacity .4s ease; }
+.learning #bloom.open .bloom-relation { opacity: 1; }
+.learning .reader .connections .relation { color: var(--dim); margin-left: 8px; font-size: 10.5px; }
+.learning .reader .connections .relation::before { content: none; }
+.learning .reader .connections .relation:hover { color: var(--ink); }
+.learning.desktop .bl:not(:has(input)), .learning.desktop :is(#r-add, #r-link, .del) { visibility: hidden; }
+.learning.desktop .bl:focus-within { visibility: visible; }
+@media (prefers-reduced-motion: reduce) {
+  .learning .garden-surface > :is(canvas, .grain, .vignette, .tl, .bl, .br) { animation: none; }
+  .learning #bloom * { transition: none; }
+}
+.learning #bloom .opt { max-width: min(195px, 26vw); width: max-content; white-space: normal; }
+.learning #bloom .opt.left { text-align: right; }

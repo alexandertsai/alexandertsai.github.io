@@ -1,12 +1,12 @@
 // The knowledge garden: concepts drawn as wireframe plants. Mounted into the Learning page;
 // mountGarden returns a function that stops it and removes every listener it added.
-import { createGarden } from "./garden-engine";
+import { createGarden } from "./garden-engine.js";
 
 // The starting tree: an empty root. Tree = "contains"; links = cross-references.
 function buildTree() {
   const nodes = [{ id: "root", title: "Everything I know", parent: null, note: "" }];
   const hues = { root: [226, 232, 255] };
-  const byId = Object.fromEntries(nodes.map((n) => [n.id, { ...n, children: [], links: [] }]));
+  const byId = Object.assign(Object.create(null), Object.fromEntries(nodes.map((n) => [n.id, { ...n, children: [], links: [] }])));
   for (const n of Object.values(byId)) if (n.parent) byId[n.parent].children.push(n);
   for (const n of Object.values(byId)) {
     let d = 0, p = n;
@@ -19,7 +19,7 @@ function buildTree() {
   return { byId, root: byId.root, list: Object.values(byId) };
 }
 
-export function mountGarden(host, file, { editable = false, saveUrl = "" } = {}) {
+export function mountGarden(host, file, { editable = false, saveUrl = "", saveSnapshot = null, camera = null } = {}) {
   const controller = new AbortController(), { signal } = controller;
   const on = (target, type, fn, opts) => target.addEventListener(type, fn, { ...opts, signal });
   const timers = new Set();
@@ -43,18 +43,18 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   const THEMES = {
     dark: {
       bg: "#000", bgFade0: "rgba(0,0,0,0)",
-      floor: "220,220,250", floorK: 0.42, plotK: 1, tick: "235,235,250", tickK: 1.8,
-      wire: "222,222,252", wireBase: 0.55, wireDepth: 0.35, wireLit: 1,
-      red: "#ff3b2e", redGlow: "rgba(255,70,50,0.8)", redBlur: 8, redLine: "rgba(255,59,46,0.55)",
+      floor: "220,220,250", floorK: 0.30, plotK: 0.9,
+      wire: "222,222,252", wireBase: 0.64, wireDepth: 0.20, wireLit: 0.96,
+      red: "#ff3b2e", redGlow: "rgba(255,70,50,0.8)", redBlur: 5, redLine: "rgba(255,59,46,0.55)",
       label: "rgba(222,222,234,0.95)", labelHot: "rgba(250,250,255,1)", labelHalo: "#000",
       wake: "222,222,252", wakeK: 0.32, fauna: "240,240,255", faunaK: 0.95,
       firefly: "255,244,190", fireflyK: 0.85,
     },
     light: {
       bg: "#f3f1e9", bgFade0: "rgba(243,241,233,0)",
-      floor: "48,62,54", floorK: 0.24, plotK: 0.72, tick: "36,48,42", tickK: 1.35,
-      wire: "38,52,45", wireBase: 0.44, wireDepth: 0.34, wireLit: 0.96,
-      red: "#b84326", redGlow: "rgba(184,67,38,0.22)", redBlur: 4, redLine: "rgba(184,67,38,0.5)",
+      floor: "48,62,54", floorK: 0.23, plotK: 0.76,
+      wire: "38,52,45", wireBase: 0.58, wireDepth: 0.18, wireLit: 0.96,
+      red: "#b84326", redGlow: "rgba(184,67,38,0.22)", redBlur: 2, redLine: "rgba(184,67,38,0.5)",
       label: "rgba(36,44,41,0.92)", labelHot: "rgba(17,23,21,1)", labelHalo: "#f3f1e9",
       wake: "48,62,54", wakeK: 0.28, fauna: "32,42,37", faunaK: 0.88,
       firefly: "218,148,32", fireflyK: 0.55,
@@ -79,11 +79,18 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     set(k, v) {
       memory[k] = v;
       if (!editable) return;
-      clearTimeout(store.t); store.t = setTimeout(store.flush, 400);
+      if (saveSnapshot) {
+        if (!store.t) { store.t = true; queueMicrotask(store.flush); }
+      } else {
+        clearTimeout(store.t); store.t = setTimeout(store.flush, 400);
+      }
     },
     flush() {
-      if (!store.t || !saveUrl) return;
-      clearTimeout(store.t); store.t = null;
+      if (!store.t) return;
+      if (!saveSnapshot) clearTimeout(store.t);
+      store.t = null;
+      if (saveSnapshot) { saveSnapshot(store.snapshot()); return; }
+      if (!saveUrl) return;
       fetch(saveUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: store.snapshot(), keepalive: true }).catch(() => {});
     },
   };
@@ -93,7 +100,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   try { added = JSON.parse(localStorage.getItem(ADDED) || "[]"); } catch {}
   function graft(rec) {
     const p = byId[rec.parent];
-    if (!p || byId[rec.id]) return null;
+    if (!p || !/^[a-z0-9_-]+$/i.test(rec.id) || byId[rec.id]) return null;
     const n = { ...rec, children: [], links: [], domain: p.domain === "root" ? rec.id : p.domain, depth: p.depth + 1, rgb: p.rgb, cat: String(list.length).padStart(3, "0") };
     byId[n.id] = n; p.children.push(n); list.push(n);
     return n;
@@ -116,6 +123,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
 
   const view = createView({ dur: 1000, pitch: 0.56 });
   view.set(root);
+  if (camera) view.yaw = camera.yaw;
   list.forEach((n, i) => (n.cat = String(i).padStart(3, "0")));
   added.forEach(graft);
   for (const rec of added) if (edits[rec.id]) Object.assign(byId[rec.id], edits[rec.id]);
@@ -156,6 +164,9 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   const saveLinks = () => { try { store.set(LINKS, JSON.stringify(myLinks)); store.set(UNLINKED, JSON.stringify(unlinked)); return true; } catch { return false; } };
   const asStored = (n, l) => (l.dir === "out" ? [n.id, l.id, l.type] : [l.id, n.id, l.type]);
   const lower = (s) => s.toLowerCase();
+  const relation = (type, outgoing = true) => type === "prerequisite" ? (outgoing ? "leads to" : "builds on")
+    : type === "part of" ? (outgoing ? "used in" : "uses") : type === "contrasts" ? "contrasts with" : "related to";
+  const relations = [["related", true], ["prerequisite", false], ["prerequisite", true], ["part of", false], ["part of", true], ["contrasts", true]];
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const reading = () => !isGarden(view.node);
 
@@ -229,6 +240,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       + `<li class="add"><button id="r-add" type="button" aria-label="Add a concept inside">add</button></li></ul>`;
     $("r-connections").innerHTML = `<h3>connections</h3><ul>`
       + n.links.map((l) => `<li><button data-id="${l.id}">${esc(lower(byId[l.id].title))}</button>`
+        + (editable ? `<button type="button" class="relation" data-relation="${asStored(n, l).join("|")}" aria-label="Change relationship">${relation(l.type, l.dir === "out")}</button>` : "")
         + `<button type="button" class="unlink" data-unlink="${asStored(n, l).join("|")}" aria-label="Remove this connection">×</button></li>`).join("")
       + `<li class="add"><button id="r-link" type="button" aria-label="Connect another concept">add</button></li></ul>`;
     $("r-del").innerHTML = n === root ? "" : `<button type="button" data-del="ask">delete</button>`;
@@ -305,12 +317,12 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   function onEdit() {
     const n = subj();
     n.title = $("r-title").textContent.trim() || n.title;
-    n.note = $("r-note").textContent.trim();
+    n.note = $("r-note").innerText.trim();
     edits[n.id] = { title: n.title, note: n.note };
     persist();
   }
   function addConcept(title, parent) {
-    const rec = { id: "u" + Date.now().toString(36), title, note: "", parent: parent.id };
+    const rec = { id: "u" + crypto.randomUUID(), title, note: "", parent: parent.id };
     graft(rec); added.push(rec);
     try { store.set(ADDED, JSON.stringify(added)); } catch {}
     forget(); groundCache.clear(); fit = null;
@@ -380,6 +392,16 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   on($("r-connections"), "click", (e) => {
     const un = e.target.closest("[data-unlink]");
     if (un) { dropConnection(un.dataset.unlink); saveLinks(); return renderReader(); }
+    const change = e.target.closest("[data-relation]");
+    if (change && editable) {
+      const n = subj(), [from, to, type] = change.dataset.relation.split("|");
+      const other = from === n.id ? to : from;
+      const i = relations.findIndex(([kind, out]) => kind === type && relation(kind, out) === relation(type, from === n.id));
+      const [kind, out] = relations[(i + 1) % relations.length];
+      dropConnection(change.dataset.relation);
+      addConnection(out ? [n.id, other, kind] : [other, n.id, kind]);
+      saveLinks(); return renderReader();
+    }
     if (!e.target.closest("#r-link")) return;
     const f = subj(), li = e.target.closest("li");
     const cands = list.filter((m) => m !== f && m !== root && !f.links.some((l) => l.id === m.id));
@@ -418,8 +440,8 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   function renderArticles() {
     const n = subj(), items = articles[n.id] || [];
     $("r-articles").innerHTML = `<h3>articles</h3><ul>`
-      + items.map((a, i) => `<li><a href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.title || siteOf(a.url))}</a>`
-        + (a.title ? `<span class="site">${esc(siteOf(a.url).split("/")[0])}</span>` : "") + `<button type="button" class="unlink" data-art="${i}" aria-label="Remove this article">×</button></li>`).join("")
+      + items.map((a, i) => cleanUrl(a.url) ? `<li><a href="${esc(cleanUrl(a.url))}" target="_blank" rel="noopener noreferrer">${esc(a.title || siteOf(a.url))}</a>`
+        + (a.title ? `<span class="site">${esc(siteOf(a.url).split("/")[0])}</span>` : "") + `<button type="button" class="unlink" data-art="${i}" aria-label="Remove this article">×</button></li>` : "").join("")
       + `<li class="add"><button id="r-art" type="button" aria-label="Add an article">add</button></li></ul>`;
   }
   on($("r-articles"), "click", (e) => {
@@ -665,7 +687,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     ctx.setLineDash([]);
   }
 
-  // A nested garden's plot: a small dashed square of ground with a tick at each corner.
+  // A nested garden’s dashed plot.
   function plot(project, ly, pl) {
     const r = (pl.r * ground(pl.node).ext) / 1.45, [x, y, z] = pl.pos, th = pal(), a = ly.alpha * (pl.nested ? 0.22 : 0.4) * th.plotK;
     const P = (dx, dz) => project((x + dx) * ly.scale + ly.off[0], (y + 0.002) * ly.scale + ly.off[1], (z + dz) * ly.scale + ly.off[2], [0, 0, 0]);
@@ -673,8 +695,6 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     ctx.strokeStyle = `rgba(${th.floor},${a})`; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
     ctx.beginPath(); c.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.strokeStyle = `rgba(${th.tick},${a * th.tickK})`;
-    for (const p of c) { ctx.beginPath(); ctx.moveTo(p[0] - 3, p[1]); ctx.lineTo(p[0] + 3, p[1]); ctx.moveTo(p[0], p[1] - 3); ctx.lineTo(p[0], p[1] + 3); ctx.stroke(); }
   }
 
   const labelFont = (big) => `${big ? 500 : 400} ${big ? (small ? 12 : 13.5) : (small ? 11 : 12)}px ${FONT}`;
@@ -700,7 +720,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   }
   function cross(x, y, label, hot, big, ly = y, flip = false) {
     const arm = hot ? 8 : 6, th = pal();
-    ctx.strokeStyle = th.red; ctx.lineWidth = 1.6;
+    ctx.strokeStyle = th.red; ctx.lineWidth = 1.45;
     ctx.shadowColor = th.redGlow; ctx.shadowBlur = th.redBlur;
     ctx.beginPath(); ctx.moveTo(x - arm, y); ctx.lineTo(x + arm, y); ctx.moveTo(x, y - arm); ctx.lineTo(x, y + arm); ctx.stroke();
     if (!label) { ctx.shadowBlur = 0; return; }
@@ -711,7 +731,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     }
     ctx.font = labelFont(big); ctx.textAlign = flip ? "right" : "left"; ctx.textBaseline = "middle";
     ctx.fillStyle = hot ? th.labelHot : th.label;
-    ctx.shadowColor = th.labelHalo; ctx.shadowBlur = 8;
+    ctx.shadowColor = th.labelHalo; ctx.shadowBlur = 4;
     const tx = flip ? x - 12 : x + 12;
     ctx.fillText(label, tx, ly); ctx.fillText(label, tx, ly);
     ctx.textAlign = "left";
@@ -728,7 +748,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       view.yaw += reduce ? fit.yaw - view.yaw : (fit.yaw - view.yaw) * 0.1;
       if (!reduce && Math.abs(fit.yaw - view.yaw) < 0.01) fit.spin = true;
     }
-    if (!drag && !reduce && !caught && (!reading() ? !hover : tg === fit && fit.spin && !hover && !typing() && !view.dir)) view.yaw += 0.0012;
+    if (!drag && !reduce && !caught && !creatureHeld && (!reading() ? !hover : tg === fit && fit.spin && !hover && !typing() && !view.dir)) view.yaw += 0.0012;
     lay.moving = Math.abs(tg.cx - lay.cx) > 2 || Math.abs(tg.S - lay.S) > 0.01 * tg.S; lay.cx += (tg.cx - lay.cx) * k; lay.cy += (tg.cy - lay.cy) * k; lay.S += (tg.S - lay.S) * k; lay.set = true;
     const project = projector(view, lay.cx, lay.cy, lay.S);
     const layers = view.layers(now), settled = !view.outer && !view.fade;
@@ -785,15 +805,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     lastGroups = groups;
     drawFauna(now, layers[layers.length - 1], project, settled);
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    if (dark) {
-      ctx.globalCompositeOperation = "lighter";
-      ctx.filter = `blur(${4 * DPR}px)`; ctx.globalAlpha = 0.85; ctx.drawImage(wire, 0, 0);
-    } else {
-      ctx.globalCompositeOperation = "multiply";
-      ctx.filter = `blur(${3 * DPR}px)`; ctx.globalAlpha = 0.16; ctx.drawImage(wire, 0, 0);
-    }
-    ctx.globalCompositeOperation = "source-over";
-    ctx.filter = "none"; ctx.globalAlpha = 1; ctx.drawImage(wire, 0, 0);
+    ctx.drawImage(wire, 0, 0);
     ctx.restore();
 
     // Red crosses: one per plant or plot in a garden; on a single plant, one per concept inside it.
@@ -825,8 +837,8 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
 
   /* ---------------- fauna: small creatures carry each connection between related concepts ---------------- */
   // Each connection has its own creature, the same every time: a bird, butterfly, bee, moth, dragonfly or firefly.
-  const KINDS = ["bird", "butterfly", "bee", "moth", "dragonfly", "firefly"];
-  let fauna = [], faunaNode = null, nextSpawn = 0;
+  const KINDS = ["bird", "butterfly", "dragonfly", "bee", "moth", "firefly"];
+  let fauna = [], faunaNode = null, nextSpawn = 0, nextPair = 0;
 
   // Where a concept is on screen in the settled garden: its plant's crown, its leaf on a plant, or its plot.
   function spot(id, ly, project) {
@@ -837,8 +849,8 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     for (let n = byId[id]; n && n !== ly.node; n = byId[n.parent]) {
       const own = sc.plants.find((pl) => pl.node === n);
       if (own) return W3(own, figure(n).top);
-      const host = sc.plants.find((pl) => pl.node.id === n.parent);
-      if (host) return W3(host, anchors(host.node).get(n.id));
+      const host = sc.plants.find((pl) => pl.node.id === n.parent && !pl.representative);
+      if (host) { const i = anchors(host.node).get(n.id); if (i != null) return W3(host, i); }
       const plot = sc.plots.find((pt) => pt.node === n);
       if (plot) return project(plot.pos[0] * ly.scale + ly.off[0], (plot.pos[1] + 0.25) * ly.scale + ly.off[1], plot.pos[2] * ly.scale + ly.off[2], [0, 0, 0]);
     }
@@ -852,7 +864,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       const g = [...lastGroups.values()][0];
       if (!g) return;
       n.links.forEach((l) => {
-        const crown = () => { const P = figure(n), i = P.top; return project(P[i * 3] * g.s + g.ox, P[i * 3 + 1] * g.s + g.oy, P[i * 3 + 2] * g.s + g.oz, [0, 0, 0]); };
+        const crown = (_, project) => { const g = lastGroups.get(n); if (!g) return null; const P = figure(n), i = P.top; return project(P[i * 3] * g.s + g.ox, P[i * 3 + 1] * g.s + g.oy, P[i * 3 + 2] * g.s + g.oz, [0, 0, 0]); };
         const item = () => {
           const b = $("r-connections").querySelector(`[data-id="${l.id}"]`); if (!b) return null;
           const r = b.closest("li").getBoundingClientRect(), box = $("r-scroll").getBoundingClientRect(), y = r.top + r.height / 2;
@@ -863,33 +875,43 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     } else {
       const inside = new Set(subtree(n).map((m) => m.id));
       for (const a of inside) for (const l of byId[a].links) if (l.dir === "out" && inside.has(l.id)) {
-        const A = () => spot(a, ly, project), B = () => spot(l.id, ly, project);
-        const pa = A(), pb = B();
-        if (pa && pb && Math.hypot(pa[0] - pb[0], pa[1] - pb[1]) > 40) pairs.push([A, B, l.type, a, l.id]);
+        const A = (layer, p) => spot(a, layer, p), B = (layer, p) => spot(l.id, layer, p);
+        const pa = A(ly, project), pb = B(ly, project);
+        if (pa && pb && Math.hypot(pa[0] - pb[0], pa[1] - pb[1]) > 12) pairs.push([A, B, l.type, a, l.id]);
       }
     }
     if (!pairs.length) return;
-    const [from, to, type, a, b] = pairs[Math.floor(Math.random() * pairs.length)];
-    fauna.push({ from, to, type, ends: [a, b], kind: KINDS[hash([a, b].sort().join("|")) % KINDS.length], t0: now, dur: 4200 + Math.random() * 2600, seed: Math.random() * 1000, side: Math.random() < 0.5 ? -1 : 1 });
+    const [from, to, type, a, b] = pairs[nextPair++ % pairs.length];
+    const linkIndex = myLinks.findIndex(([source, target]) => source === a && target === b);
+    fauna.push({ from, to, type, ends: [a, b], kind: KINDS[(linkIndex < 0 ? hash([a, b].sort().join("|")) : linkIndex) % KINDS.length], t0: now, dur: 4200 + Math.random() * 2600, seed: Math.random() * 1000, side: Math.random() < 0.5 ? -1 : 1 });
   }
 
-  let caught = null, lastFrame = 0;
+  let caught = null, lastFrame = 0, activeCreature = null;
+  const creatureButton = $("creature");
+  let creatureHeld = false;
+  const holdCreature = (e) => { creatureHeld = e.type === "pointerenter" || e.type === "focus"; };
+  for (const event of ["pointerenter", "pointerleave", "focus", "blur"]) on(creatureButton, event, holdCreature);
+  on(creatureButton, "click", () => {
+    if (!activeCreature) return;
+    if (activeCreature === caught) release(); else catchCreature(activeCreature);
+  });
   function drawFauna(now, ly, project, settled) {
     const dt = now - (lastFrame || now); lastFrame = now;
-    if (reduce) return;
-    if (faunaNode !== view.node || !settled) { if (faunaNode !== view.node) { fauna = []; release(); } faunaNode = view.node; nextSpawn = now + 4000; if (!settled) return; }
-    if (caught) caught.t0 += dt; // a caught creature hangs where it is
-    // one creature at a time, setting off every 8 to 12 s
-    if (now > nextSpawn && !fauna.length) { spawn(now, ly, project); nextSpawn = now + 8000 + Math.random() * 4000; }
+    activeCreature = null;
+
+    if (faunaNode !== view.node || !settled) { if (faunaNode !== view.node) { fauna = []; nextPair = 0; creatureHeld = false; release(); } faunaNode = view.node; nextSpawn = now + 1400; if (!settled) { creatureButton.hidden = true; return; } }
+    const held = caught || ((creatureHeld || reduce) && fauna[0]);
+    if (held) held.t0 += dt;
+    if (now > nextSpawn && !fauna.length) { spawn(now, ly, project); nextSpawn = now + 6200 + Math.random() * 2000; }
     fauna = fauna.filter((c) => now - c.t0 < c.dur);
     for (const c of fauna) {
-      const A = c.from(), B = c.to();
+      const A = c.from(ly, project), B = c.to(ly, project);
       if (!A || !B) continue;
-      const u = (now - c.t0) / c.dur;
+      const u = reduce ? 0.5 : (now - c.t0) / c.dur;
       let e = u < 0.5 ? 2 * u * u : 1 - 2 * (1 - u) * (1 - u);
       if (c.kind === "dragonfly") { const k = Math.min(3, Math.floor(u * 4)), f = u * 4 - k; e = (k + (f < 0.45 ? 0 : 1 - Math.pow(1 - (f - 0.45) / 0.55, 3))) / 4; } // hovers, then darts
       const dx = B[0] - A[0], dy = B[1] - A[1], d = Math.hypot(dx, dy) || 1, nx = -dy / d, ny = dx / d;
-      const lift = Math.min(160, 0.35 * d), C = [(A[0] + B[0]) / 2 + nx * c.side * 0.2 * d, (A[1] + B[1]) / 2 - lift];
+      const lift = Math.min(160, Math.max(32, 0.35 * d)), C = [(A[0] + B[0]) / 2 + nx * c.side * 0.2 * d, (A[1] + B[1]) / 2 - lift];
       const at = (t) => {
         const q = 1 - t; let x = q * q * A[0] + 2 * q * t * C[0] + t * t * B[0], y = q * q * A[1] + 2 * q * t * C[1] + t * t * B[1];
         const w = c.kind === "bee" ? 5 * Math.sin(t * 46 + c.seed) : c.kind === "butterfly" || c.kind === "moth" ? 9 * Math.sin(t * 15 + c.seed) : c.kind === "firefly" ? 14 * Math.sin(t * 7 + c.seed) : 0;
@@ -899,11 +921,19 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       // the connection it carries: a faint dotted wake behind it
       wctx.fillStyle = `rgba(${thf.wake},${thf.wakeK * env})`;
       for (let k = 0; k <= 40; k++) { const t = (k / 40) * e; const [x, y] = at(t); wctx.fillRect(x - 0.6, y - 0.6, 1.2, 1.2); }
-      const t = now / 1000 + c.seed, hover = c.kind === "dragonfly" ? 1.5 * Math.sin(t * 9) : 0;
+      const t = reduce ? 1 : now / 1000 + c.seed, hover = c.kind === "dragonfly" ? 1.5 * Math.sin(t * 9) : 0;
       let [x, y] = at(e); y += hover;
       const [x2, y2] = at(Math.min(1, e + 0.01)), th = Math.atan2(y2 + hover - y, x2 - x);
       c.x = x; c.y = y;
-      if (c === caught) $("bloom").style.transform = `translate(${x}px, ${y}px)`;
+      if (c === caught) {
+        const [bx, by] = bloomPosition(x, y);
+        $("bloom").style.transform = `translate(${bx}px, ${by}px)`;
+      }
+      if (env > 0.25 && x > 10 && x < W - 10 && y > 10 && y < H - 10) {
+        activeCreature = c;
+        creatureButton.dataset.kind = c.kind;
+        creatureButton.style.transform = `translate(${x}px, ${y}px)`;
+      }
       wctx.save(); wctx.translate(x, y); wctx.rotate(th); wctx.scale(1.6, 1.6);
       wctx.strokeStyle = `rgba(${thf.fauna},${thf.faunaK * env})`; wctx.lineWidth = 0.7;
       wctx.beginPath();
@@ -941,20 +971,26 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
       }
       wctx.stroke(); wctx.restore();
     }
+    creatureButton.hidden = !activeCreature;
   }
 
   // Catch a creature: it stops, and its connection opens into a ring of the concepts it joins.
+  const bloomPosition = (x, y) => [
+    Math.min(W - Math.min(190, W * 0.28), Math.max(Math.min(190, W * 0.28), x)),
+    Math.min(H - 112, Math.max(112, y)),
+  ];
   function catchCreature(c) {
     release(true);
     caught = c;
-    const ids = [...new Set(c.ends)].filter((id) => byId[id] && id !== view.node.id), n = ids.length, r = small ? 58 : 74;
+    const ids = [...new Set(c.ends)].filter((id) => byId[id]), n = ids.length, r = small ? 58 : 74;
     const el = $("bloom");
     // side by side on wide screens; above and below on phones, where names would run off the edge
-    el.innerHTML = `<div class="hush"></div><div class="ring"></div>` + ids.map((id, i) => {
+    el.innerHTML = `<div class="hush"></div><div class="ring"></div><span class="bloom-relation">${relation(c.type)}</span>` + ids.map((id, i) => {
       const a = (small ? -Math.PI / 2 : Math.PI) + (i / n) * Math.PI * 2, x = Math.cos(a) * r, y = Math.sin(a) * r, left = Math.cos(a) < -0.3, mid = Math.abs(Math.cos(a)) <= 0.3;
       return `<button type="button" class="opt${left ? " left" : ""}" data-id="${id}" style="--x:${x.toFixed(1)}px;--y:${y.toFixed(1)}px;--ax:${left ? "-100%" : mid ? "-50%" : "0%"};--d:${(0.08 * i).toFixed(2)}s">${esc(lower(byId[id].title))}</button>`;
     }).join("");
-    el.style.transform = `translate(${c.x}px, ${c.y}px)`;
+    const [x, y] = bloomPosition(c.x, c.y);
+    el.style.transform = `translate(${x}px, ${y}px)`;
     requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("open")));
   }
   function release(now) {
@@ -969,10 +1005,12 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   on($("bloom"), "click", (e) => { if (e.target.closest("[data-id]")) release(); });
   // creatures fly over the text too: catch them there unless the click lands on something to use
   on($("reader"), "pointerdown", (e) => {
-    if (e.target.closest("button, input, select")) return;
+    if (e.target.closest("a, button, input, select, [contenteditable]")) return;
     const c = creatureAt(e.clientX, e.clientY);
-    if (c) { e.preventDefault(); c === caught ? release() : catchCreature(c); } // takes the click before the text does
-    else if (caught) release();
+    if (c) {
+      e.preventDefault();
+      if (c === caught) release(); else catchCreature(c);
+    } else if (caught) release();
   });
 
   /* ---------------- input ---------------- */
@@ -995,6 +1033,7 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
     if (drag) { const dx = e.clientX - drag.x; drag.moved = Math.max(drag.moved, Math.abs(dx)); view.yaw = drag.yaw + dx * 0.008; return; }
     hover = pick(e.clientX, e.clientY); keyPick = null; markSel(); dwell(hover); cv.style.cursor = hover || creatureAt(e.clientX, e.clientY) ? "pointer" : "grab";
   });
+  on(cv, "pointercancel", () => { drag = null; });
   on(cv, "pointerup", (e) => {
     const moved = drag?.moved ?? 0; drag = null;
     if (moved >= 5 && fit && fit.node === view.node) fit.spin = true; // keep the user's angle and turn on from there
@@ -1007,18 +1046,20 @@ export function mountGarden(host, file, { editable = false, saveUrl = "" } = {})
   });
 
   on(window, "resize", resize);
+  if (camera && byId[camera.id]) view.set(byId[camera.id]);
   resize(); annotate();
-  const start = byId[location.hash.slice(1)];
+  const start = !camera && byId[location.hash.slice(1)];
   if (start && start !== root) {
     const chain = []; for (let p = start; p && p !== root; p = byId[p.parent]) chain.unshift(p);
     chain.forEach((n, i) => setTimeout(() => go(n), 700 + i * 1300));
   }
   raf = requestAnimationFrame(draw);
 
-  return () => {
+  const stop = () => {
     store.flush();
     controller.abort();
     cancelAnimationFrame(raf);
     for (const id of timers) clearTimeout(id);
   };
+  return Object.assign(stop, { camera: () => ({ id: view.node.id, yaw: view.yaw }), find: openFind });
 }

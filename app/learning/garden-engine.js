@@ -1,3 +1,5 @@
+import { botanicalModels } from "./garden-models.js";
+
 // Garden engine. Plants grow from what they hold: every concept inside a plant is one leaf,
 // and when a branch is full the plant puts out a new one. A concept with nothing inside is a bud.
 // A concept whose children have children of their own is shown as a GARDEN of these plants;
@@ -533,11 +535,19 @@ export function createGarden(KG) {
       });
     },
   };
+  Object.assign(SPECIES, botanicalModels({ strand, petal, loop, quad, flat, add, mul, norm, sideOf, TAU, L }));
   const SPECIES_ORDER = Object.keys(SPECIES);
+  const established = {
+    umwixasws: "meadow", umwixb2wh: "wireFern", umwj20i3k: "seedOrbits", umwj2nr3p: "oak",
+    umwk7yqze: "pitcher", umwk7yqzf: "lichen", umwj01xjg: "coralFungus",
+    umwk71qu8: "magnolia", umwlgt1md: "horsetail", umwlh6qe1: "redwood",
+    umwlgrszb: "lotus", umwlhav29: "bonsai", umwljzeo4: "dandelion",
+  };
 
   /** Species for a concept: siblings take different species, and it never changes with the view. */
   function speciesOf(node) {
-    if (node.species && SPECIES[node.species]) return node.species;
+    if (node.species && Object.hasOwn(SPECIES, node.species)) return node.species;
+    if (Object.hasOwn(established, node.id)) return established[node.id];
     if (!node.parent) return "lotus";
     const sibs = KG.byId[node.parent].children, i = sibs.indexOf(node);
     return SPECIES_ORDER[(hash(node.parent) + i) % SPECIES_ORDER.length];
@@ -546,8 +556,13 @@ export function createGarden(KG) {
   /** Strands for a concept: one organ per concept inside it. Base at y = 0. */
   function grow(node) {
     const S = [], r = rng(hash(node.id + "grow")), A = new Map();
-    if (!node.children.length) sprout(S, 0.2 + r() * 0.06, r);
-    else SPECIES[speciesOf(node)](S, node.children, r, A);
+    if (node.children.length) SPECIES[speciesOf(node)](S, node.children, r, A);
+    else if (hash(node.id) % 4 === 0) sprout(S, 0.2 + r() * 0.06, r);
+    else {
+      const seedlings = ["wireFern", "meadow", "seedOrbits"];
+      SPECIES[seedlings[hash(node.id) % seedlings.length]](S, [node], r, A);
+      A.clear();
+    }
     return { S, anchorsOut: A };
   }
 
@@ -570,9 +585,7 @@ export function createGarden(KG) {
   const isGarden = (n) => n.children.some((c) => c.children.length);
     const closeUpScale = (n) => Math.max(1.1, Math.min(3.6, 1.9 / figure(n).h));
 
-  /** A scene: plants {node, pos (base), s, top (the child of `node` it belongs to), nested}
-      and plots {pos, r, node} for every garden drawn inside it. Nested gardens are drawn whole,
-      only smaller: nothing that exists is left out. */
+  /** Each nested plot contains its smaller garden and one larger representative plant. */
   const PLOT_K = 0.3, sceneCache = new Map();
   const nestedT = (P0, k) => (q) => add(P0, mul(add(q, [0, -FLOOR, 0]), k));
   function scene(node) {
@@ -589,7 +602,8 @@ export function createGarden(KG) {
       // beside mini gardens, single plants are drawn smaller so neither dwarfs the other
       if (kids.some(isGarden)) gs = Math.min(gs, 0.7);
       // neighbours round the ring must not overlap: widen the ring to fit the widest pair side by side
-      const reach = kids.map((c) => (isGarden(c) ? 1.45 * PLOT_K : figure(c).w * gs));
+      const plotScale = (c) => Math.min(0.96, 0.49 / Math.max(0.35, figure(c).w));
+      const reach = kids.map((c) => (isGarden(c) ? Math.max(1.45 * PLOT_K, figure(c).w * plotScale(c)) : figure(c).w * gs));
       let Rfit = R;
       if (n > 1) for (let i = 0; i < n; i++) Rfit = Math.max(Rfit, (reach[i] + reach[(i + 1) % n] + 0.12) / (2 * Math.sin(Math.PI / n)) / 0.92);
       out = { plants: [], plots: [] };
@@ -598,7 +612,10 @@ export function createGarden(KG) {
         const P0 = [Math.cos(a) * d, FLOOR, Math.sin(a) * d];
         if (isGarden(c)) {
           const T = nestedT(P0, PLOT_K), sub = scene(c);
-          for (const p of sub.plants) out.plants.push({ node: p.node, pos: T(p.pos), s: p.s * PLOT_K, crosses: false, top: c, nested: true });
+          for (const p of sub.plants) {
+            if (!p.representative) out.plants.push({ node: p.node, pos: T(p.pos), s: p.s * PLOT_K, crosses: false, top: c, nested: true });
+          }
+          out.plants.push({ node: c, pos: P0, s: plotScale(c), crosses: false, top: c, nested: false, representative: true });
           for (const pl of sub.plots) out.plots.push({ pos: T(pl.pos), r: pl.r * PLOT_K, node: pl.node, top: c, nested: true });
           out.plots.push({ pos: P0, r: 1.45 * PLOT_K, node: c, top: c, nested: false });
         } else out.plants.push({ node: c, pos: P0, s: gs, crosses: false, top: c, nested: false });
