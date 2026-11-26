@@ -23,6 +23,24 @@ async function fixture(t) {
 }
 const post = { title: 'Example', date: '2026-10-11', preview: '', draft: true, body: 'Hello *world*.' };
 
+test('Typst files without metadata open as drafts and gain metadata when saved', async (t) => {
+  const { root, request } = await fixture(t);
+  const dir = path.join(root, 'content/blog/posts/source-only');
+  fs.mkdirSync(dir, { recursive: true });
+  const body = '= Existing draft\n\nNotes in progress.';
+  fs.writeFileSync(path.join(dir, 'index.typ'), body);
+  const listing = await request('/api/posts');
+  assert.equal(listing.status, 200);
+  const [draft] = listing.data;
+  assert.equal(draft.title, 'Existing draft');
+  assert.equal(draft.draft, true);
+  assert.equal(draft.body, body);
+  const meta = path.join(dir, 'post.json');
+  assert.equal(fs.existsSync(meta), false);
+  assert.equal((await request('/api/posts/source-only', 'PUT', draft)).status, 200);
+  assert.equal(JSON.parse(fs.readFileSync(meta, 'utf8')).draft, true);
+});
+
 test('browser workflow creates a draft, persists an image, previews, and prepares publication', async (t) => {
   const { root, request } = await fixture(t);
   let response = await request('/api/posts/example', 'POST', post);

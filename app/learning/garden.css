@@ -185,7 +185,7 @@
   .learning .tl { right: calc(var(--edge) + 8px); line-height: 1.4; }
   .learning.notes .bl, .learning:is(.reading, .notes) .br { display: none; }
 }
-.learning .site-header { --site-ink: var(--ink); --site-muted: var(--dim); --site-accent: var(--red); --site-line: transparent; z-index: 10; pointer-events: none; font-size: 11px; line-height: 1.7; }
+.learning .site-header { --site-ink: var(--ink); --site-muted: var(--dim); --site-accent: var(--red); --site-line: transparent; height: 44px; z-index: 10; pointer-events: none; font-size: 11px; line-height: 1.7; }
 .learning .site-header nav { pointer-events: auto; }
 .learning > canvas { animation: learning-float-up 1150ms cubic-bezier(.16, 1, .3, 1) backwards; will-change: transform, opacity; }
 .learning > :is(.grain, .vignette) { animation: learning-in 900ms ease-out both; }

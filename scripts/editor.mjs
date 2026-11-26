@@ -22,9 +22,18 @@ export function createEditorServer(root = process.cwd()) {
   }
   function read(slug) {
     const dir = directory(slug);
-    const text = fs.readFileSync(path.join(dir, 'index.typ'), 'utf8');
-    const metadata = fs.readFileSync(path.join(dir, 'post.json'), 'utf8');
-    const data = JSON.parse(metadata);
+    const source = path.join(dir, 'index.typ');
+    const text = fs.readFileSync(source, 'utf8');
+    let metadata = '';
+    let data;
+    try {
+      metadata = fs.readFileSync(path.join(dir, 'post.json'), 'utf8');
+      data = JSON.parse(metadata);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+      const title = text.match(/^=\s+([^\r\n]+)/m)?.[1].trim() || slug.replaceAll('-', ' ');
+      data = { title, date: fs.statSync(source).mtime.toISOString().slice(0, 10), preview: '', draft: true };
+    }
     return { slug, ...data, body: text, format: 'typst', revision: revision(metadata + '\0' + text) };
   }
   const renderers = new Map();
