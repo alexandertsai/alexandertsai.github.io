@@ -1,3 +1,6 @@
-@font-face { font-family: 'Personal Sans'; src: url('/fonts/personal-sans/PersonalSans-Regular.ttf') format('truetype'); font-style: normal; font-weight: 400; font-display: swap; }
-body { margin: 24px; color: #333; font: 17px/1.7 'Personal Sans', Arial, sans-serif; }
+body { margin: 0; color: #333; font: 17px/1.7 'Personal Sans', Arial, sans-serif; overflow: hidden; }
+#article { display: flow-root; }
 .typst-document > svg { display: block; width: 100%; height: auto; }
+.typst-html { margin-block: 0 !important; }
+html[data-inline] #article { width: max-content; }
+html[data-inline] .typst-document > svg { width: auto; height: auto; }

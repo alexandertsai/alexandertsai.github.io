@@ -7,6 +7,7 @@ import { once } from 'node:events';
 import { createEditorServer } from './editor.mjs';
 import { prepareContent } from './content.mjs';
 import { createTypstRenderer } from './typst.mjs';
+import { escapeTypst, inlineParts, parseTypst } from './editor/typst-document.mjs';
 
 async function fixture(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'blog-editor-'));
@@ -19,9 +20,32 @@ async function fixture(t) {
     const response = await fetch(origin + url, { method, headers: { 'Content-Type': 'application/json', 'X-Editor-Request': '1', ...headers }, body: data === undefined ? undefined : JSON.stringify(data) });
     return { status: response.status, data: await response.json() };
   };
-  return { root, request };
+  return { root, request, origin };
 }
 const post = { title: 'Example', date: '2026-10-11', preview: '', draft: true, body: 'Hello *world*.' };
+
+test('visual editor recognizes formatted prose and keeps custom blocks and whitespace', () => {
+  const source = '\n= Heading\nProse with *bold*, _emphasis_, and $x^2$.\n\n#figure(\n  [Panel],\n\n  caption: [Example],\n)\n\n#html("diagram.html")\n';
+  const { blocks, tail } = parseTypst(source);
+  assert.deepEqual(blocks.map((block) => block.kind), ['heading', 'paragraph', 'embed', 'embed']);
+  assert.deepEqual(inlineParts(blocks[1].text).filter((part) => part.kind !== 'text').map((part) => part.kind), ['strong', 'em', 'atom']);
+  assert.equal(blocks.map(({ gap, raw }) => gap + raw).join('') + tail, source);
+  assert.equal(inlineParts(escapeTypst('Use * and # as text.'))[0].text, 'Use * and # as text.');
+});
+
+test('one-line equations compile at their natural width and visual editor assets are served', async (t) => {
+  const { request, origin } = await fixture(t);
+  const narrow = await request('/api/posts/example/preview', 'POST', { body: '$x^2$', inline: true });
+  const wide = await request('/api/posts/example/preview', 'POST', { body: '$x^2$', width: 600 });
+  assert.equal(narrow.status, 200);
+  const width = (response) => Number(response.data.html.match(/data-width="([^"]+)"/)[1]);
+  assert.ok(width(narrow) < width(wide));
+  for (const asset of ['/rich-text.js', '/typst-document.mjs']) {
+    const response = await fetch(origin + asset);
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get('content-type'), /^text\/javascript/);
+  }
+});
 
 test('Typst files without metadata open as drafts and gain metadata when saved', async (t) => {
   const { root, request } = await fixture(t);

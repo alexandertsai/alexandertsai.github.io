@@ -6,7 +6,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import nextEnv from '@next/env';
 import { createTypstRenderer } from './typst.mjs';
 
-const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.avif': 'image/avif' };
+const mime = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.avif': 'image/avif' };
 const revision = (text) => createHash('sha256').update(text).digest('hex');
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -37,14 +37,14 @@ export function createEditorServer(root = process.cwd()) {
     return { slug, ...data, body: text, format: 'typst', revision: revision(metadata + '\0' + text) };
   }
   const renderers = new Map();
-  function preview(slug, body, width) {
+  function preview(slug, body, width, inline = false) {
     let render = renderers.get(slug);
     if (!render) {
       render = createTypstRenderer(directory(slug), { fontDirectory: path.join(root, 'content/blog/fonts') });
       renderers.set(slug, render);
       if (renderers.size > 8) renderers.delete(renderers.keys().next().value);
     }
-    return render(body, { width });
+    return render(body, { width, inline });
   }
   return http.createServer(async (req, res) => {
     const send = (status, data, type = 'application/json') => {
@@ -75,7 +75,7 @@ export function createEditorServer(root = process.cwd()) {
         const [, slug, action] = match;
         const dir = directory(slug);
         if (req.method === 'GET' && !action) return send(200, read(slug));
-        if (req.method === 'POST' && action === 'preview') return send(200, preview(slug, input.body, input.width));
+        if (req.method === 'POST' && action === 'preview') return send(200, preview(slug, input.body, input.width, input.inline === true));
         if (req.method === 'POST' && action === 'images') {
           if (!fs.existsSync(path.join(dir, 'index.typ'))) throw new Error('Save the post before adding images.');
           const extension = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp', 'image/gif': '.gif' }[input.type];
@@ -116,7 +116,11 @@ export function createEditorServer(root = process.cwd()) {
           return send(200, read(nextSlug));
         }
       }
-      const staticFiles = { '/': 'index.html', '/editor.js': 'editor.js', '/editor.css': 'editor.css', '/preview.html': 'preview.html', '/preview.js': 'preview.js', '/preview.css': 'preview.css' };
+      const staticFiles = {
+        '/': 'index.html', '/editor.js': 'editor.js', '/editor.css': 'editor.css',
+        '/rich-text.js': 'rich-text.js', '/typst-document.mjs': 'typst-document.mjs',
+        '/preview.html': 'preview.html', '/preview.js': 'preview.js', '/preview.css': 'preview.css',
+      };
       if (req.method === 'GET' && staticFiles[url.pathname]) {
         const file = path.join(path.dirname(fileURLToPath(import.meta.url)), 'editor', staticFiles[url.pathname]);
         return send(200, fs.readFileSync(file), mime[path.extname(file)]);

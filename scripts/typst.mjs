@@ -9,10 +9,10 @@ export function createTypstRenderer(directory, { fontDirectory } = {}) {
   const fontPaths = [fileURLToPath(new URL('../public/fonts/personal-sans', import.meta.url)), fileURLToPath(new URL('../public/fonts/inter', import.meta.url)), fontDirectory].filter((directory) => directory && fs.existsSync(directory));
   const compiler = NodeCompiler.create({ workspace, fontArgs: [{ fontPaths }] });
   const main = path.join(workspace, '.preview.typ');
-  const renderText = (source, { width = 600 } = {}) => {
+  const renderText = (source, { width = 600, inline = false } = {}) => {
     if (typeof source !== 'string') throw new Error('Typst source must be text.');
     const pixels = Math.min(1200, Math.max(240, Math.round(Number(width) || 600)));
-    const preamble = `#set page(width: ${pixels * 0.75}pt, height: auto, margin: 0pt, fill: none)\n#set text(font: ("Personal Sans", "Inter", "Libertinus Serif"), size: 13.5pt, fill: rgb("#333333"), hyphenate: false)\n#set par(leading: 0.9em, spacing: 2em, justify: false)\n#show link: underline.with(stroke: 0.75pt + rgb("#245880"), offset: 3.5pt)\n#show figure.caption: set text(size: 10.5pt, fill: rgb("#666666"))\n`;
+    const preamble = `#set page(width: ${inline ? "auto" : pixels * 0.75 + "pt"}, height: auto, margin: 0pt, fill: none)\n#set text(font: ("Personal Sans", "Inter", "Libertinus Serif"), size: 13.5pt, fill: rgb("#333333"), hyphenate: false)\n#set par(leading: 0.9em, spacing: 2em, justify: false)\n#show link: underline.with(stroke: 0.75pt + rgb("#245880"), offset: 3.5pt)\n#show figure.caption: set text(size: 10.5pt, fill: rgb("#666666"))\n`;
     compiler.mapShadow(main, Buffer.from(preamble + source));
     const started = performance.now();
     try {

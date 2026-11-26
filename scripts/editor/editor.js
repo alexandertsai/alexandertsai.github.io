@@ -1,28 +1,19 @@
+import { createWritingSurface } from './rich-text.js';
+
 const $ = (id) => document.getElementById(id);
 const body = $('body');
 let current = null;
 let dirty = false;
 let busy = false;
-let timer;
-let previewVersion = 0;
-let previewController;
-let previewReady = false;
-let pendingPreview;
-let lastPreviewKey = '';
-let previewSlug = '';
-const previewFrame = $('preview');
-const pingPreview = () => previewFrame.contentWindow.postMessage({ type: 'preview-ping' }, '*');
-previewFrame.addEventListener('load', pingPreview);
-window.addEventListener('message', (event) => {
-  if (event.source !== previewFrame.contentWindow || event.data?.type !== 'preview-ready') return;
-  previewReady = true;
-  if (pendingPreview) previewFrame.contentWindow.postMessage(pendingPreview, '*');
-});
-pingPreview();
 let posts = [];
-const fields = ['title', 'slug', 'date', 'draft', 'description', 'body'];
+const fields = ['title', 'slug', 'date', 'draft', 'description'];
+const editor = createWritingSurface(body, async (source, inline, width) => {
+  const result = await api('/api/posts/' + previewSlug() + '/preview', 'POST', { body: source, width, inline });
+  return result.html;
+}, changed);
+const previewSlug = () => current?.slug || ($('slug').validity.valid && $('slug').value) || 'new-post';
 const backupKey = () => 'typst-blog-editor:' + (current?.slug || 'new');
-const values = () => ({ slug: $('slug').value, title: $('title').value, date: $('date').value, preview: $('description').value, body: body.value, format: 'typst', draft: $('draft').value === 'true', revision: current?.revision });
+const values = () => ({ slug: $('slug').value, title: $('title').value, date: $('date').value, preview: $('description').value, body: editor.source(), format: 'typst', draft: $('draft').value === 'true', revision: current?.revision });
 const slugify = (text) => text.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 function showError(message = '') { $('error').textContent = message; $('error').hidden = !message; }
 async function api(url, method = 'GET', data, signal) {
@@ -31,17 +22,11 @@ async function api(url, method = 'GET', data, signal) {
   if (!response.ok) throw new Error(result.error || 'Request failed.');
   return result;
 }
-function changed(updatePreview = true) {
+function changed() {
   dirty = true;
   $('status').textContent = 'Unsaved changes';
   try { localStorage.setItem(backupKey(), JSON.stringify({ ...values(), slug: $('slug').value })); }
   catch { $('status').textContent = 'Unsaved changes; browser backup unavailable'; }
-  if (updatePreview) {
-    previewVersion++;
-    previewController?.abort();
-    clearTimeout(timer);
-    timer = setTimeout(preview, 50);
-  }
 }
 function load(post = null) {
   if (busy) return;
@@ -63,14 +48,12 @@ function load(post = null) {
   $('date').value = data.date || new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   $('draft').value = String(data.draft ?? true);
   $('description').value = data.preview || '';
-  body.value = data.body || '';
+  editor.load(data.body || '');
   $('slug').disabled = false;
-  $('heading').textContent = post ? 'Edit post' : 'New post';
   dirty = Boolean(restored);
   $('status').textContent = restored ? 'Browser backup restored; save to disk' : post ? 'Saved to disk' : 'Not saved';
   showError(legacy ? 'Previous draft recovered as text. Check its Typst syntax before publishing. The original browser backup is preserved.' : '');
   renderPosts();
-  preview();
 }
 function renderPosts() {
   $('posts').replaceChildren();
@@ -92,6 +75,7 @@ function renderPosts() {
 async function refreshPosts() { posts = await api('/api/posts'); renderPosts(); }
 async function save() {
   if (busy) return false;
+  if (['slug', 'date'].some((id) => !$(id).validity.valid)) $('settings').open = true;
   if (!$('metadata').reportValidity()) return false;
   busy = true;
   $('save').disabled = true;
@@ -105,7 +89,6 @@ async function save() {
     current = result;
     if ($('slug').value === slug) $('slug').value = result.slug;
     $('slug').disabled = false;
-    $('heading').textContent = 'Edit post';
     dirty = JSON.stringify({ ...values(), revision: JSON.parse(snapshot).revision }) !== snapshot;
     try {
       localStorage.removeItem(key);
@@ -113,56 +96,62 @@ async function save() {
     } catch { /* Disk saves still work without browser storage. */ }
     $('status').textContent = dirty ? 'Unsaved changes' : 'Saved to disk';
     await refreshPosts();
-    preview();
     return true;
   } catch (error) { showError(error.message); $('status').textContent = 'Save failed'; return false; }
   finally { busy = false; $('save').disabled = false; }
 }
-async function preview() {
-  clearTimeout(timer);
-  const slug = current?.slug || $('slug').value || 'new-post';
-  const source = body.value;
-  const width = Math.max(240, previewFrame.clientWidth - 48);
-  const key = JSON.stringify([slug, source, width]);
-  if (key === lastPreviewKey) { $('preview-error').hidden = true; return; }
-  previewController?.abort();
-  previewController = new AbortController();
-  const version = ++previewVersion;
-  try {
-    const result = await api('/api/posts/' + slug + '/preview', 'POST', { body: source, width }, previewController.signal);
-    if (version !== previewVersion) return;
-    $('preview-error').hidden = true;
-    $('compile-time').textContent = `${result.compileMs} ms`;
-    pendingPreview = { type: 'preview', html: result.html, resetScroll: previewSlug !== slug };
-    previewSlug = slug;
-    lastPreviewKey = key;
-    if (previewReady) previewFrame.contentWindow.postMessage(pendingPreview, '*');
-  } catch (error) {
-    if (version !== previewVersion || error.name === 'AbortError') return;
-    $('preview-error').hidden = false;
-    $('preview-error').textContent = error.message;
+const dialog = $('insert-dialog');
+let insertKind;
+document.querySelectorAll('[data-format], #image').forEach((button) => {
+  button.addEventListener('mousedown', (event) => {
+    editor.remember();
+    event.preventDefault();
+  });
+});
+document.querySelectorAll('[data-format]').forEach((button) => button.addEventListener('click', () => {
+  const kind = button.dataset.format;
+  if (kind !== 'link' && kind !== 'math') return editor.format(kind);
+  editor.remember();
+  insertKind = kind;
+  $('insert-heading').textContent = kind === 'link' ? 'Insert link' : 'Insert equation';
+  $('insert-label-wrap').hidden = kind !== 'link';
+  $('insert-label').value = editor.selectedText();
+  $('insert-value-label').textContent = kind === 'link' ? 'URL' : 'Equation';
+  $('insert-value').value = '';
+  $('insert-value').placeholder = kind === 'link' ? 'https://' : 'x^2 + y^2';
+  $('display-wrap').hidden = kind !== 'math';
+  $('display').checked = false;
+  $('insert-error').hidden = true;
+  dialog.showModal();
+  $('insert-value').focus();
+}));
+$('insert-cancel').addEventListener('click', () => dialog.close());
+$('insert-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const value = $('insert-value').value.trim();
+  if (!value) return;
+  if (insertKind === 'math' && /[$\r\n]/.test(value)) {
+    $('insert-error').textContent = 'Enter one equation without enclosing dollar signs.';
+    $('insert-error').hidden = false;
+    return;
   }
-}
-function insert(before, after = '', fallback = 'text') {
-  const start = body.selectionStart;
-  const selected = body.value.slice(start, body.selectionEnd) || fallback;
-  body.setRangeText(before + selected + after, start, body.selectionEnd, 'end');
-  body.focus();
-  body.setSelectionRange(start + before.length, start + before.length + selected.length);
-  changed();
-}
-const formats = {
-  bold: ['*', '*'], italic: ['_', '_'], heading: ['\n= ', '\n', 'Heading'], link: ['#link("https://example.com")[', ']', 'Link text'],
-  list: ['\n- ', '\n', 'List item'], quote: ['\n#quote(block: true)[', ']\n', 'Quote'], code: ['\n```\n', '\n```\n', 'code'],
-  math: ['$', '$', 'x^2'], display: ['\n$ ', ' $\n', 'sum_(i=1)^n i = (n(n+1))/2'],
-};
-document.querySelectorAll('[data-format]').forEach((button) => button.addEventListener('click', () => insert(...formats[button.dataset.format])));
+  dialog.close();
+  if (insertKind === 'link') {
+    if (editor.insertLink($('insert-label').value.trim(), value)) return;
+    dialog.showModal();
+    $('insert-error').textContent = 'Enter a web address, email link, or page path.';
+    $('insert-error').hidden = false;
+    return;
+  }
+  const space = $('display').checked ? ' ' : '';
+  editor.insertFragment('$' + space + value + space + '$', 'Equation', !space);
+});
+
 async function upload(files) {
   if (!files.length || busy) return;
   showError();
   if (!current && !await save()) return;
   const slug = current.slug;
-  let position = body.selectionStart;
   busy = true;
   $('save').disabled = true;
   try {
@@ -170,10 +159,7 @@ async function upload(files) {
       if (file.size > 10 * 1024 * 1024) throw new Error('Images must be under 10 MB.');
       const data = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = () => reject(new Error('Could not read image.')); reader.readAsDataURL(file); });
       const result = await api('/api/posts/' + slug + '/images', 'POST', { type: file.type, data });
-      const markup = `\n#image(${JSON.stringify(result.url)}, width: 100%, alt: "Image description")\n`;
-      body.setRangeText(markup, position, position, 'end');
-      position += markup.length;
-      changed();
+      editor.insertFragment('#image(' + JSON.stringify(result.url) + ', width: 100%, alt: "Image description")', 'Image');
     }
     body.focus();
   } catch (error) { showError(error.message); }
@@ -189,22 +175,16 @@ $('image').addEventListener('click', () => $('image-file').click());
 $('image-file').addEventListener('change', () => { upload([...$('image-file').files]); $('image-file').value = ''; });
 $('title').addEventListener('input', () => { if (!current && (!$('slug').value || $('slug').dataset.auto !== 'false')) $('slug').value = slugify($('title').value); });
 $('slug').addEventListener('input', () => { $('slug').dataset.auto = 'false'; });
-fields.forEach((id) => $(id).addEventListener('input', () => changed(['body', 'slug'].includes(id) || (id === 'title' && !current))));
+fields.forEach((id) => $(id).addEventListener('input', changed));
 $('save').addEventListener('click', save);
 $('metadata').addEventListener('submit', (event) => { event.preventDefault(); save(); });
 $('new').addEventListener('click', () => { $('slug').dataset.auto = 'true'; load(); });
 document.addEventListener('keydown', (event) => {
   if (!(event.metaKey || event.ctrlKey)) return;
   if (event.key.toLowerCase() === 's') { event.preventDefault(); save(); }
-  if (document.activeElement === body && ['b', 'i'].includes(event.key.toLowerCase())) { event.preventDefault(); insert(...formats[event.key.toLowerCase() === 'b' ? 'bold' : 'italic']); }
+  if (document.activeElement === body && ['b', 'i'].includes(event.key.toLowerCase())) { event.preventDefault(); editor.format(event.key.toLowerCase() === 'b' ? 'bold' : 'italic'); }
 });
 window.addEventListener('beforeunload', (event) => { if (dirty || busy) { event.preventDefault(); event.returnValue = ''; } });
-new ResizeObserver(() => {
-  previewVersion++;
-  previewController?.abort();
-  clearTimeout(timer);
-  timer = setTimeout(preview, 50);
-}).observe(previewFrame);
 try {
   await refreshPosts();
   load();

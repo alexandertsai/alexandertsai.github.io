@@ -1,0 +1,294 @@
+import { escapeTypst, inlineParts, parseTypst, safeLink } from './typst-document.mjs';
+
+const blockSelector = 'p,div,h1,h2,h3,h4,h5,h6,blockquote,pre,ul,ol,figure';
+const originalBlocks = new Map();
+
+function appendInline(parent, parts) {
+  for (const part of parts) {
+    if (part.kind === 'text') {
+      parent.append(document.createTextNode(part.text));
+      continue;
+    }
+    if (part.kind === 'atom') {
+      parent.append(fragment(part.raw, part.math ? 'Equation' : 'Typst element', true));
+      continue;
+    }
+    const element = document.createElement(part.kind === 'link' ? 'a' : part.kind);
+    if (part.kind === 'link') {
+      element.setAttribute('href', part.url);
+      if (part.bare) element.dataset.bare = '';
+    }
+    if (part.text != null) element.textContent = part.text;
+    else appendInline(element, part.children);
+    parent.append(element);
+  }
+}
+
+function fragment(source, label, inline = false) {
+  const element = document.createElement(inline ? 'span' : 'figure');
+  element.className = inline ? 'inline-fragment' : 'document-fragment';
+  element.dataset.fragment = source;
+  element.dataset.label = label;
+  element.contentEditable = 'false';
+  element.textContent = label;
+  return element;
+}
+
+function visualBlock(block) {
+  let element;
+  switch (block.kind) {
+    case 'heading':
+      element = document.createElement('h' + (block.level + 1));
+      break;
+    case 'code':
+      element = document.createElement('pre');
+      element.dataset.language = block.language;
+      element.textContent = block.text;
+      return element;
+    case 'list':
+    case 'ordered':
+      element = document.createElement(block.kind === 'list' ? 'ul' : 'ol');
+      if (block.kind === 'ordered') element.start = block.start;
+      for (const item of block.items) {
+        const li = document.createElement('li');
+        appendInline(li, inlineParts(item));
+        element.append(li);
+      }
+      return element;
+    case 'comment':
+      element = fragment(block.raw, 'Comment');
+      element.hidden = true;
+      return element;
+    case 'embed':
+      return fragment(block.raw, block.label);
+    case 'quote':
+    case 'caption':
+      element = document.createElement(block.kind === 'quote' ? 'blockquote' : 'p');
+      element.dataset.wrapper = block.prefix;
+      if (block.kind === 'caption') element.className = 'article-caption';
+      break;
+    default:
+      element = document.createElement('p');
+  }
+  appendInline(element, inlineParts(block.text));
+  return element;
+}
+
+const childrenText = (element) => [...element.childNodes].map(inlineSource).join('');
+
+function inlineSource(node) {
+  if (node.nodeType === Node.TEXT_NODE) return escapeTypst(node.textContent.replaceAll('\u00a0', ' '));
+  if (node.nodeType !== Node.ELEMENT_NODE) return '';
+  if (node.hasAttribute('data-fragment')) return node.dataset.fragment;
+  if (node.tagName === 'BR') return '\n';
+  const value = childrenText(node);
+  if (!value) return '';
+  switch (node.tagName) {
+    case 'STRONG': case 'B': return '#strong[' + value + ']';
+    case 'EM': case 'I': return '#emph[' + value + ']';
+    case 'U': return '#underline[' + value + ']';
+    case 'S': case 'STRIKE': return '#strike[' + value + ']';
+    case 'CODE': return '#raw(' + JSON.stringify(node.textContent) + ')';
+    case 'A': {
+      const url = node.getAttribute('href');
+      if (!safeLink(url)) return value;
+      return node.hasAttribute('data-bare') && node.textContent === url ? url : '#link(' + JSON.stringify(url) + ')[' + value + ']';
+    }
+    default: {
+      let styled = value;
+      if (node.style.fontWeight === 'bold' || Number(node.style.fontWeight) >= 600) styled = '#strong[' + styled + ']';
+      if (node.style.fontStyle === 'italic') styled = '#emph[' + styled + ']';
+      if (node.style.textDecorationLine?.includes('underline')) styled = '#underline[' + styled + ']';
+      return styled;
+    }
+  }
+}
+
+function blockSource(node) {
+  if (node.nodeType !== Node.ELEMENT_NODE) return inlineSource(node);
+  if (node.hasAttribute('data-fragment')) return node.dataset.fragment;
+  const body = childrenText(node).replace(/\n$/, '');
+  if (node.dataset.wrapper) return node.dataset.wrapper + body + ']';
+  if (/^H[1-6]$/.test(node.tagName)) return '='.repeat(Math.max(1, Number(node.tagName[1]) - 1)) + ' ' + body;
+  switch (node.tagName) {
+    case 'BLOCKQUOTE': return '#quote(block: true)[' + body + ']';
+    case 'PRE': {
+      const text = node.innerText.replace(/\n$/, '');
+      const fence = '`'.repeat(Math.max(3, ...[...text.matchAll(/`+/g)].map((match) => match[0].length + 1)));
+      return fence + (node.dataset.language || '') + '\n' + text + '\n' + fence;
+    }
+    case 'UL':
+    case 'OL': {
+      const marker = node.tagName === 'UL' ? '- ' : node.start === 1 ? '+ ' : null;
+      return [...node.children].filter((child) => child.tagName === 'LI').map((child, index) =>
+        (marker ?? (node.start + index) + '. ') + childrenText(child).trimEnd().replaceAll('\n', '\n  ')).join('\n');
+    }
+    default: return body;
+  }
+}
+
+export function openDocument(surface, source) {
+  originalBlocks.clear();
+  const { blocks, tail } = parseTypst(source);
+  const content = document.createDocumentFragment();
+  for (const [index, block] of blocks.entries()) {
+    const node = visualBlock(block);
+    node.dataset.original = String(index);
+    content.append(node);
+    originalBlocks.set(String(index), { ...block, signature: blockSource(node) });
+  }
+  if (!content.childNodes.length) {
+    const paragraph = document.createElement('p');
+    paragraph.append(document.createElement('br'));
+    content.append(paragraph);
+  }
+  surface.replaceChildren(content);
+  surface.dataset.tail = tail;
+}
+
+export function readDocument(surface) {
+  const used = new Set();
+  let source = '', pending = '';
+  function append(value, original) {
+    if (!value && !original) return;
+    const separator = original?.gap ?? '\n\n';
+    if (source || !used.size && original?.gap) source += separator;
+    source += original?.signature === value ? original.raw : value;
+  }
+  for (const node of surface.childNodes) {
+    if (node.nodeType !== Node.ELEMENT_NODE || !node.matches(blockSelector)) {
+      pending += inlineSource(node);
+      continue;
+    }
+    append(pending);
+    pending = '';
+    const key = node.dataset.original;
+    append(blockSource(node), used.has(key) ? null : originalBlocks.get(key));
+    if (key != null) used.add(key);
+  }
+  append(pending);
+  return source + (surface.dataset.tail ?? '');
+}
+
+export function createWritingSurface(surface, renderFragment, onChange) {
+  let selection = null, generation = 0;
+  let frames = new WeakMap();
+  const remember = () => {
+    const current = window.getSelection();
+    if (current.rangeCount && surface.contains(current.getRangeAt(0).commonAncestorContainer)) {
+      selection = current.getRangeAt(0).cloneRange();
+    }
+  };
+
+  function restore() {
+    surface.focus();
+    const current = window.getSelection();
+    if (selection && surface.contains(selection.commonAncestorContainer)) {
+      current.removeAllRanges();
+      current.addRange(selection);
+    } else {
+      current.selectAllChildren(surface);
+      current.collapseToEnd();
+    }
+  }
+
+  function previews() {
+    const current = generation;
+    for (const element of surface.querySelectorAll('[data-fragment]:not([hidden])')) {
+      if (element.querySelector('iframe')) continue;
+      const inline = element.matches('span');
+      const frame = document.createElement('iframe');
+      frame.title = element.dataset.label;
+      frame.setAttribute('sandbox', 'allow-scripts');
+      frame.src = '/preview.html' + (inline ? '?inline=1' : '');
+      const state = { ready: false, html: null, inline };
+      frames.set(frame, state);
+      element.replaceChildren(frame);
+      frame.addEventListener('load', () => frame.contentWindow?.postMessage({ type: 'preview-ping' }, '*'));
+      renderFragment(element.dataset.fragment, inline, surface.clientWidth).then((html) => {
+        if (current !== generation || !element.isConnected) return;
+        state.html = html;
+        if (state.ready) frame.contentWindow?.postMessage({ type: 'preview', html }, '*');
+      }).catch(() => {
+        if (current !== generation || !element.isConnected) return;
+        element.dataset.unavailable = '';
+        element.replaceChildren(document.createTextNode(element.dataset.label + ' · view unavailable'));
+      });
+    }
+  }
+
+  window.addEventListener('message', (event) => {
+    const frame = [...surface.querySelectorAll('iframe')].find((item) => item.contentWindow === event.source);
+    const state = frame && frames.get(frame);
+    if (!state) return;
+    if (event.data?.type === 'preview-ready') {
+      state.ready = true;
+      if (state.html) frame.contentWindow?.postMessage({ type: 'preview', html: state.html }, '*');
+    } else if (event.data?.type === 'preview-size') {
+      const { width, height } = event.data;
+      if (!Number.isFinite(height) || height < 1) return;
+      frame.style.height = Math.min(height, 12_000) + 'px';
+      if (state.inline && Number.isFinite(width) && width > 0) frame.style.width = Math.min(width, 680) + 'px';
+    }
+  });
+
+  function changed() {
+    remember();
+    previews();
+    onChange();
+  }
+
+  function command(name, value = null) {
+    restore();
+    document.execCommand(name, false, value);
+    changed();
+  }
+
+  document.addEventListener('selectionchange', remember);
+  surface.addEventListener('input', changed);
+  surface.addEventListener('click', (event) => {
+    if (event.target.closest('a')) event.preventDefault();
+  });
+  surface.addEventListener('paste', (event) => {
+    if (event.defaultPrevented || event.clipboardData.files.length) return;
+    event.preventDefault();
+    command('insertText', event.clipboardData.getData('text/plain'));
+  });
+
+  return {
+    load(source) {
+      generation++;
+      frames = new WeakMap();
+      openDocument(surface, source);
+      selection = null;
+      previews();
+    },
+    source: () => readDocument(surface),
+    remember,
+    format(kind) {
+      const block = selection?.startContainer.parentElement?.closest(blockSelector);
+      switch (kind) {
+        case 'bold': return command('bold');
+        case 'italic': return command('italic');
+        case 'heading': return command('formatBlock', block?.tagName === 'H2' ? 'p' : 'h2');
+        case 'list': return command('insertUnorderedList');
+        case 'ordered': return command('insertOrderedList');
+        case 'quote': return command('formatBlock', block?.tagName === 'BLOCKQUOTE' ? 'p' : 'blockquote');
+        case 'code': return command('formatBlock', block?.tagName === 'PRE' ? 'p' : 'pre');
+      }
+    },
+    selectedText: () => selection?.toString() || '',
+    insertLink(label, url) {
+      if (!safeLink(url)) return false;
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.textContent = label || url;
+      command('insertHTML', link.outerHTML);
+      return true;
+    },
+    insertFragment(source, label, inline = false) {
+      const element = fragment(source, label, inline);
+      command('insertHTML', element.outerHTML + (inline ? ' ' : '<p><br></p>'));
+    },
+  };
+}
