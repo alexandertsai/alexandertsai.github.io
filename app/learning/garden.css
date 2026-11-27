@@ -143,7 +143,7 @@
 .learning .sugg .in { margin-left: 10px; font-size: 10.5px; color: var(--dim); }
 .learning .sugg .none { cursor: default; }
 .learning .find { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); width: min(460px, calc(100vw - 40px)); z-index: 40;
-  padding: 16px 18px 12px; background: var(--panel); border: 1px dashed var(--dash); font-size: 13px; }
+  padding: 16px 18px 12px; background: var(--panel); font-size: 13px; }
 .learning .find[hidden] { display: none; }
 .learning .find input { width: 100%; background: none; border: 0; border-bottom: 1px solid var(--red); color: var(--ink); font: inherit; font-size: 15px; padding: 2px 0 6px; outline: none; }
 .learning .find input::placeholder { color: var(--dim); }
