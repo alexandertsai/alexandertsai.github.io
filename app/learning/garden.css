@@ -135,10 +135,10 @@
 .learning .reader li.add input::placeholder { color: var(--dim); }
 .learning .reader li.add { position: relative; }
 .learning .reader .sugg { position: absolute; left: 0; right: 0; top: 100%; margin-top: 6px; gap: 0; z-index: 2; background: var(--sugg-bg); font-size: 13px; }
-.learning .reader .connections .sugg li, .learning .find .sugg li { display: block; padding: 4px 0 4px 14px; color: var(--dim); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
+.learning .reader .connections .sugg li, .learning .find .sugg li { display: block; padding: 4px 0 4px 22px; line-height: 1.45; color: var(--dim); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative; }
 .learning .sugg li b { font-weight: 400; color: var(--ink); }
 .learning .sugg li.on { color: var(--body); }
-.learning .sugg li.on::before { content: "→"; color: var(--red); position: absolute; left: 0; }
+.learning .sugg li.on::before { content: "→"; color: var(--red); position: absolute; left: 0; top: 50%; transform: translateY(-52%); }
 .learning .sugg li:hover b, .learning .sugg li.on b { color: var(--strong); }
 .learning .sugg .in { margin-left: 10px; font-size: 10.5px; color: var(--dim); }
 .learning .sugg .none { cursor: default; }
