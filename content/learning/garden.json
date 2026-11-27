@@ -1,5 +1,5 @@
 {
-  "saved": 1795779338839,
+  "saved": 1795813135295,
   "added": [
     {
       "id": "umwixasws",
@@ -449,6 +449,9 @@
     },
     "umwixasws": {
       "note": "Machine Learning (in a traditional sense) is not the same as generative AI. Instead of trying to generate code for a website, we are usually trying to make a singular prediction.\n\nFor example, given the past 5 years of house purchase data (sale prices, location, number of rooms etc), can we predict how much some house today would sell for?"
+    },
+    "uded9722d-991d-4253-87eb-194b451248a1": {
+      "note": "The frequency domain, in my opinion, is incredibly difficult to really understand, so this explanation will remain overly simplified. The idea is that in most images we've got two areas: high-frequency areas and low-frequency ones.\n\nHigh-frequency areas have lots of fine, rapidly-changing details, such as a photo of the many blades of waving grass on the ground, or a microscropic view of a cell. Low-frequency areas are smooth. Picture a blue sky or a plain and boring white wall.\n\nConsider a 1920x1080 black and white image. Instead of representing each pixel as a number between 0-255 signalling how bright that pixel is, we now have 1920x1080 complex numbers. Each complex number contains the magnitude and phase of a certain pattern - sorta like how present it is and where it started being present. The angle and period of the pattern are derived from the angle of that point from the centre of an image and and how far that coordinate is from the centre of an image. I recommend watching a video on this as you will likely remain confused if you only read blogs.\n\nIf I took an image of a brick wall, vertical and horizontal edges would be very present (since bricks are rectangular), but diagonal edges probably wouldn't be too present.\n\nFrequency domains are useful for image sharpening and blurring. If I wanted to blur an image, I could just delete all the high frequency parts."
     }
   },
   "deleted": [],
@@ -581,6 +584,12 @@
       {
         "title": "OpenAI's harness: Codex",
         "url": "https://github.com/openai/codex"
+      }
+    ],
+    "uded9722d-991d-4253-87eb-194b451248a1": [
+      {
+        "title": "Explainer video on frequencies",
+        "url": "https://www.youtube.com/watch?v=OOu5KP3Gvx0"
       }
     ]
   }
