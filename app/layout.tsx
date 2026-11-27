@@ -25,10 +25,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f1e9" },
-    { media: "(prefers-color-scheme: dark)", color: "#000" },
-  ],
+  themeColor: "#000",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -37,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark">
       <body className={`${jetbrainsMono.variable} font-mono antialiased`}>
         {children}
       </body>

@@ -38,8 +38,9 @@ export function mountGarden(host, file, { editable = false, saveUrl = "", saveSn
   const wire = document.createElement("canvas"), wctx = wire.getContext("2d");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const darkMedia = matchMedia("(prefers-color-scheme: dark)");
-  let dark = darkMedia.matches;
-  on(darkMedia, "change", (e) => { dark = e.matches; });
+  const forceDark = document.documentElement.dataset.theme === "dark";
+  let dark = forceDark || darkMedia.matches;
+  if (!forceDark) on(darkMedia, "change", (e) => { dark = e.matches; });
   const THEMES = {
     dark: {
       bg: "#000", bgFade0: "rgba(0,0,0,0)",
