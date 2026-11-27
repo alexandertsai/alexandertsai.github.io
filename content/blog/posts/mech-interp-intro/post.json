@@ -1,5 +1,5 @@
 {
-  "title": "General Mechanistic Interpretability",
+  "title": "A Brief Intro to Mechanistic Interpretability",
   "date": "2026-10-11",
   "preview": "A simple introduction to how neural networks are interpreted, from feature visualization and circuits to chain-of-thought monitoring.",
   "draft": false

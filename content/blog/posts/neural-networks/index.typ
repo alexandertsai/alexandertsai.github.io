@@ -4,7 +4,7 @@ Imagine you've just come back from volunteering at a pet shelter. Your camera ga
 
 You want to organize it and place cats in one album and dogs in another, but you've taken too many photos. You think back to your Introduction to Python class and try to write a Python script to do this. Pretty soon, you realize each image is too complex, and there isn't any reasonable function you could write to differentiate a dog from a cat.
 
-This is where *neural networks* come in! They can be thought of as really intelligent programs that can perform tasks human-written code cannot (must note: there are also many tasks where simply writing code would be much better, e.g. mathematical operations).
+This is where *neural networks* come in! They can be thought of as really intelligent functions that can perform tasks human-written code cannot (must note: there are also many tasks where simply writing code would be much better, e.g. mathematical operations).
 
 To understand what a neural network is, let's start with a simpler task. Let's say I have an 8×8 black-and-white photo (64 pixels in total). I want to determine if it's a smiling face or a frowning one.
 
@@ -28,7 +28,9 @@ And what if we then multiplied our 64 pixel numbers [0, 0, 0, …] element-wise 
 
 So we'd get $0 times 1.2 + 0 times (-0.9) + 0 times 0.3 + dots + 0 times 0.2$, which sums up to 1.5 for random list 1. Repeating the same process with random list 2 gives us −0.2. And now, what if we just add these two numbers together and say, if this result is above zero, it's a smiling face? And if it's zero or below, it's gotta be a frowning one?
 
-This incredibly arbitrary operation of multiplying and summing is essentially what a neural network is! (Yes, we skipped a lot of details, but ignore that for now.) What's almost magical is (a) how well these simple operations can work when trained on a bunch of data and (b) the myriad of things they can do. It just works!
+One way to think about why this might work is that with enough time, the network could learn which pixels matter and which don't. Pixels near the edge aren't too important so their values don't matter too much, we'll give low values in our random list. Pixels near the mouth are really important since they'll decide if it's a smile or a frown, so we want to contribute a lot to our final score. We'll give them a high value in our random list of numbers.
+
+This is essentially what a neural network is! (Yes, we skipped a lot of details, but ignore that for now.) What's almost magical is (a) how well these simple operations can work when trained on a bunch of data and (b) the myriad of things they can do. It just works!
 
 One way to think about *why* we'd even do this in the first place is as follows: imagine you have a bunch of numbers (the pixels in the image) that you know must contain some information about the fact this is a smiling face. You just have no idea how to extract that information. Well, maybe instead of trying to write manual rules, you'll just have some kind of "network" extract it for you. Your hope is that, with enough training data, these random numbers will kinda improve and capture the complexity for you. You might not know how it does it, but as long as it works, that's fine.
 
