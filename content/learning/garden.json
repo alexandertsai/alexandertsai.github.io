@@ -1,5 +1,5 @@
 {
-  "saved": 1794990825521,
+  "saved": 1795778779257,
   "added": [
     {
       "id": "umwixasws",
@@ -270,6 +270,60 @@
       "title": "token",
       "note": "",
       "parent": "umwljzeo4"
+    },
+    {
+      "id": "ufbda9578-0bcb-4f51-9a7a-a9682a95a7f6",
+      "note": "Computer vision usually refers to using computers to ingest visual data and doing something with that. For example, we might want to:\n\n- Use our camera footage to track how many visitors are entering our store every day. \n- Analyse an X-ray for signs of cancer.\n- Improve the accuracy of Face ID. \n\nThese are all computer vision tasks.",
+      "parent": "umwixasws",
+      "title": "computer vision"
+    },
+    {
+      "id": "u53d909d0-eca8-423f-8ca3-eaf92a9ffb30",
+      "note": "Agents are LLMs with tools. The objective is to extend the functionalities of a basic LLM. Instead of a simply chatbot, agents are able to perform tasks end-to-end. For example, it could use a web-search tool to find you the cheapest flights to Hawaii and then use a browser tool to book it in your Chrome browser.",
+      "parent": "umwixb2wh",
+      "title": "agents"
+    },
+    {
+      "id": "uff1a5bd3-4a0d-492c-aeb3-3631766b5514",
+      "note": "Domains are different ways to represent the information within an image. Thinking of images as pixels is pretty intuitive. There are, however, many other ways to represent images too! \n\nMathematically, we can think of switching domains as a *change of basis*.",
+      "parent": "ufbda9578-0bcb-4f51-9a7a-a9682a95a7f6",
+      "title": "domains"
+    },
+    {
+      "id": "u55c96259-6644-4df5-a5fc-c89758a8e314",
+      "note": "Most agents are reactive. Always-on agents aim to be proactive instead, doing things before you ask for it. For example, it might scan your email and send you a reminder that someone is trying to reach you about your extended car warranty.\n\nBeyond basic scanning capabilities, today’s proactive agents can be incredibly intelligent. I once forgot about a piece of homework. Overnight (without being asked), it scanned my course website and told me I’ve got a deadline today that the instructors added later.\n\nExamples include Meta’s Muse, X’s Grokbot, or ChatGPT dots.",
+      "parent": "u53d909d0-eca8-423f-8ca3-eaf92a9ffb30",
+      "title": "Always-on Agents"
+    },
+    {
+      "id": "u5c9911fc-ede3-4a78-b567-22ab83413c84",
+      "note": "Tools are functions that agents can call to get things done. If you asked ChatGPT what’s the weather today, it can’t answer you without external help. The weather today wasn’t in its training data.\n\nIt can call a tool to search the internet for the current weather. In practice, Chat might output something like this.\n\n<tool_call>{\"name\": \"web_search\", \"arguments\": {\"query\": \"Berkeley weather\"}}</tool_call>\n\nOur ChatGPT app detects “<tool_call>” and immediately knows “hey, the user wants to use a tool now”. It parses the argument and runs a function (usually a simple python one) to search the web for that exact thing. It then returns the answer to Chat, who can now tell you the answer. The exact way these answers are passed around are discussed in harnesses.",
+      "parent": "u53d909d0-eca8-423f-8ca3-eaf92a9ffb30",
+      "title": "tools"
+    },
+    {
+      "id": "uac43448b-3ccf-4e40-97bb-0c88cf1e7f19",
+      "note": "The harness can be thought of as the environment that really turns an LLM into an agent. Imagine the following scenario: you want your LLM to write code to create a website. One way it could do this is to output code into your GPT desktop app. You can then paste this code, run it, and preview the app yourself. \n\nThis process, however, is extremely tedious. Harnesses were invented to help automate this. One simple idea is giving an LLM tools and a while loop. *While* website design not good, write or edit code for website, use tool to preview in browser, and determine if satisfactory. Only when you’re satisfied, end the loop.\n\nHarnesses today have grown incredibly complex and often involve many subtle design choices. One area of particular interest is harnesses that recursively improve themselves.",
+      "parent": "u53d909d0-eca8-423f-8ca3-eaf92a9ffb30",
+      "title": "harness"
+    },
+    {
+      "id": "uc4274a5b-d6a1-4fd9-bfc8-0af4700bac97",
+      "note": "The traditional way in which we represent images in the spatial domain is typically by having three separate *channels* for each pixel. \n\nTake a standard 1920x1080 image. That would contain approximately 2 million pixels. Each pixel has a certain colour. If I took your mugshot, the center pixels would be skin-colored, and the outer pixels might be the color of the prison facility. We typically represent each pixel as a combination of red, green, and blue, with a scale between 0-255, depending on the intensity. If we say each pixel is represented by a (R, G, B) list, then:\n\n- A pure red pixel: (255, 0, 0)\n- A purple pixel: (255, 0, 255)\n- A brown pixel: (165, 42, 42)\n- A grey pixel: (128, 128, 128)\n\nSo really, to represent an image that is 1920x1080, we'd just have about 1080 rows of pixels, with each row containing 1920 of these pixel lists. The total numerical values across all three colors we'd store would then be 1920x1080x3.\n\nThink about how we would represent white pixels or black pixels!",
+      "parent": "uff1a5bd3-4a0d-492c-aeb3-3631766b5514",
+      "title": "spatial"
+    },
+    {
+      "id": "uded9722d-991d-4253-87eb-194b451248a1",
+      "note": "The frequency domain, in my opinion, is incredibly difficult to really understand, so this explanation will remain overly simplified. The idea is that in most images we've got two areas: high-frequency areas and low-frequency ones.\n\nHigh-frequency areas have lots of fine, rapidly-changing details, such as a photo of the many blades of waving grass on the ground, or a microscropic view of a cell. Low-frequency areas are smooth. Picture a blue sky or a plain and boring white wall.\n\nConsider a black and white image. Instead of representing each pixel as a number representing how bright that pixel is, we instead represent them as complex numbers. This complex number tells us about a certain pattern and how much it is present. For example, if I took an image of a brick wall, vertical and horizontal edges would be very present (since bricks are rectangular), but diagonal edges probably wouldn't be too present.\n\nFrequency domains are useful for image sharpening and blurring. If I wanted to blur an image, I could just delete all the high frequency parts.",
+      "parent": "uff1a5bd3-4a0d-492c-aeb3-3631766b5514",
+      "title": "frequency"
+    },
+    {
+      "id": "u2c604cae-5ff1-4ee7-b4fb-c45aa4967598",
+      "note": "",
+      "parent": "uff1a5bd3-4a0d-492c-aeb3-3631766b5514",
+      "title": "wavelet"
     }
   ],
   "edits": {
@@ -368,6 +422,9 @@
     "umwljzrh2": {
       "title": "multimodal",
       "note": "Multimodal refers to different modalities: image, video, or audio. Non-multimodal models typically refer to models that can only process text."
+    },
+    "umwixasws": {
+      "note": "Machine Learning (in a traditional sense) is not the same as generative AI. Instead of trying to generate code for a website, we are usually trying to make a singular prediction.\n\nFor example, given the past 5 years of house purchase data (sale prices, location, number of rooms etc), can we predict how much some house today would sell for?"
     }
   },
   "deleted": [],
@@ -390,6 +447,11 @@
     [
       "umwljuysy",
       "umwlgqbcv",
+      "related"
+    ],
+    [
+      "u5c9911fc-ede3-4a78-b567-22ab83413c84",
+      "uac43448b-3ccf-4e40-97bb-0c88cf1e7f19",
       "related"
     ]
   ],
@@ -475,6 +537,26 @@
       {
         "url": "https://transformer-circuits.pub/2024/model-diffing/index.html",
         "title": "Stage-Wise Model Diffing"
+      }
+    ],
+    "u55c96259-6644-4df5-a5fc-c89758a8e314": [
+      {
+        "title": "Alexandr Wang on Why We're Building Muse",
+        "url": "https://x.com/alexandr_wang/status/2103551714536439951"
+      },
+      {
+        "title": "Stanford CS146S: Always-on Agents",
+        "url": "https://youtu.be/L1OBRtfPS34?si=TLkVeGTLUME0H1u_"
+      }
+    ],
+    "uac43448b-3ccf-4e40-97bb-0c88cf1e7f19": [
+      {
+        "title": "Video on Self-Improving Harnesses",
+        "url": "https://www.youtube.com/watch?v=YOsQULgqgNA"
+      },
+      {
+        "title": "OpenAI's harness: Codex",
+        "url": "https://github.com/openai/codex"
       }
     ]
   }
