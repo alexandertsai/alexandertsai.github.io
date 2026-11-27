@@ -3,7 +3,7 @@
 import { useEffect, useRef, type MouseEvent } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { depart, DEPART_MS } from "./depart";
+import { depart, DEPART_MS, returnHome, RETURN_MS } from "./depart";
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -41,16 +41,18 @@ export default function SiteHeader() {
     ], { duration: 220, easing: "cubic-bezier(.22, 1, .36, 1)", fill: "forwards" });
     if (href === pathname) return;
     const into = href === "/learning/" && !learning;
+    const home = href === "/" && learning;
     if (into) depart();
-    navigation.current = setTimeout(() => router.push(href), into ? DEPART_MS : 50);
+    if (home) returnHome();
+    navigation.current = setTimeout(() => router.push(href), into ? DEPART_MS : home ? RETURN_MS : 50);
   }
 
   return <header className="site-header site-width" data-pond-text>
     <nav aria-label="Main navigation">
-      {!learning && <Link href="/" aria-current={pathname === "/" ? "page" : undefined} onClick={(event) => navigate(event, "/")}>
+      <Link href="/" aria-current={pathname === "/" ? "page" : undefined} onClick={(event) => navigate(event, "/")}>
         Home
         {pathname === "/" && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
-      </Link>}
+      </Link>
       <Link href="/learning/" aria-current={learning ? "page" : undefined} onClick={(event) => navigate(event, "/learning/")}>
         Learning
         {learning && <span ref={indicator} className="site-nav-active" aria-hidden="true" />}
