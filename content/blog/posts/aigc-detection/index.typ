@@ -1,6 +1,6 @@
-Something I've been working on for a while is detecting AI-generated content (AIGC), especially images! It's clear that scam cases (love scams, general scams) and fraud abuse (fake IDs, refund abuse) have seen a surge since the inception of generative AI. This was something I worked on for almost a year at TikTok within the e-commerce risk control department.
+Something I've been working on for a while is detecting AI-generated content (AIGC), especially images! It's clear that AI-related fraud has seen a surge as generative AI has evolved. The truth is the field, as it is now, still isn't that good at tackling it.
 
-As a quick overview of the field, we currently have five primary methods of detecting AI-generated images.
+As a quick overview, we currently have five primary methods of detecting AI-generated images.
 
 1. *Training-free methods*: attempt to reconstruct the images with some type of model. If there is a high reconstruction error, the image is likely real. Else, it is probably fake. Most of these methods do not work that well in production.
 
@@ -14,9 +14,9 @@ As a quick overview of the field, we currently have five primary methods of dete
 
 #html("detection-patterns.html")
 
-What's really interesting is that the focus of the field from 2024 to 2026 has shifted between all of these approaches. As generative models evolved from GANs and Stable Diffusion to more autoregressive approaches, and now further towards more complex architectures, so have the approaches used to detect them.
+What's really interesting is that the focus of the field from 2024 to 2026 has shifted between all of these approaches. As generative models evolved from GANs and Stable Diffusion to autoregression, and now further towards more complex architectures, certain detection methods have fallen out of favour.
 
-The current consensus in the field seems to be that the task isn't impossible, but it is extraordinarily difficult to make approaches that are robust and generalize well. I like to think of it as three parts:
+The current consensus seems to be that detecting AI images is not impossible, but it is extraordinarily difficult to make approaches that are robust and generalize well. I like to think of it as three parts:
 
 *Generalization*: If I train my model on gpt-image-2 today, and OpenAI releases gpt-image-2.5 tomorrow, will my model still work?
 
