@@ -11,7 +11,7 @@ export function depart() {
   overlay.id = OVERLAY_ID;
   overlay.setAttribute("aria-hidden", "true");
   document.body.append(overlay);
-  for (const element of document.querySelectorAll<HTMLElement>("main.home > :not(.pond), .professional-blog > *")) {
+  for (const element of document.querySelectorAll<HTMLElement>("main.home > :not(.pond, .site-header), .professional-blog > :not(.site-header)")) {
     element.animate([
       { opacity: 1, filter: "blur(0)", transform: "translateY(0)" },
       { opacity: 0, filter: "blur(2px)", transform: "translateY(-6px)" },
@@ -43,7 +43,7 @@ export function returnHome() {
   overlay.setAttribute("aria-hidden", "true");
   document.body.append(overlay);
   overlay.animate([{ "--return-hole": "80vmax" }, { "--return-hole": "0vmax" }], { duration: RETURN_MS, easing: "cubic-bezier(.5, 0, .75, .3)", fill: "forwards" });
-  document.querySelector<HTMLElement>(".learning")?.animate([
+  document.querySelector<HTMLElement>(".learning .garden-surface")?.animate([
     { transform: "scale(1)", filter: "blur(0)" },
     { transform: "scale(2.8)", filter: "blur(8px)" },
   ], { duration: RETURN_MS, easing: "cubic-bezier(.55, 0, .85, .35)", fill: "forwards" });
@@ -63,7 +63,7 @@ export function openReturn() {
   overlay.dataset.opening = "1";
   clearTimeout(returnTimer);
   overlay.getAnimations().forEach((animation) => animation.cancel());
-  for (const element of document.querySelectorAll<HTMLElement>("main.home > :not(.pond)")) {
+  for (const element of document.querySelectorAll<HTMLElement>("main.home > :not(.pond, .site-header)")) {
     element.animate([{ transform: "scale(.96)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 650, easing: "cubic-bezier(.2, .7, .2, 1)" });
   }
   overlay.animate([{ "--return-hole": "0vmax" }, { "--return-hole": "80vmax" }], { duration: 650, easing: "cubic-bezier(.3, .6, .3, 1)", fill: "forwards" })
