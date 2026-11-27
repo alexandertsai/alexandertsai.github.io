@@ -38,6 +38,13 @@
   .professional-blog .typst-html :is(img:not([src$=".svg"]), video, canvas, [role="img"], table, [role="listitem"] > span:nth-of-type(2)) { filter: invert(1) hue-rotate(180deg); }
 }
 .professional-blog .blog-content a:focus-visible { outline: 2px solid var(--site-accent); outline-offset: 3px; }
+@media (pointer: coarse), (max-width: 727px) {
+  html:has(.blog-reader) { overscroll-behavior-x: none; }
+  .professional-blog:has(.blog-reader) { overflow-x: clip; touch-action: pan-y pinch-zoom; }
+  .blog-reader { overflow-wrap: anywhere; }
+  .blog-content .typst-html { overflow-x: auto; overscroll-behavior-x: contain; }
+  .blog-content .nn-quiz input { font-size: 16px; }
+}
 .professional-blog .blog-empty { min-height: 45vh; width: min(100% - 48px, 680px); margin: 56px auto; color: var(--site-copy); }
 @media (max-width: 1179px) {
   .professional-blog .blog-reader { width: min(100% - 48px, 680px); grid-template-columns: minmax(0, 1fr); gap: 36px; padding-top: 28px; }
