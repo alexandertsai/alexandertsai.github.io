@@ -1,5 +1,5 @@
 {
-  "saved": 1795778779257,
+  "saved": 1795779338839,
   "added": [
     {
       "id": "umwixasws",
@@ -324,6 +324,30 @@
       "note": "",
       "parent": "uff1a5bd3-4a0d-492c-aeb3-3631766b5514",
       "title": "wavelet"
+    },
+    {
+      "id": "umwy426ax",
+      "note": "Agents are LLMs that can call tools and complete tasks end-to-end. They can be thought of as extensions of a regular LLM.",
+      "parent": "umwixb2wh",
+      "title": "agents"
+    },
+    {
+      "id": "umwy42cfv",
+      "note": "",
+      "parent": "umwy426ax",
+      "title": "agent swarms"
+    },
+    {
+      "id": "umwy43675",
+      "note": "",
+      "parent": "umwy426ax",
+      "title": "tools"
+    },
+    {
+      "id": "umwy43a9p",
+      "note": "",
+      "parent": "umwy426ax",
+      "title": "harness"
     }
   ],
   "edits": {
